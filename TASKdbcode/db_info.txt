@@ -1,0 +1,38 @@
+This file contains information about the ElephantSQL database that
+stores the TASK demographic information.
+------------------------------------------------------------------------
+
+Host Name: peanut.db.elephantsql.com
+
+URL: postgres://usqmchwx:jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R@peanut.db.elephantsql.com/usqmchwx
+
+User/Database: usqmchwx
+
+Password: jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R
+
+Port: 5432
+
+Meal Sites (maybe?):
+trenton_area_soup_kitchen
+first_baptist_church
+trinity_episcopal_church
+Bethel_world_outreach_ministries
+Bible_way_temple_of_deliverance
+First_united_methodist_church_of_highstown
+first_presbyterian_church_of_hightstown
+St_james_ame_church
+Princeton_united_methodist_church
+Holy_apostles_episcopal_church
+Trenton_rescue_mission
+Trenton_circus_squad
+Redding_circle_senior_center
+Mercer_behavioral_health
+Medallion_care_behavioral_health
+Homefront
+Wilson_elementary_school
+Kuser_elementary_school
+Masjidul_taqwa
+Prospect_village
+St_lukes_church
+morrisville_united_methodist_church
+

@@ -3,8 +3,8 @@
 #-----------------------------------------------------------------------
 # delete_task_db.py
 # Author: Andres Blanco Bonilla
-# Uses SQLAlchemy to delete the demographic database in ElephantSQL
-# for testing purposes
+# Uses SQLAlchemy to delete every table in the demographic database in 
+# ElephantSQL for testing purposes
 #-----------------------------------------------------------------------
 
 import sys
