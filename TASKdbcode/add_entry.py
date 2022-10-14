@@ -26,7 +26,8 @@ def handle_input():
     parser.add_argument("meal_site", metavar="meal site",
                         help="The race of the patron to be added")
     parser.add_argument("-r", dest='race', metavar="race",
-                        help="The race of the patron to be added")
+                        help="The races of the patron to be added,\
+                            Enter a comma-separated string")
     # parser.add_argument("-e", dest='ethnicity', metavar="ethn",
     #                     help="The ethnicity of the patron (Hispanic or Not)\
     #             Enter H for Hispanic, N otherwise")
@@ -49,6 +50,8 @@ def handle_input():
     args = parser.parse_args()
     args_dict = vars(args)
     args_dict["meal_site"] = args_dict["meal_site"].title()
+    races = args_dict["race"].split(",")
+    args_dict["race"] = races
     return args_dict
 
 # -----------------------------------------------------------------------

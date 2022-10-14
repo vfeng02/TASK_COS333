@@ -8,8 +8,9 @@
 
 
 from sqlalchemy.ext.declarative import AbstractConcreteBase
-from sqlalchemy import Table, Column, Integer, String, DateTime
+from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
+from sqlalchemy.dialects.postgresql import ARRAY
 
 from werkzeug.security import generate_password_hash,\
     check_password_hash
@@ -42,15 +43,15 @@ class Administrators(User):
 # Every meal site inherits these fields
 class MealSite(AbstractConcreteBase, Base):
     service_timestamp = Column(DateTime, primary_key = True)
-    race = Column(String())
+    race = Column(ARRAY(String))
     language = Column(String())
     age_range = Column(String())
     gender = Column(String())
-    zip_code = Column(String())
-    homeless = Column(String(1))
-    veteran = Column(String(1))
-    disabled = Column(String(1))
-    patron_response = Column(String(1))
+    zip_code = Column(String(5))
+    homeless = Column(Boolean())
+    veteran = Column(Boolean())
+    disabled = Column(Boolean())
+    patron_response = Column(Boolean())
 
 
 class Trenton_Area_Soup_Kitchen(MealSite):

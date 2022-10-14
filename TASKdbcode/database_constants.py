@@ -16,35 +16,33 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "@peanut.db.elephantsql.com/usqmchwx")
 
 DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
-                       "gender", "zip_code", "homeless", "veteran",
+                       "gender", "zip_code", "homeless", "veteran",\
                        "disabled", "patron_response"]
 
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
     "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
-    "Multiracial", "Unknown"]
-
-# ETHNICITY_OPTIONS = ["H", "N"]
+        "Unknown"]
 
 LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
                     "Chinese", "Creole", "Dari", "Farsi", "French",\
                     "German", "Polish", "Russian", "Swahili", "Urdu",\
-                    "Vietnamese", "Other", "Unknown"]
+                    "Vietnamese", "Other"]
 
 AGE_RANGE_OPTIONS = ["<18", "18-24", "25-34", "35-44", "45-54",\
     "55-64", ">65", "Unknown"]
 
 GENDER_OPTIONS = ["Male", "Female", "Non-Binary", "TransMale", 
-                  "TransFemale", "Other", "Unknown"]
+                  "TransFemale", "Other"]
 
-ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "Unknown"]
+ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "00000"]
 
-HOMELESS_OPTIONS = ["Y", "N"]
+HOMELESS_OPTIONS = [True, False]
 
-VETERAN_OPTIONS = ["Y", "N"]
+VETERAN_OPTIONS = [True, False]
 
-DISABLED_OPTIONS = ["Y", "N"]
+DISABLED_OPTIONS = [True, False]
 
-PATRON_RESPONSE_OPTIONS = ["Y", "N"]
+PATRON_RESPONSE_OPTIONS = [True, False]
 
 
 MEAL_SITE_OPTIONS = [database.First_Baptist_Church,\
