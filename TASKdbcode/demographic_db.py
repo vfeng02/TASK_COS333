@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 # demographic_database.py
 # Author: Andres Blanco Bonilla
-# Sets up table classes for SQLAlchemy to use
+# Sets up TASK database table classes for SQLAlchemy to use
 #----------------------------------------------------------------------
 
 

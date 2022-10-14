@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 # delete_task_db.py
 # Author: Andres Blanco Bonilla
-# Uses SQLAlchemy to delete every table in the demographic database in 
+# Uses SQLAlchemy to delete every table in the TASK database in 
 # ElephantSQL for testing purposes
 #-----------------------------------------------------------------------
 
@@ -15,14 +15,9 @@ from sqlalchemy import func
 import psycopg2
 
 import demographic_db as database
+from database_constants import DATABASE_URL
 
 #-----------------------------------------------------------------------
-
-DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
-                "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
-                "@peanut.db.elephantsql.com/usqmchwx")
-
-engine = sqlalchemy.create_engine(DATABASE_URL)
 
 def main():
 

@@ -3,7 +3,9 @@
 #-----------------------------------------------------------------------
 # create_task_db.py
 # Author: Andres Blanco Bonilla
-# Uses SQLAlchemy to create the demographic database in ElephantSQL
+# Uses SQLAlchemy to create the TASK database in ElephantSQL
+# Meal site tables start empty
+# User tables start with some example entries
 #-----------------------------------------------------------------------
 
 import sys
@@ -14,16 +16,11 @@ from sqlalchemy import func
 import psycopg2
 
 import demographic_db as database
+from database_constants import DATABASE_URL
 
 #-----------------------------------------------------------------------
 
-DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
-                "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
-                "@peanut.db.elephantsql.com/usqmchwx")
-
-
-
-def test_insert(session):
+def insert_users(session):
     #-------------------------------------------------------------------
 
     admin = database.Administrators(id="1234",
@@ -63,14 +60,14 @@ def test_insert(session):
 
     #-------------------------------------------------------------------
 
-    task = database.Trenton_Area_Soup_Kitchen(
-        service_timestamp=func.now(),
-        race="W", ethnicity="H",
-        language="English", age_range="20-24",
-        gender="M", zip_code="08610", homeless="N",
-        veteran="N", disabled="N", patron_response="Y")
-    session.add(task)
-    session.commit()
+    # task = database.Trenton_Area_Soup_Kitchen(
+    #     service_timestamp=func.now(),
+    #     race="W", ethnicity="H",
+    #     language="English", age_range="20-24",
+    #     gender="M", zip_code="08610", homeless="N",
+    #     veteran="N", disabled="N", patron_response="Y")
+    # session.add(task)
+    # session.commit()
 
     #-------------------------------------------------------------------
 
@@ -137,7 +134,7 @@ def main():
         database.Base.metadata.create_all(engine)
 
         with sqlalchemy.orm.Session(engine) as session:
-            test_insert(session)
+            insert_users(session)
 
         engine.dispose()
 
