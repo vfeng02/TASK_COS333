@@ -12,27 +12,3 @@ Password: jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R
 
 Port: 5432
 
-Meal Sites (maybe?):
-trenton_area_soup_kitchen
-first_baptist_church
-trinity_episcopal_church
-bethel_world_outreach_ministries
-bible_way_temple_of_deliverance
-first_united_methodist_church_of_highstown
-first_presbyterian_church_of_hightstown
-st_james_ame_church
-princeton_united_methodist_church
-holy_apostles_episcopal_church
-trenton_rescue_mission
-trenton_circus_squad
-redding_circle_senior_center
-mercer_behavioral_health
-medallion_care_behavioral_health
-homefront
-wilson_elementary_school
-kuser_elementary_school
-masjidul_taqwa
-prospect_village
-st_lukes_church
-morrisville_united_methodist_church
-
