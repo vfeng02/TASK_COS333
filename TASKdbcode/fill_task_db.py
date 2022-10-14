@@ -21,6 +21,7 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
 
+# have to capitalize these, they should be constants
 race_options = ["American Indian/Alaska Native", "Asian", "Black",\
     "Native Hawaiian/Pacific Islander", "White", "Multiracial"]
 ethnicity_options = ["H", "N"]

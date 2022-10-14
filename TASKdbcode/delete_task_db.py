@@ -18,7 +18,9 @@ import demographic_db as database
 
 #-----------------------------------------------------------------------
 
-DATABASE_URL = "postgresql+psycopg2://usqmchwx:jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R@peanut.db.elephantsql.com/usqmchwx"
+DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
+                "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
+                "@peanut.db.elephantsql.com/usqmchwx")
 
 engine = sqlalchemy.create_engine(DATABASE_URL)
 
