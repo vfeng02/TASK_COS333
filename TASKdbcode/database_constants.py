@@ -15,25 +15,28 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
 
-DEMOGRAPHIC_OPTIONS = ["race", "ethnicity", "language", "age_range",\
+DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
                        "gender", "zip_code", "homeless", "veteran",
                        "disabled", "patron_response"]
 
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
-    "Native Hawaiian/Pacific Islander", "White", "Multiracial"]
+    "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
+    "Multiracial", "Unknown"]
 
-ETHNICITY_OPTIONS = ["H", "N"]
+# ETHNICITY_OPTIONS = ["H", "N"]
 
-LANGUAGE_OPTIONS = ["English", "Spanish", "French"]
+LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
+                    "Chinese", "Creole", "Dari", "Farsi", "French",\
+                    "German", "Polish", "Russian", "Swahili", "Urdu",\
+                    "Vietnamese", "Other", "Unknown"]
 
 AGE_RANGE_OPTIONS = ["<18", "18-24", "25-34", "35-44", "45-54",\
-    "55-64", ">65"]
+    "55-64", ">65", "Unknown"]
 
-GENDER_OPTIONS = ["M", "F", "O"]
+GENDER_OPTIONS = ["Male", "Female", "Non-Binary", "TransMale", 
+                  "TransFemale", "Other", "Unknown"]
 
-ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610"]
-
-YN_OPTIONS = ["Y", "N"]
+ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "Unknown"]
 
 HOMELESS_OPTIONS = ["Y", "N"]
 
@@ -43,6 +46,7 @@ DISABLED_OPTIONS = ["Y", "N"]
 
 PATRON_RESPONSE_OPTIONS = ["Y", "N"]
 
+
 MEAL_SITE_OPTIONS = [database.First_Baptist_Church,\
     database.First_Presbyterian_Church_of_Hightstown,\
     database.First_United_Methodist_Church_of_Hightstown,\
@@ -50,5 +54,17 @@ MEAL_SITE_OPTIONS = [database.First_Baptist_Church,\
     database.Medallion_Care_Behavioral_Health,\
     database.Princeton_United_Methodist_Church,\
     database.Trenton_Area_Soup_Kitchen,\
-    database.Trenton_Rescue_Mission,\
-    database.Trinity_Episcopal_Cathedral]
+    database.Rescue_Mission,\
+    database.Trinity_Episcopal_Cathedral,\
+    database.Trenton_Circus_Squad,\
+    database.Harvest_Intercontinental_Ministries_United,\
+    database.St_James_AME_Church,\
+    database.Bible_Way_Cathedral_of_Deliverance,\
+    database.Redding_Circle_Senior_Center,\
+    database.Mercer_Behavioral_Health,\
+    database.Turning_Point_United_Methodist_Church,\
+    database.Princeton_Family_YMCA,\
+    database.St_Lukes_Church,\
+    database.Morrisville_United_Methodist_Church,\
+    database.Cartet_Arms,\
+    database.Masjidul_Taowa]

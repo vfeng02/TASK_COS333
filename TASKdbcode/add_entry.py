@@ -27,9 +27,9 @@ def handle_input():
                         help="The race of the patron to be added")
     parser.add_argument("-r", dest='race', metavar="race",
                         help="The race of the patron to be added")
-    parser.add_argument("-e", dest='ethnicity', metavar="ethn",
-                        help="The ethnicity of the patron (Hispanic or Not)\
-                Enter H for Hispanic, N otherwise")
+    # parser.add_argument("-e", dest='ethnicity', metavar="ethn",
+    #                     help="The ethnicity of the patron (Hispanic or Not)\
+    #             Enter H for Hispanic, N otherwise")
     parser.add_argument("-l", dest='language', metavar="lang",
                         help="The primary language of the patron")
     parser.add_argument("-a", dest='age_range', metavar="age",

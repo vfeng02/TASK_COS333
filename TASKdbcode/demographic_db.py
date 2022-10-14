@@ -43,11 +43,10 @@ class Administrators(User):
 class MealSite(AbstractConcreteBase, Base):
     service_timestamp = Column(DateTime, primary_key = True)
     race = Column(String())
-    ethnicity = Column(String(1))
     language = Column(String())
-    age_range = Column(String(5))
-    gender = Column(String(1))
-    zip_code = Column(String(5))
+    age_range = Column(String())
+    gender = Column(String())
+    zip_code = Column(String())
     homeless = Column(String(1))
     veteran = Column(String(1))
     disabled = Column(String(1))
@@ -75,11 +74,47 @@ class Princeton_United_Methodist_Church(MealSite):
 class Holy_Apostles_Episcopal_Church(MealSite):
     __tablename__ = "holy_apostles_episcopal_church"
 
-class Trenton_Rescue_Mission(MealSite):
-    __tablename__ = "trenton_rescue_mission"
+class Rescue_Mission(MealSite):
+    __tablename__ = "rescue_mission"
 
 class Medallion_Care_Behavioral_Health(MealSite):
     __tablename__ = "medallion_care_behavioral_health"
+    
+class Trenton_Circus_Squad(MealSite):
+    __tablename__ = "trenton_circus_squad"
+    
+class Harvest_Intercontinental_Ministries_United(MealSite):
+    __tablename__ = "harvest_intercontinental_ministries_united"
+
+class St_James_AME_Church(MealSite):
+    __tablename__ = "st_james_ame_church"
+
+class Bible_Way_Cathedral_of_Deliverance(MealSite):
+    __tablename__ = "bible_way_cathedral_of_deliverance"
+
+class Redding_Circle_Senior_Center(MealSite):
+    __tablename__ = "redding_circle_senior_center"
+
+class Mercer_Behavioral_Health(MealSite):
+    __tablename__ = "mercer_behavioral_health"
+
+class Turning_Point_United_Methodist_Church(MealSite):
+    __tablename__ = "turning_point_united_methodist_church"
+
+class Princeton_Family_YMCA(MealSite):
+    __tablename__ = "princeton_family_ymca"
+
+class St_Lukes_Church(MealSite):
+    __tablename__ = "st_lukes_church"
+
+class Morrisville_United_Methodist_Church(MealSite):
+    __tablename__ = "morrisville_united_methodist_church"
+
+class Cartet_Arms(MealSite):
+    __tablename__ = "cartet_arms"
+
+class Masjidul_Taowa(MealSite):
+    __tablename__ = "masjidul_taowa"
 
 
 Base.registry.configure()
