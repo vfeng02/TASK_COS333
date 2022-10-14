@@ -24,13 +24,15 @@ DATABASE_URL = "postgresql+psycopg2://usqmchwx:jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R@
 engine = sqlalchemy.create_engine(DATABASE_URL)
 
 def main():
-
+    
     if len(sys.argv) != 1:
-        print('Usage: python create.py', file=sys.stderr)
+        print('Usage: python delete_task_db.py', file=sys.stderr)
         sys.exit(1)
 
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
+        # clearing the tables like this is slow and inefficient
+        # need to look for better ways of doing it
         database.Base.metadata.drop_all(engine)
         database.Base.metadata.create_all(engine)
         engine.dispose()

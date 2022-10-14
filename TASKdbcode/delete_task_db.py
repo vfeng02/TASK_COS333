@@ -25,7 +25,7 @@ engine = sqlalchemy.create_engine(DATABASE_URL)
 def main():
 
     if len(sys.argv) != 1:
-        print('Usage: python create.py', file=sys.stderr)
+        print('Usage: python delete_task_db.py', file=sys.stderr)
         sys.exit(1)
 
     try:
