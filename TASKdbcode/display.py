@@ -40,7 +40,7 @@ def main():
                     demographics = []
                     for demographic in DEMOGRAPHIC_OPTIONS:
                         demographics.append(getattr(row, demographic))
-                    print(*demographics)
+                    print(row.service_timestamp, *demographics)
 
         engine.dispose()
 
