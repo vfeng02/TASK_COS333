@@ -30,17 +30,17 @@ def main():
         engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
-            for meal_site in MEAL_SITE_OPTIONS:
                 print('-------------------------------------------')
-                print(str(meal_site.__tablename__))
+                print("meal_sites")
                 print('-------------------------------------------')
-                query = session.query(meal_site)
+                query = session.query(database.MealSite)
                 table = query.all()
                 for row in table:
                     demographics = []
                     for demographic in DEMOGRAPHIC_OPTIONS:
                         demographics.append(getattr(row, demographic))
-                    print(row.service_timestamp, *demographics)
+                    print(row.service_timestamp, row.meal_site,\
+                        *demographics)
 
         engine.dispose()
 

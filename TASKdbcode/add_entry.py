@@ -24,7 +24,7 @@ def handle_input():
         "Adds a patron's demographic entry into the TASK database",\
                                     allow_abbrev  = False)
     parser.add_argument("meal_site", metavar="meal site",
-                        help="The race of the patron to be added")
+                        help="The meal site the patron attended")
     parser.add_argument("-r", dest='race', metavar="race",
                         help="The races of the patron to be added,\
                             Enter a comma-separated string")
@@ -39,13 +39,13 @@ def handle_input():
                         help="The gender of the patron")
     parser.add_argument("-z", dest='zip_code', metavar="zip",
                         help="The zip code of the patron")
-    parser.add_argument("-hl", dest='homeless', metavar="homeless",
+    parser.add_argument("-hl", type = bool, dest='homeless', metavar="homeless",
                         help="Whether the patron is homeless or not")
-    parser.add_argument("-v", dest='veteran', metavar="vet",
+    parser.add_argument("-v", type = bool, dest='veteran', metavar="vet",
                         help="Whether the patron is a veteran or not")
-    parser.add_argument("-d", dest='disabled', metavar="dis",
+    parser.add_argument("-d", type = bool, dest='disabled', metavar="dis",
                         help="Whether the patron has a disability or not")
-    parser.add_argument("-p", dest='patron_response', metavar="pat",
+    parser.add_argument("-p", type = bool, dest='patron_response', metavar="pat",
                         help="Whether the patron provided with this information or not")
     args = parser.parse_args()
     args_dict = vars(args)
@@ -54,31 +54,10 @@ def handle_input():
     args_dict["race"] = races
     return args_dict
 
-# -----------------------------------------------------------------------
 def main():
 
     args_dict = handle_input()
-
-    try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
-
-        with sqlalchemy.orm.Session(engine) as session:
-            meal_site = getattr(database, args_dict["meal_site"])
-            del args_dict["meal_site"]
-            # demographics = {}
-            # for demographic in demographic_options:
-            #     demographics[demographic] = args_dict[demographic]
-            entry = meal_site(\
-                service_timestamp = sqlalchemy.func.now(),\
-                **args_dict)
-            session.add(entry)
-            session.commit()
-
-        engine.dispose()
-
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+    database.add_patron(args_dict)
 
 #-----------------------------------------------------------------------
 if __name__ == '__main__':

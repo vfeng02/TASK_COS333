@@ -43,11 +43,12 @@ def fill_db(num_entries):
             database_constants.DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
-            for meal_site in database_constants.MEAL_SITE_OPTIONS:
+            for meal_site_option in database_constants.MEAL_SITE_OPTIONS:
                 for _ in range(num_entries):
                     random_fields = generate_demographics()
                     
-                    row = meal_site(service_timestamp = func.now(),\
+                    row = database.MealSite(service_timestamp = func.now(),\
+                        meal_site = meal_site_option,
                         **random_fields)
 
                     session.add(row)

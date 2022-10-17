@@ -45,24 +45,24 @@ DISABLED_OPTIONS = [True, False]
 PATRON_RESPONSE_OPTIONS = [True, False]
 
 
-MEAL_SITE_OPTIONS = [database.First_Baptist_Church,\
-    database.First_Presbyterian_Church_of_Hightstown,\
-    database.First_United_Methodist_Church_of_Hightstown,\
-    database.Holy_Apostles_Episcopal_Church,\
-    database.Medallion_Care_Behavioral_Health,\
-    database.Princeton_United_Methodist_Church,\
-    database.Trenton_Area_Soup_Kitchen,\
-    database.Rescue_Mission,\
-    database.Trinity_Episcopal_Cathedral,\
-    database.Trenton_Circus_Squad,\
-    database.Harvest_Intercontinental_Ministries_United,\
-    database.St_James_AME_Church,\
-    database.Bible_Way_Cathedral_of_Deliverance,\
-    database.Redding_Circle_Senior_Center,\
-    database.Mercer_Behavioral_Health,\
-    database.Turning_Point_United_Methodist_Church,\
-    database.Princeton_Family_YMCA,\
-    database.St_Lukes_Church,\
-    database.Morrisville_United_Methodist_Church,\
-    database.Cartet_Arms,\
-    database.Masjidul_Taowa]
+MEAL_SITE_OPTIONS = ["First_Baptist_Church",\
+    "First_Presbyterian_Church_of_Hightstown",\
+    "First_United_Methodist_Church_of_Hightstown",\
+    "Holy_Apostles_Episcopal_Church",\
+    "Medallion_Care_Behavioral_Health",\
+    "Princeton_United_Methodist_Church",\
+    "Trenton_Area_Soup_Kitchen",\
+    "Rescue_Mission",\
+    "Trinity_Episcopal_Cathedral",\
+    "Trenton_Circus_Squad",\
+    "Harvest_Intercontinental_Ministries_United",\
+    "St_James_AME_Church",\
+    "Bible_Way_Cathedral_of_Deliverance",\
+    "Redding_Circle_Senior_Center",\
+    "Mercer_Behavioral_Health",\
+    "Turning_Point_United_Methodist_Church",\
+    "Princeton_Family_YMCA",\
+    "St_Lukes_Church",\
+    "Morrisville_United_Methodist_Church",\
+    "Cartet_Arms",\
+    "Masjidul_Taowa"]
