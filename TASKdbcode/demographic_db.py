@@ -13,6 +13,9 @@ from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import ARRAY
+# sql_alchemy filters has to be downloaded from this repo
+# https://github.com/bodik/sqlalchemy-filters
+from sqlalchemy_filters import apply_filters
 from database_constants import DATABASE_URL
 
 from werkzeug.security import generate_password_hash,\
@@ -99,8 +102,15 @@ def get_patrons(select_fields, filter_dict):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(*select_fields).filter_by(**filter_dict)
-            print(query)
+            query = session.query(MealSite)
+            for key, value in filter_dict.items():
+                filter = {"field": key, "op" : "==", "value": value}
+                if key == "race":
+                    for race in value:
+                        filter = {"field": key, "op" : "any", "value": race}
+                        query = apply_filters(query, filter)
+                query = apply_filters(query, filter)
+            # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)
 
         engine.dispose()

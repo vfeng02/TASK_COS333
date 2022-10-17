@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 # filter_db.py
 # Author: Andres Blanco Bonilla
-# Test db filters
+# Testing db filters
 #-----------------------------------------------------------------------
 
 import demographic_db as database
@@ -16,8 +16,7 @@ import pandas
 def main():
     selects = ["service_timestamp", "meal_site", "race", "gender",
                "age_range"]
-    filters = {"meal_site": "Trenton_Area_Soup_Kitchen", "race": ["White", "Hispanic"],
-               "gender": "Male", "age_range": "18-24"}
+    filters = {"meal_site": "Trenton_Area_Soup_Kitchen", "race": ["Hispanic", "White"]}
     df = database.get_patrons(selects, filters)
     print(tabulate(df, headers='keys', tablefmt='psql'))
     print(df)
