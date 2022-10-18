@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TASK.com</title>
+    </head>
+    <body>
+        {% include ’header.html’ %}
+        <h1>Input Data</h1>
+        <form action="/submitresult" method="get">
+            Please enter patron name:
+            <input type="text" name="patron" autofocus>
+            <input type="submit" value="Go">
+        </form>
+        <br>
+        <br>
+        <strong>Previous name entered: {{prev_name}}</strong>
+        <br>
+        <br>
+        {% include ’footer.html’ %}
+    </body>
+</html>
