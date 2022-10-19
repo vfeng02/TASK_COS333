@@ -1,7 +1,8 @@
 # TASK_COS333
 
-Information for connecting to the ElephantSQL database that stores the TASK demographic information.
-------------------------------------------------------------------------
+---
+
+Information for connecting to the ElephantSQL database that stores the TASK demographic information:
 
 Host Name: peanut.db.elephantsql.com
 

@@ -1,6 +1,6 @@
 import time
 import flask
-import demographic_db
+# import demographic_db
 
 #-----------------------------------------------------------------------
 
