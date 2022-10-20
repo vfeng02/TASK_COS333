@@ -7,7 +7,7 @@
 # for other programs to use
 #-----------------------------------------------------------------------
 
-import demographic_db as database
+# import demographic_db as database
 
 #-----------------------------------------------------------------------
 
