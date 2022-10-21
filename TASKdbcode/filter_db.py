@@ -18,7 +18,7 @@ def main():
                "age_range"]
     filters = {"meal_site": "Trenton_Area_Soup_Kitchen", "race": ["Hispanic", "White"]}
     df = database.get_patrons(selects, filters)
-    print(tabulate(df, headers='keys', tablefmt='psql'))
+    #print(tabulate(df, headers='keys', tablefmt='psql'))
     print(df)
 #-----------------------------------------------------------------------
 if __name__ == '__main__':

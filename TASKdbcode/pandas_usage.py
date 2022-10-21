@@ -7,8 +7,9 @@ if __name__ == "__main__":
     # "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
     #     "Unknown"]}
     select_fields = ["service_timestamp", "meal_site", "race",]
+    filter_dict = {}
 
-    df = get_patrons(select_fields)
+    df = get_patrons(select_fields, filter_dict)
 
     
     df[f'total_American_Indian'] = 0 
@@ -43,7 +44,8 @@ if __name__ == "__main__":
         df[f'total_White'] += df[f'{name}_White'] 
         df[f'total_Hispanic'] += df[f'{name}_Hispanic']
         df[f'total_Unknown'] += df[f'{name}_Unknown'] 
-
+    with pandas.option_context('display.max_rows', 10, 'display.max_columns', None):  # more options can be specified also
+        print(df)
 
     
 
