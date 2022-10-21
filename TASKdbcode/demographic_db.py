@@ -102,7 +102,7 @@ def get_patrons(select_fields, filter_dict):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(MealSite)
+            query = session.query(*select_fields)
             for key, value in filter_dict.items():
                 filter = {"field": key, "op" : "==", "value": value}
                 if key == "race":
@@ -111,8 +111,7 @@ def get_patrons(select_fields, filter_dict):
                         query = apply_filters(query, filter)
                 query = apply_filters(query, filter)
             # print(query)
-            demographic_df = pandas.read_sql(query.statement, session.bind,
-                                             columns = select_fields)
+            demographic_df = pandas.read_sql(query.statement, session.bind)
 
         engine.dispose()
         return demographic_df

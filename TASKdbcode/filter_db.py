@@ -16,9 +16,9 @@ import pandas
 def main():
     selects = ["service_timestamp", "meal_site", "race", "gender",
                "age_range"]
-    filters = {"meal_site": "Trenton_Area_Soup_Kitchen", "race": ["Hispanic", "White"]}
+    filters = {"meal_site": "Trenton Area Soup Kitchen", "race": ["Hispanic"]}
     df = database.get_patrons(selects, filters)
-    #print(tabulate(df, headers='keys', tablefmt='psql'))
+    print(tabulate(df, headers='keys', tablefmt='psql'))
     print(df)
 #-----------------------------------------------------------------------
 if __name__ == '__main__':
