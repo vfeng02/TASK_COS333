@@ -19,50 +19,68 @@ DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
                        "gender", "zip_code", "homeless", "veteran",\
                        "disabled", "patron_response"]
 
+# Check all that apply
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
     "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
         "Unknown"]
 
+# Primary language (not every language a person speaks)
 LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
                     "Chinese", "Creole", "Dari", "Farsi", "French",\
                     "German", "Polish", "Russian", "Swahili", "Urdu",\
-                    "Vietnamese", "Other"]
+                    "Vietnamese", "Other", "Unknown"]
 
 AGE_RANGE_OPTIONS = ["<18", "18-24", "25-34", "35-44", "45-54",\
     "55-64", ">65", "Unknown"]
 
 GENDER_OPTIONS = ["Male", "Female", "Non-Binary", "TransMale", 
-                  "TransFemale", "Other"]
+                  "TransFemale", "Other", "Unknown"]
 
-ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "00000"]
+# These are not all the zip_code options
+# Zip codes primarily come from Mercer County and Heightstown
+# but they could be anything
+ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "Unknown"]
 
-HOMELESS_OPTIONS = [True, False]
 
-VETERAN_OPTIONS = [True, False]
+HOMELESS_OPTIONS = ["True", "False", "Unknown"]
 
-DISABLED_OPTIONS = [True, False]
+VETERAN_OPTIONS = ["True", "False", "Unknown"]
+
+DISABLED_OPTIONS = ["True", "False", "Unknown"]
 
 PATRON_RESPONSE_OPTIONS = [True, False]
 
 
-MEAL_SITE_OPTIONS = ["First_Baptist_Church",\
-    "First_Presbyterian_Church_of_Hightstown",\
-    "First_United_Methodist_Church_of_Hightstown",\
-    "Holy_Apostles_Episcopal_Church",\
-    "Medallion_Care_Behavioral_Health",\
-    "Princeton_United_Methodist_Church",\
-    "Trenton_Area_Soup_Kitchen",\
-    "Rescue_Mission",\
-    "Trinity_Episcopal_Cathedral",\
-    "Trenton_Circus_Squad",\
-    "Harvest_Intercontinental_Ministries_United",\
-    "St_James_AME_Church",\
-    "Bible_Way_Cathedral_of_Deliverance",\
-    "Redding_Circle_Senior_Center",\
-    "Mercer_Behavioral_Health",\
-    "Turning_Point_United_Methodist_Church",\
-    "Princeton_Family_YMCA",\
-    "St_Lukes_Church",\
-    "Morrisville_United_Methodist_Church",\
-    "Cartet_Arms",\
-    "Masjidul_Taowa"]
+MEAL_SITE_OPTIONS = ["First Baptist Church",\
+    "First Presbyterian Church of Hightstown",\
+    "First United Methodist Church of Hightstown",\
+    "Holy Apostles Episcopal Church",\
+    "Medallion Care Behavioral Health",\
+    "Princeton United Methodist Church",\
+    "Trenton Area Soup Kitchen",\
+    "Rescue Mission",\
+    "Trinity Episcopal Cathedral",\
+    "Trenton Circus Squad",\
+    "Harvest Intercontinental Ministries United",\
+    "St James AME Church",\
+    "Bible Way Cathedral of Deliverance",\
+    "Redding Circle Senior Center",\
+    "Mercer Behavioral Health",\
+    "Turning Point United Methodist Church",\
+    "Princeton Family YMCA",\
+    "Homefront",\
+    "St Lukes Church",\
+    "Morrisville United Methodist Church",\
+    "Cartet Arms",\
+    "Masjidul Taowa",\
+    "Architects Housing",\
+    "Louis Josephson Apartments",\
+    "James J. Abbot Apartments",\
+    "J. Conner French Towers",\
+    "Luther Towers",\
+    "Cathedral Square",\
+    "North 25 Apartments",\
+    "Kingsbury Towers",\
+    "Pelletier Homes",\
+    "Independence Gardens",\
+    "City of Trenton Hotels"]
