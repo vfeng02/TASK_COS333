@@ -111,7 +111,8 @@ def get_patrons(select_fields, filter_dict):
                         query = apply_filters(query, filter)
                 query = apply_filters(query, filter)
             # print(query)
-            demographic_df = pandas.read_sql(query.statement, session.bind)
+            demographic_df = pandas.read_sql(query.statement, session.bind,
+                                             columns = select_fields)
 
         engine.dispose()
         return demographic_df
