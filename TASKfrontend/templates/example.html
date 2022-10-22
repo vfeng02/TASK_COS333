@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+
+<head>				
+	{% if new_user %}
+	{% set title_value = "Create Your Account!" %}
+	{% set button_value = "Get Started!" %}
+	{% else %}
+	{% set title_value = "Edit Your Profile!" %}
+	{% set button_value = "Submit Changes" %}
+	{% endif %}
+	<title>MealMatch | {{title_value}}</title>
+	{% include 'imports.html' %}
+</head>
+
+<body class="forceMaven">
+	{% include 'header.html' %}
+
+
+	{% if new_user %}
+	<div class="modal fade" id="newUserModal" tabindex="-1"
+				aria-labelledby="ModalLabel_newUser" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="ModalLabel_Disclaimer">
+								Disclaimer</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<p>
+								By using MealMatch, you are agreeing to allow some personal information 
+								(e.g, name, major, class year, phone number) to be shared with other users/Princeton students. <br/>
+								MealMatch is not responsible for any communication or interaction that occurs outside of the app.
+							</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary sml_button"
+							 style = "background-color: #ff9f46; color: white;"
+							 data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+	</div>
+	<script type="text/javascript">
+		$(window).on('load', function() {
+			$('#newUserModal').modal('show');
+		});
+	</script>
+	{% endif %}
+
+
+	<div class="container-fluid">
+		<div style="margin-top: 10px;">
+			<h2>{{title_value}}</h2>
+		</div>
+		<hr>
+		<form id = "profileForm" action="/submit_profile_form" method="get">
+			<table>
+				<tr>
+					<td align="right">Name:</td>
+					<td>
+						<input class="form-control profileInput" name="name" id='name' required pattern="[A-ZÀ-ÿ][-,a-zA-Z. ']+[ ]*"
+							value="{{existing_profile_info['name']}}" placeholder="First and Last Name">
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Year:</td>
+					<td>
+						<select class="form-select profileInput" name="year" required>
+							<option disabled selected hidden value="">Select your year</option>
+							{%for i in range(-1, 4)%}
+							{%set output = senior_class+i %}
+							{% if i == -1 %}
+							{%set output = "Grad Student" %}
+							{% endif %}
+							{% if senior_class+i==existing_profile_info['year'] %}
+							<option selected>{{output}}</option>
+							{% else %}
+							<option>{{output}}</option>
+							{% endif %}
+							{%endfor%}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Major:</td>
+					<td>
+						<select class="form-select profileInput" name="major" required>
+							<option disabled selected hidden value="">Choose your major</option>
+							{% for major in majors %}
+							{% if major==existing_profile_info['major'] %}
+							<option selected>{{major}}</option>
+							{% else %}
+							<option>{{major}}</option>
+							{% endif %}
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="right">Bio:</td>
+					<td>
+						<textarea class="form-control profileInput"
+							placeholder="Tell your future match some things about yourself! Any good conversation starters?"
+							name="bio">{{existing_profile_info['bio']}}</textarea>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="right">Phone Number:</td>
+					<td>
+						<input class="form-control profileInput" type="tel" name="phonenum"
+							placeholder="10 digits, no dashes etc." pattern="[0-9]{10}" required
+							value="{{existing_profile_info['phonenum']}}">
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Match Preference:</td>
+					<td>
+						<div class = 'row'>
+							<div class="btn-group btn-group-toggle col-sm-8" role="group" data-toggle = "buttons">
+
+								<!-- Old Config -->
+								<!-- <div class="btn-group" role="group" aria-label="radio toggle button group for algorithm preference"> -->
+
+								{%for option in ['Major/Year', 'Random'] %}
+									{% if option == existing_profile_info['matchpref'] %}
+										<input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-{{option}}" name="match-pref" value="{{option}}" checked>
+										{% set activityclass = 'active-button' %}
+									{% else %}
+										<input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-{{option}}" name="match-pref" value="{{option}}">
+										{% set activityclass = 'inactive-button' %}
+									{% endif %}
+									<label class="btn btn-secondary {{activityclass}}" id = "toggle-button-{{option}}" for="btn-check-{{option}}">{{option}}
+										{% if option == 'Major/Year' %}
+											{% set ttitle = "Indicate a preference to eat with people of your major and class year!" %}
+										{% else %}
+											{% set ttitle = "Indicate a preference to match with random people!" %}
+										{% endif %}
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16"
+										data-toggle="tooltip" data-bs-placement="right" title="{{ttitle}}">
+											<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+											<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 
+													3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 
+													1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 
+													0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+										</svg>  
+										<script>
+											// activate tooltips
+											$('.bi-info-circle').ready(function () {
+											$('[data-toggle="tooltip"]').tooltip()
+											})
+										</script>
+									</label>
+								{%endfor%}
+								
+							</div>
+						</div>
+					</td>
+				</tr>
+				<!-- <tr>
+					<td align="right">Recurring Requests:</td>
+					<td>
+						<div class = 'row'>
+							<div class="btn-group btn-group-toggle col-sm-8" role="group" data-toggle = "buttons">
+								<!-- Old Config -->
+								<!-- <div class="btn-group" role="group" aria-label="radio toggle button group for algorithm preference"> -->
+
+								<!-- {%for option in ['Enable', 'Disable'] %}
+								{% if option == existing_profile_info['matchpref'] %}
+								<input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-{{option}}" name="match-pref" value="{{option}}" checked>
+								<label class="btn btn-secondary active-button" id = "toggle-button-{{option}}" for="btn-check-{{option}}">{{option}}</label>
+								{%else%}
+								<input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-{{option}}" name="match-pref" value="{{option}}">
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-{{option}}">{{option}}</label>
+								{%endif%}
+								{%endfor%} -->
+<!-- 
+								<label class="toggle">
+									<span class="toggle-label">Disabled</span>
+									
+									<input class="toggle-checkbox" type="checkbox" id = 'recur' name = "FALSE">
+									<div class="toggle-switch"></div>
+									<span class="toggle-label">Enabled</span>
+								  </label>
+							</div>
+							<div class = 'col-sm-4'>
+								<button type ='button' class="btn btn-secondary inactive-recur-config" id = "config-toggle" style = 'font-size: smaller; background-color: #ff9f46;'>Configure
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16"
+									data-toggle="tooltip" data-bs-placement="right" title="Set up a request to recurringly go out for a specific mealtime on specified days. Reccomended for use by familiar users.">
+										<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+										<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+									</svg>  
+									<script>
+												// activate tooltips
+												$('.bi-info-circle').ready(function () {
+												$('[data-toggle="tooltip"]').tooltip()
+												})
+									</script>	
+								</button>			  
+								  						
+							
+							</div>
+							
+						</div>
+					</td> 
+				</tr> -->
+				<tr>
+					<td>
+					</td>
+					<td>
+						<input id='submit' class="form-control profileInput orange-moon mainButton enter-button"
+							type="submit" value="{{button_value}}">
+					</td>
+					<div>
+						{% if valid_phonenum == False %}
+						<div class="container row" id="errorBox" style="color: red">Please enter a valid US phone number.</div>
+						{% endif %}
+						<div class="container row noError" id="prefErrorBox" style="color: red">Please select a type of matching preference.</div>
+					</div>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<hr>
+</body>
+
+<script type = "text/javascript" src = "../static/js/prefmatchbuttons.js">
+</script>
+<script>
+
+	let form = document.getElementById('profileForm');
+	let matchPrefOptionSelected = false;
+	let majorPrefButton = document.getElementById("toggle-button-Major/Year");
+	let randomPrefButton = document.getElementById("toggle-button-Random");
+	let prefErrorBox = document.getElementById('prefErrorBox');
+
+
+	let initiallyActiveButtons = document.getElementsByClassName('active-button');
+	
+	if(initiallyActiveButtons.length > 0)
+		matchPrefOptionSelected = true;
+
+
+
+
+	function registerSelectedMatchPref () { 
+		
+		matchPrefOptionSelected = true; 
+		
+ }
+
+	majorPrefButton.addEventListener('click', registerSelectedMatchPref);
+	randomPrefButton.addEventListener('click', registerSelectedMatchPref);
+
+
+
+	form.addEventListener('submit', (event) => {
+		if(!matchPrefOptionSelected)
+			{
+				
+				event.preventDefault();
+				prefErrorBox.classList.remove('noError');
+				prefErrorBox.classList.add('error');
+
+			}
+	})
+	
+</script>
+
+
+<style>
+	*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.noError
+{
+	display: none;
+}
+
+.error  {
+	display: block;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #ccc;
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.toggle-checkbox:checked + .toggle-switch {
+  /* background: #56c080; */
+  	background: #ff9f46; 
+}
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 30px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+body {
+		font-weight: normal;
+	}
+
+	#mealType {
+		margin: 20px;
+		margin-top: 20px;
+
+	}
+
+</style>
+
+
+</html>
+
+
+
+<style>
+	.profileInput {
+		padding-left: 10px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+	.mainButton:hover {
+		transform: scale(1.05) perspective(1px);
+	}
+
+	
+
+	.active-button {
+		background-color: #ff9f46 !important;
+	}
+
+	.inactive-button {
+		background-color: #bbb !important;
+	}
+	
+	.special-container{
+		display: table;
+		height: 100%;
+	}
+
+	.vertical-center{
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+	.active-recur-config {
+		display: block !important;
+	}
+
+	.inactive-recur-config {
+		display: none !important;
+	}
+
+</style>

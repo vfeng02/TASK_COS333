@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TASK.com</title>
+    </head>
+    
+
+    <body class="forceMaven">
+    {% include 'header.html' %}
+    <div class="container-fluid">
+		<div style="margin-top: 10px;">
+			<h2>Enter Patron Data</h2>
+		</div>
+		<hr>
+		<form id = "patronForm" action="/submitresult" method="get">
+			<table>
+				<tr>
+					<td align="right">Race:</td>
+					<td>
+						<input class="form-select patronInput" name="race">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Language:</td>
+					<td>
+						<input class="form-select patronInput" name="language">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Age range:</td>
+					<td>
+						<input class="form-select patronInput" name="age">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Gender:</td>
+					<td>
+						<input class="form-select patronInput" name="gender">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Zip code:</td>
+					<td>
+						<input class="form-select patronInput" name="zip_code">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Homeless:</td>
+					<td>
+						<input class="form-select patronInput" name="homeless">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Veteran:</td>
+					<td>
+						<input class="form-select patronInput" name="veteran">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Disabled:</td>
+					<td>
+						<input class="form-select patronInput" name="disabled">
+					</td>
+				</tr>
+                <tr>
+					<td align="right">Patron response:</td>
+					<td>
+                        <input class="form-select patronInput" name="patron_response">
+                        <!-- <div class = 'row'>
+							<div class="btn-group btn-group-toggle col-sm-8" role="group" data-toggle = "buttons">
+                                <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-True" name="true" value="True" checked>
+                                <input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-False" name="false" value="False">
+                                <input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-False" name="false" value="Unknown">
+                            </div>
+                        </div> -->
+					</td>
+				</tr>
+                
+            </table>
+        </form>
+        {% include 'footer.html' %}
+    </div>
+</body>
+
+    <!-- <body>
+        <h1>Patron Data</h1>
+        <form action="/submitresult" method="get">
+            Meal site:
+            <input type="text" name="meal_site" autofocus>
+            <br>
+            <br>
+            Language:
+            <input type="text" name="language" autofocus>
+            <br>
+            <br>
+            Age range:
+            <input type="text" name="age" autofocus>
+            <br>
+            <br>
+            Gender:
+            <input type="text" name="gender" autofocus>
+            <br>
+            <br>
+            Zip code:
+            <input type="text" name="zipcode" autofocus>
+            <br>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <br>
+        <strong>Previous name entered: {{prev_name}}</strong>
+        <br>
+        <br>
+        {% include 'footer.html' %}
+    </body> -->
+</html>

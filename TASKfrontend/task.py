@@ -38,43 +38,41 @@ def index():
 
  #-----------------------------------------------------------------------
 
-@app.route('/form', methods=['GET'])
-def form():
-    prev_name = flask.request.cookies.get('prev_name')
-    if prev_name is None:
-        prev_name = '(None)'
+@app.route('/submitpatrondata', methods=['GET'])
+def submitpatrondata():
+    language = flask.request.cookies.get('language')
+    print(language)
 
-    html_code = flask.render_template('form.html',
+    html_code = flask.render_template('submitpatrondata.html',
     ampm=get_ampm(),
-    current_time=get_current_time(),
-    prev_name=prev_name)
+    current_time=get_current_time())
     response = flask.make_response(html_code)
     return response
 
  #-----------------------------------------------------------------------
 
-@app.route('/submitresult', methods=['GET'])
-def submit_result():
-    name = flask.request.args.get('name')
-    if name is None:
-        name = ''
-        name = name.strip()
+# @app.route('/submitresult', methods=['GET'])
+# def submit_result():
+#     name = flask.request.args.get('name')
+#     if name is None:
+#         name = ''
+#         name = name.strip()
 
-    if name == '':
-        prev_name = '(None)'
-    else:
-        prev_name = name
+#     if name == '':
+#         prev_name = '(None)'
+#     else:
+#         prev_name = name
 
-    # add_patron()
-        # submit name to the db
+#     # add_patron()
+#         # submit name to the db
 
-    html_code = flask.render_template('submitresult.html',
-        ampm=get_ampm(),
-        current_time=get_current_time(),
-        name=prev_name)
-    response = flask.make_response(html_code)
-    response.set_cookie('prev_name', prev_name)
-    return response
+#     html_code = flask.render_template('submitresult.html',
+#         ampm=get_ampm(),
+#         current_time=get_current_time(),
+#         name=prev_name)
+#     response = flask.make_response(html_code)
+#     response.set_cookie('prev_name', prev_name)
+#     return response
 
  #-----------------------------------------------------------------------
 
