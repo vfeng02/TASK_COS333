@@ -1,3 +1,9 @@
+<!-------------------------------------------------------------------------
+submitpatrondata.html
+Author: Vicky Feng
+Sets up HTML page to input patron data
+-------------------------------------------------------------------------->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +18,7 @@
 			<h2>Enter Patron Data</h2>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitresult" method="get">
+		<form id = "patronForm" action="/submitpatrondata" method="get">
 			<table>
 				<tr>
 					<td align="right">Race:</td>
@@ -75,6 +81,12 @@
                         </div> -->
 					</td>
 				</tr>
+                <tr>
+                    <td>
+						<input id='submit' class="form-control patronInput mainButton enter-button"
+							type="submit" value="Submit">
+					</td>
+                </tr>
                 
             </table>
         </form>
@@ -82,36 +94,48 @@
     </div>
 </body>
 
-    <!-- <body>
-        <h1>Patron Data</h1>
-        <form action="/submitresult" method="get">
-            Meal site:
-            <input type="text" name="meal_site" autofocus>
-            <br>
-            <br>
-            Language:
-            <input type="text" name="language" autofocus>
-            <br>
-            <br>
-            Age range:
-            <input type="text" name="age" autofocus>
-            <br>
-            <br>
-            Gender:
-            <input type="text" name="gender" autofocus>
-            <br>
-            <br>
-            Zip code:
-            <input type="text" name="zipcode" autofocus>
-            <br>
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-        <br>
-        <br>
-        <strong>Previous name entered: {{prev_name}}</strong>
-        <br>
-        <br>
-        {% include 'footer.html' %}
-    </body> -->
+<!-- <script type = "text/javascript" src = "../static/js/prefmatchbuttons.js">
+</script>
+<script>
+
+	let form = document.getElementById('patronForm');
+	let matchPrefOptionSelected = false;
+	let majorPrefButton = document.getElementById("toggle-button-Major/Year");
+	let randomPrefButton = document.getElementById("toggle-button-Random");
+	let prefErrorBox = document.getElementById('prefErrorBox');
+
+
+	let initiallyActiveButtons = document.getElementsByClassName('active-button');
+	
+	if(initiallyActiveButtons.length > 0)
+		matchPrefOptionSelected = true;
+
+
+
+
+	function registerSelectedMatchPref () { 
+		
+		matchPrefOptionSelected = true; 
+		
+ }
+
+	majorPrefButton.addEventListener('click', registerSelectedMatchPref);
+	randomPrefButton.addEventListener('click', registerSelectedMatchPref);
+
+
+
+	form.addEventListener('submit', (event) => {
+		if(!matchPrefOptionSelected)
+			{
+				
+				event.preventDefault();
+				prefErrorBox.classList.remove('noError');
+				prefErrorBox.classList.add('error');
+
+			}
+	})
+	
+</script> -->
+
+
 </html>

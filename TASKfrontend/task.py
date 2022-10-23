@@ -1,7 +1,11 @@
+from dis import dis
 import time
-import flask
+from flask import Flask, request
+from flask import render_template, make_response
 import sys
-# from demographic_db import add_patron
+sys.path.insert(0, '../TASKdbcode')
+from demographic_db import add_patron
+from database_constants import 
 # import os
 # import urllib.parse as up
 # import psycopg2
@@ -10,7 +14,7 @@ import sys
 
 #-----------------------------------------------------------------------
 
-app = flask.Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates')
 # sys.path.insert(0, '../TASKdbcode')
 # sys.path.insert(0, '/Users/vicky/Desktop/COS333/TASK_COS333/Taskdbcode')
 # DATABASE_URL = 'postgres://usqmchwx:jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R@peanut.db.elephantsql.com/usqmchwx'
@@ -30,23 +34,40 @@ def get_current_time():
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-    html_code = flask.render_template('index.html',
+    html_code = render_template('index.html',
     ampm=get_ampm(),
     current_time=get_current_time())
-    response = flask.make_response(html_code)
+    response = make_response(html_code)
     return response
 
  #-----------------------------------------------------------------------
 
 @app.route('/submitpatrondata', methods=['GET'])
 def submitpatrondata():
-    language = flask.request.cookies.get('language')
-    print(language)
+    meal_site = "First Baptist Church" #place holder, will fill in with options later
+    race = request.args.get('race')
+    language = request.args.get('language')
+    age_range = request.args.get('age_range')
+    gender = request.args.get('gender')
+    zip_code = request.args.get('zip_code')
+    homeless = request.args.get('homeless')
+    veteran = request.args.get('veteran')
+    disabled = request.args.get('disabled')
+    patron_response = request.args.get('patron_response')
 
-    html_code = flask.render_template('submitpatrondata.html',
+    patron_data = {"meal_site": meal_site, "race": race, "language": language,
+    "age_range": age_range, "gender": gender, "zip_code": zip_code, 
+    "homeless": homeless, "veteran": veteran, "disabled": disabled,
+    "patron_response": patron_response}
+
+    # add_patron(patron_data)
+    
+    print(patron_data)
+
+    html_code = render_template('submitpatrondata.html',
     ampm=get_ampm(),
     current_time=get_current_time())
-    response = flask.make_response(html_code)
+    response = make_response(html_code)
     return response
 
  #-----------------------------------------------------------------------
