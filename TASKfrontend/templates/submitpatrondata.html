@@ -23,7 +23,7 @@ Sets up HTML page to input patron data
 				<tr>
 					<td align="right">Race:</td>
 					<td>
-						<input class="form-select patronInput" name="race">
+						<input class="form-select patronInput" type="search" list = "races" name="race">
 					</td>
 				</tr>
                 <tr>
@@ -93,6 +93,12 @@ Sets up HTML page to input patron data
         {% include 'footer.html' %}
     </div>
 </body>
+
+<datalist id = "races">
+	{% for race in races %}
+	<option value={{race}}>
+	{% endfor %}
+</datalist>
 
 <!-- <script type = "text/javascript" src = "../static/js/prefmatchbuttons.js">
 </script>

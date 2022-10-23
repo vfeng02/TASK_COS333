@@ -4,8 +4,9 @@ from flask import Flask, request
 from flask import render_template, make_response
 import sys
 sys.path.insert(0, '../TASKdbcode')
-from demographic_db import add_patron
-from database_constants import 
+# from demographic_db import add_patron
+from database_constants import mealsites, languages, races, ages, genders, zip_codes
+from database_constants import HOMELESS_OPTIONS
 # import os
 # import urllib.parse as up
 # import psycopg2
@@ -65,8 +66,15 @@ def submitpatrondata():
     print(patron_data)
 
     html_code = render_template('submitpatrondata.html',
-    ampm=get_ampm(),
-    current_time=get_current_time())
+        ampm=get_ampm(),
+        current_time=get_current_time(),
+        languages = languages,
+        races = races,
+        ages = ages,
+        genders = genders,
+        zip_codes = zip_codes,
+        boolean_options = HOMELESS_OPTIONS
+        )
     response = make_response(html_code)
     return response
 
