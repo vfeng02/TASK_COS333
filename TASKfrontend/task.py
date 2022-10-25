@@ -7,18 +7,10 @@ sys.path.insert(0, '../TASKdbcode')
 # from demographic_db import add_patron
 from database_constants import mealsites, languages, races, ages, genders, zip_codes
 from database_constants import HOMELESS_OPTIONS
-# import os
-# import urllib.parse as up
-# import psycopg2
-# import contextlib
-# import demographic_db
 
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
-# sys.path.insert(0, '../TASKdbcode')
-# sys.path.insert(0, '/Users/vicky/Desktop/COS333/TASK_COS333/Taskdbcode')
-# DATABASE_URL = 'postgres://usqmchwx:jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R@peanut.db.elephantsql.com/usqmchwx'
 
 #-----------------------------------------------------------------------
 
