@@ -24,23 +24,31 @@ RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
     "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
         "Unknown"]
 
+races = sorted(RACE_OPTIONS)
+
 # Primary language (not every language a person speaks)
 LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
                     "Chinese", "Creole", "Dari", "Farsi", "French",\
                     "German", "Polish", "Russian", "Swahili", "Urdu",\
                     "Vietnamese", "Other", "Unknown"]
 
+languages = sorted(LANGUAGE_OPTIONS)
+
 AGE_RANGE_OPTIONS = ["<18", "18-24", "25-34", "35-44", "45-54",\
     "55-64", ">65", "Unknown"]
+
+ages = sorted(AGE_RANGE_OPTIONS)
 
 GENDER_OPTIONS = ["Male", "Female", "Non-Binary", "TransMale", 
                   "TransFemale", "Other", "Unknown"]
 
+genders = sorted(GENDER_OPTIONS)
 # These are not all the zip_code options
 # Zip codes primarily come from Mercer County and Heightstown
 # but they could be anything
 ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "Unknown"]
 
+zip_codes = sorted(ZIP_CODE_OPTIONS)
 
 HOMELESS_OPTIONS = ["True", "False", "Unknown"]
 
@@ -84,3 +92,5 @@ MEAL_SITE_OPTIONS = ["First Baptist Church",\
     "Pelletier Homes",\
     "Independence Gardens",\
     "City of Trenton Hotels"]
+
+mealsites = sorted(MEAL_SITE_OPTIONS)
