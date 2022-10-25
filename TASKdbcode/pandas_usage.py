@@ -9,6 +9,9 @@
 
 from demographic_db import * 
 
+def to_1D(series):
+ return pandas.Series([x for _list in series for x in _list])
+
 def main():
     # filters = {"race": ["American Indian/Alaska Native", "Asian", "Black",\
     # "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
@@ -17,8 +20,11 @@ def main():
     filter_dict = {"meal_site": "First Baptist Church"}
 
     df = get_patrons(select_fields, filter_dict)
-    num_by_race = df.groupby(df["race"].map(tuple))["service_timestamp"].count()
-    print(num_by_race.head(10))
+    print(df["race"].value_counts())
+    print(to_1D(df["race"]).value_counts())
+    
+    # num_by_race = df.groupby(df["race"].map(tuple))["service_timestamp"].count()
+    # print(num_by_race.head(10))
     
     
 
