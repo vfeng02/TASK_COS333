@@ -1,7 +1,16 @@
+#!/usr/bin/env python
+
+#-----------------------------------------------------------------------
+# task.py
+# Author: Vicky Feng and Andres Blanco Bonilla
+# Runs simple HTML form to input data into the TASK demographic database
+#-----------------------------------------------------------------------
+
 from dis import dis
 import time
 from flask import Flask, request
 from flask import render_template, make_response
+import os
 import sys
 sys.path.insert(0, '../TASKdbcode')
 from demographic_db import add_patron
@@ -49,24 +58,27 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"meal_site": meal_site, "race": race, "language": language,
+    patron_data = {"meal_site": meal_site, "race": [race], "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
 
-    # add_patron(patron_data)
+    demographic_db.add_patron(patron_data)
     
     print(patron_data)
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
-        languages = languages,
-        races = races,
-        ages = ages,
-        genders = genders,
-        zip_codes = zip_codes,
-        boolean_options = HOMELESS_OPTIONS
+        languages = database_constants.LANGUAGE_OPTIONS,
+        races = database_constants.RACE_OPTIONS,
+        ages = database_constants.AGE_RANGE_OPTIONS,
+        genders = database_constants.GENDER_OPTIONS,
+        zip_codes = database_constants.ZIP_CODE_OPTIONS,
+        homeless_options = database_constants.HOMELESS_OPTIONS,
+        veteran_options = database_constants.VETERAN_OPTIONS,
+        disabled_options = database_constants.DISABLED_OPTIONS,
+        patron_response_options = database_constants.PATRON_RESPONSE_OPTIONS
         )
     response = make_response(html_code)
     return response

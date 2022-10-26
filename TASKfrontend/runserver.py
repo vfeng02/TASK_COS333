@@ -1,4 +1,13 @@
+#!/usr/bin/env python
+
+#-----------------------------------------------------------------------
+# runserver.py
+# Author: Vicky Feng and Andres Blanco Bonilla
+# Runs the server for the simple HTML form for entry input
+#-----------------------------------------------------------------------
+
 import sys
+import os
 import argparse
 import task
 
@@ -22,6 +31,6 @@ def main():
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
-    
+
 if __name__ == '__main__':
     main()
