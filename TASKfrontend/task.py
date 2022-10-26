@@ -14,9 +14,10 @@ import os
 import sys
 sys.path.insert(0, '../TASKdbcode')
 from demographic_db import add_patron
-from database_constants import mealsites, languages, races, ages, genders, zip_codes
-from database_constants import HOMELESS_OPTIONS
-# import psycopg2
+# from database_constants import mealsites, languages, races, ages, genders, zip_codes
+# from database_constants import HOMELESS_OPTIONS
+import database_constants
+import psycopg2
 
 #-----------------------------------------------------------------------
 
@@ -63,17 +64,17 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
 
-    demographic_db.add_patron(patron_data)
+    add_patron(patron_data)
     
     print(patron_data)
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
-        languages = database_constants.LANGUAGE_OPTIONS,
-        races = database_constants.RACE_OPTIONS,
-        ages = database_constants.AGE_RANGE_OPTIONS,
-        genders = database_constants.GENDER_OPTIONS,
+        languages = database_constants.languages,
+        races = database_constants.races,
+        ages = database_constants.ages,
+        genders = database_constants.genders,
         zip_codes = database_constants.ZIP_CODE_OPTIONS,
         homeless_options = database_constants.HOMELESS_OPTIONS,
         veteran_options = database_constants.VETERAN_OPTIONS,
