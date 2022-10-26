@@ -21,7 +21,7 @@ DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
 
 # Check all that apply
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
-    "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
+    "Native Hawaiian/Pacific Islander", "White/Caucasian", "Hispanic",\
         "Unknown"]
 
 races = sorted(RACE_OPTIONS)
