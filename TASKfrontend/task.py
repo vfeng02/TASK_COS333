@@ -10,13 +10,13 @@ from dis import dis
 import time
 from flask import Flask, request
 from flask import render_template, make_response
+import os
 import sys
 
-from TASKdbcode import demographic_db
-from TASKdbcode import database_constants
+sys.path.append("..")
 
-# import mealsites, languages, races, ages, genders, zip_codes
-# from TASK_COS333/TASKdbcode/database_constants import HOMELESS_OPTIONS
+from TASKdbcode import database_constants
+from TASKdbcode import demographic_db
 
 #-----------------------------------------------------------------------
 
@@ -70,12 +70,12 @@ def submitpatrondata():
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
-        languages = database_constants.LANGUAGES,
+        languages = database_constants.LANGUAGE_OPTIONS,
         races = database_constants.RACE_OPTIONS,
         ages = database_constants.AGE_RANGE_OPTIONS,
         genders = database_constants.GENDER_OPTIONS,
-        zip_codes = ZIP_CODE_OPTIONS,
-        boolean_options = HOMELESS_OPTIONS
+        zip_codes = database_constants.ZIP_CODE_OPTIONS,
+        boolean_options = database_constants.HOMELESS_OPTIONS
         )
     response = make_response(html_code)
     return response

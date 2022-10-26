@@ -4,7 +4,7 @@
 # demographic_database.py
 # Author: Andres Blanco Bonilla
 # Sets up TASK database table classes for SQLAlchemy to use
-#----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 import sys
 import pandas
@@ -16,7 +16,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
-from database_constants import DATABASE_URL
+from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
     check_password_hash
@@ -68,7 +68,7 @@ def add_patron(input_dict):
     if not input_dict["zip_code"]:
         input_dict["zip_code"] = "00000"
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        engine = sqlalchemy.create_engine(database_constants.DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # demographics = {}
