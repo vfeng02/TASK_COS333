@@ -14,41 +14,70 @@ import database_constants as database
 def to_1D(series):
  return pandas.Series([x for _list in series for x in _list])
 
+# To do: modularize coe
+def demographic_distribution(demographic, meal_site = None):
+    pass
+
 def main():
-    # filters = {"race": ["American Indian/Alaska Native", "Asian", "Black",\
-    # "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
-    #     "Unknown"]}
+    
     select_fields = ["service_timestamp", "meal_site", "race",]
+    # for name, group in df.groupby("meal_site")
     # filter_dict = {"meal_site": "First Baptist Church"}
     filter_dict = {}
 
     df = get_patrons(select_fields, filter_dict)
-    #print(df)
     # create a data frame dictionary to store your data frames
-    # mealsites = df.meal_site.unique()
     DataFrameDict = {elem: pandas.DataFrame() for elem in database.MEAL_SITE_OPTIONS}
 
     for key in DataFrameDict.keys():
         DataFrameDict[key] = df[:][df.meal_site == key]
     
-    #print(DataFrameDict["First Baptist Church"])
+  
+    # for meal_site in database.MEAL_SITE_OPTIONS:
+    #     print(DataFrameDict[meal_site]["race"].value_counts(normalize=True))
+    #     print(DataFrameDict[meal_site]["race"].value_counts().to_string(dtype = False))
+    #     print()
+    
     for meal_site in database.MEAL_SITE_OPTIONS:
+        site_df =  DataFrameDict[meal_site]
+        mask_condition = site_df["race"].map(len) == 1
+        site_df_multi = site_df[~mask_condition]
+        site_df = site_df[mask_condition]
+        single_counts = site_df["race"].value_counts()
+        multi_count = pandas.Series([len(site_df_multi.index)], ["[Other]"])
+        summary_counts = pandas.concat([single_counts, multi_count])
+        multi_counts = site_df_multi["race"].value_counts()
         print(meal_site)
         print("-------------------------------------------------------")
-        # print(DataFrameDict[meal_site]["race"].value_counts(normalize=True))
-        print(DataFrameDict[meal_site]["race"].value_counts().to_string(dtype = False))
-        print()
-
+        print(summary_counts.to_string(dtype = False))
+        print("\nOther Breakdown")
+        print(multi_counts.to_string(dtype = False))
+        print("\n\n")
         
-    #print(df["race"].value_counts())
+        
+
+
+    # print(DataFrameDict["First Baptist Church"])
+    firstdf = DataFrameDict["First Baptist Church"]
+   
+
+    # print(firstdfs["race"].value_counts(normalize=True).to_string(dtype = False))
+    # print(to_1D(firstdf["race"]))
+    # good
+
+    print()
+    
     print(to_1D(df["race"]).value_counts())
+    
+    
+    
+    
+    
+    
     
     # num_by_race = df.groupby(df["race"].map(tuple))["service_timestamp"].count()
     # print(num_by_race.head(10))
-    
-    
 
-    
     # df[f'total_American_Indian'] = 0 
     # df[f'total_Asian'] = 0 
     # df[f'total_Black'] = 0 
