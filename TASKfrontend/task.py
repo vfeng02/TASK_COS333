@@ -4,9 +4,10 @@ from flask import Flask, request
 from flask import render_template, make_response
 import sys
 sys.path.insert(0, '../TASKdbcode')
-# from demographic_db import add_patron
+from demographic_db import add_patron
 from database_constants import mealsites, languages, races, ages, genders, zip_codes
 from database_constants import HOMELESS_OPTIONS
+# import psycopg2
 
 #-----------------------------------------------------------------------
 
