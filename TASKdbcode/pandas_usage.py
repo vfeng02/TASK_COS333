@@ -40,34 +40,60 @@ def main():
     
     for meal_site in database.MEAL_SITE_OPTIONS:
         site_df =  DataFrameDict[meal_site]
+        num_entries = len(site_df.index)
         mask_condition = site_df["race"].map(len) == 1
         site_df_multi = site_df[~mask_condition]
         site_df = site_df[mask_condition]
         single_counts = site_df["race"].value_counts()
-        multi_count = pandas.Series([len(site_df_multi.index)], ["[Other]"])
+        num_multi = len(site_df_multi.index)
+        multi_count = pandas.Series([num_multi], ["[Other]"])
         summary_counts = pandas.concat([single_counts, multi_count])
         multi_counts = site_df_multi["race"].value_counts()
+        
+        # print percents instead of raw count
+        summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
+        multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
+        
         print(meal_site)
         print("-------------------------------------------------------")
         print(summary_counts.to_string(dtype = False))
         print("\nOther Breakdown")
         print(multi_counts.to_string(dtype = False))
         print("\n\n")
-        
-        
 
+    site_df = df
+    num_entries = len(site_df.index)
+    mask_condition = site_df["race"].map(len) == 1
+    site_df_multi = site_df[~mask_condition]
+    site_df = site_df[mask_condition]
+    single_counts = site_df["race"].value_counts()
+    num_multi = len(site_df_multi.index)
+    multi_count = pandas.Series([num_multi], ["[Other]"])
+    summary_counts = pandas.concat([single_counts, multi_count])
+    multi_counts = site_df_multi["race"].value_counts()
+        
+    # print percents instead of raw count
+    summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
+    multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
+    
+    print("All Meal Sites")
+    print("-------------------------------------------------------")
+    print(summary_counts.to_string(dtype = False))
+    print("\nOther Breakdown")
+    print(multi_counts.to_string(dtype = False))
+    print("\n\n")
 
     # print(DataFrameDict["First Baptist Church"])
-    firstdf = DataFrameDict["First Baptist Church"]
+    # firstdf = DataFrameDict["First Baptist Church"]
    
 
     # print(firstdfs["race"].value_counts(normalize=True).to_string(dtype = False))
     # print(to_1D(firstdf["race"]))
     # good
 
-    print()
+    # print()
     
-    print(to_1D(df["race"]).value_counts())
+    # print(to_1D(df["race"]).value_counts())
     
     
     
