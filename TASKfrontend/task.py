@@ -58,7 +58,7 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"meal_site": meal_site, "race": race, "language": language,
+    patron_data = {"meal_site": meal_site, "race": [race], "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
@@ -75,7 +75,10 @@ def submitpatrondata():
         ages = database_constants.AGE_RANGE_OPTIONS,
         genders = database_constants.GENDER_OPTIONS,
         zip_codes = database_constants.ZIP_CODE_OPTIONS,
-        boolean_options = database_constants.HOMELESS_OPTIONS
+        homeless_options = database_constants.HOMELESS_OPTIONS,
+        veteran_options = database_constants.VETERAN_OPTIONS,
+        disabled_options = database_constants.DISABLED_OPTIONS,
+        patron_response_options = database_constants.PATRON_RESPONSE_OPTIONS
         )
     response = make_response(html_code)
     return response

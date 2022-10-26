@@ -23,25 +23,25 @@ Sets up HTML page to input patron data
 				<tr>
 					<td align="right">Race:</td>
 					<td>
-						<input class="form-select patronInput" type="search" list = "races" name="race">
+						<input class="form-select patronInput" type="search" name="race" list = "races">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Language:</td>
 					<td>
-						<input class="form-select patronInput" name="language">
+						<input class="form-select patronInput" name="language" list = "languages">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Age range:</td>
 					<td>
-						<input class="form-select patronInput" name="age">
+						<input class="form-select patronInput" name="age_range" list = "ages">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Gender:</td>
 					<td>
-						<input class="form-select patronInput" name="gender">
+						<input class="form-select patronInput" name="gender" list = "genders">
 					</td>
 				</tr>
                 <tr>
@@ -53,25 +53,25 @@ Sets up HTML page to input patron data
                 <tr>
 					<td align="right">Homeless:</td>
 					<td>
-						<input class="form-select patronInput" name="homeless">
+						<input class="form-select patronInput" name="homeless" list = "homeless_options">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Veteran:</td>
 					<td>
-						<input class="form-select patronInput" name="veteran">
+						<input class="form-select patronInput" name="veteran" list = "veteran_options">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Disabled:</td>
 					<td>
-						<input class="form-select patronInput" name="disabled">
+						<input class="form-select patronInput" name="disabled" list = "disabled_options">
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Patron response:</td>
 					<td>
-                        <input class="form-select patronInput" name="patron_response">
+                        <input class="form-select patronInput" name="patron_response" list = "patron_response_options">
                         <!-- <div class = 'row'>
 							<div class="btn-group btn-group-toggle col-sm-8" role="group" data-toggle = "buttons">
                                 <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-True" name="true" value="True" checked>
@@ -97,6 +97,48 @@ Sets up HTML page to input patron data
 <datalist id = "races">
 	{% for race in races %}
 	<option value={{race}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "languages">
+	{% for language in languages %}
+	<option value={{language}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "genders">
+	{% for gender in genders %}
+	<option value={{gender}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "ages">
+	{% for age in ages %}
+	<option value={{age}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "homeless_options">
+	{% for h_option in homeless_options %}
+	<option value={{h_option}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "veteran_options">
+	{% for v_option in homeless_options %}
+	<option value={{v_option}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "disabled_options">
+	{% for d_option in homeless_options %}
+	<option value={{d_option}}>
+	{% endfor %}
+</datalist>
+
+<datalist id = "patron_response_options">
+	{% for pr_option in homeless_options %}
+	<option value={{pr_option}}>
 	{% endfor %}
 </datalist>
 

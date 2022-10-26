@@ -16,13 +16,17 @@ from sqlalchemy.dialects.postgresql import ARRAY
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
-from TASKdbcode import database_constants
+# from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
     check_password_hash
 
 
 Base = declarative_base()
+
+DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
+                "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
+                "@peanut.db.elephantsql.com/usqmchwx")
 
 # This is the base model for both types of Users in the database
 # Both types of Users inherit these fields
@@ -59,16 +63,19 @@ class MealSite(Base):
     homeless = Column(String(7))
     veteran = Column(String(7))
     disabled = Column(String(7))
-    patron_response = Column(Boolean())
+    patron_response = Column(String(7))
 
 Base.registry.configure()
 #-----------------------------------------------------------------------
 
 def add_patron(input_dict):
-    if not input_dict["zip_code"]:
-        input_dict["zip_code"] = "00000"
+    
+    for key in input_dict:
+        if not input_dict[key]:
+            input_dict[key] = "Unknown"
+
     try:
-        engine = sqlalchemy.create_engine(database_constants.DATABASE_URL)
+        engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # demographics = {}
