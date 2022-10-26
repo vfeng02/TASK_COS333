@@ -7,7 +7,9 @@
 #-----------------------------------------------------------------------
 
 
-from demographic_db import * 
+from numpy import dtype
+from demographic_db import *
+import database_constants as database
 
 def to_1D(series):
  return pandas.Series([x for _list in series for x in _list])
@@ -17,10 +19,28 @@ def main():
     # "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
     #     "Unknown"]}
     select_fields = ["service_timestamp", "meal_site", "race",]
-    filter_dict = {"meal_site": "First Baptist Church"}
+    # filter_dict = {"meal_site": "First Baptist Church"}
+    filter_dict = {}
 
     df = get_patrons(select_fields, filter_dict)
-    print(df["race"].value_counts())
+    #print(df)
+    # create a data frame dictionary to store your data frames
+    # mealsites = df.meal_site.unique()
+    DataFrameDict = {elem: pandas.DataFrame() for elem in database.MEAL_SITE_OPTIONS}
+
+    for key in DataFrameDict.keys():
+        DataFrameDict[key] = df[:][df.meal_site == key]
+    
+    #print(DataFrameDict["First Baptist Church"])
+    for meal_site in database.MEAL_SITE_OPTIONS:
+        print(meal_site)
+        print("-------------------------------------------------------")
+        # print(DataFrameDict[meal_site]["race"].value_counts(normalize=True))
+        print(DataFrameDict[meal_site]["race"].value_counts().to_string(dtype = False))
+        print()
+
+        
+    #print(df["race"].value_counts())
     print(to_1D(df["race"]).value_counts())
     
     # num_by_race = df.groupby(df["race"].map(tuple))["service_timestamp"].count()
