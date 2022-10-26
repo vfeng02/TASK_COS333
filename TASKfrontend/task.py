@@ -1,12 +1,22 @@
+#!/usr/bin/env python
+
+#-----------------------------------------------------------------------
+# task.py
+# Author: Vicky Feng and Andres Blanco Bonilla
+# Runs simple HTML form to input data into the TASK demographic database
+#-----------------------------------------------------------------------
+
 from dis import dis
 import time
 from flask import Flask, request
 from flask import render_template, make_response
 import sys
-sys.path.insert(0, '../TASKdbcode')
-# from demographic_db import add_patron
-from database_constants import mealsites, languages, races, ages, genders, zip_codes
-from database_constants import HOMELESS_OPTIONS
+
+from TASKdbcode import demographic_db
+from TASKdbcode import database_constants
+
+# import mealsites, languages, races, ages, genders, zip_codes
+# from TASK_COS333/TASKdbcode/database_constants import HOMELESS_OPTIONS
 
 #-----------------------------------------------------------------------
 
@@ -53,18 +63,18 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
 
-    # add_patron(patron_data)
+    demographic_db.add_patron(patron_data)
     
     print(patron_data)
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
-        languages = languages,
-        races = races,
-        ages = ages,
-        genders = genders,
-        zip_codes = zip_codes,
+        languages = database_constants.LANGUAGES,
+        races = database_constants.RACE_OPTIONS,
+        ages = database_constants.AGE_RANGE_OPTIONS,
+        genders = database_constants.GENDER_OPTIONS,
+        zip_codes = ZIP_CODE_OPTIONS,
         boolean_options = HOMELESS_OPTIONS
         )
     response = make_response(html_code)

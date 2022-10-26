@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 # pandas_usage.py
 # Author: Rohan Amin and Andres Blanco Bonilla
-# Sets up TASK database table classes for SQLAlchemy to use
+# Tests using pandas to generate demographic stats about race
 #-----------------------------------------------------------------------
 
 
