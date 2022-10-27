@@ -8,10 +8,11 @@ Sets up HTML page to input patron data
 <html>
     <head>
         <title>TASK.com</title>
+		{% include 'imports.html' %}
     </head>
     
 
-    <body class="forceMaven">
+    <body class="forceOpenSans">
     {% include 'header.html' %}
     <div class="container-fluid">
 		<div style="margin-top: 10px;">
@@ -53,38 +54,67 @@ Sets up HTML page to input patron data
                 <tr>
 					<td align="right">Homeless:</td>
 					<td>
-						<input class="form-select patronInput" name="homeless" list = "homeless_options">
+						<div class = 'row'>
+							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
+								{%for option in ['True', 'False', 'Unknown'] %}
+								<input type="radio" class="btn-check form-control patronInput" id="btn-check-homeless-{{option}}" name="homeless" value={{option}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-homeless-{{option}}">{{option}} </label>
+								{%endfor%}
+                            </div>
+                        </div>
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Veteran:</td>
 					<td>
-						<input class="form-select patronInput" name="veteran" list = "veteran_options">
+						<div class = 'row'>
+							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
+								{%for option in ['True', 'False', 'Unknown'] %}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{option}}" name="veteran" value={{option}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-veteran-{{option}}">{{option}} </label>
+								{%endfor%}
+                            </div>
+                        </div>
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Disabled:</td>
 					<td>
-						<input class="form-select patronInput" name="disabled" list = "disabled_options">
+						<div class = 'row'>
+							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
+								{%for option in ['True', 'False', 'Unknown'] %}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{option}}" name="disabled" value={{option}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-disabled-{{option}}">{{option}} </label>
+								{%endfor%}
+                            </div>
+                        </div>
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Patron response:</td>
 					<td>
-                        <input class="form-select patronInput" name="patron_response" list = "patron_response_options">
-                        <!-- <div class = 'row'>
-							<div class="btn-group btn-group-toggle col-sm-8" role="group" data-toggle = "buttons">
-                                <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-True" name="true" value="True" checked>
-                                <input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-False" name="false" value="False">
-                                <input type="radio" class="btn-check form-control profileInput mainButton" id="btn-check-False" name="false" value="Unknown">
+                        <div class = 'row'>
+							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
+								{%for option in ['True', 'False'] %}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-presp-{{option}}" name="patron_response" value={{option}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-presp-{{option}}">{{option}} </label>
+								{%endfor%}
                             </div>
-                        </div> -->
+                        </div>
 					</td>
 				</tr>
                 <tr>
                     <td>
 						<input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
+					</td>
+					<td>
+						<input id='switch' class="form-control patronInput mainButton enter-button" 
+						 type="button" onclick="location.href='/selectmealsite';" value="Switch Mealsite">
+					</td>
+					<td>
+						<input id='logout' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="location.href='/index';" value="Log out">
 					</td>
                 </tr>
                 
@@ -118,7 +148,7 @@ Sets up HTML page to input patron data
 	{% endfor %}
 </datalist>
 
-<datalist id = "homeless_options">
+<!-- <datalist id = "homeless_options">
 	{% for h_option in homeless_options %}
 	<option value={{h_option}}>
 	{% endfor %}
@@ -140,50 +170,68 @@ Sets up HTML page to input patron data
 	{% for pr_option in homeless_options %}
 	<option value={{pr_option}}>
 	{% endfor %}
-</datalist>
+</datalist> -->
 
-<!-- <script type = "text/javascript" src = "../static/js/prefmatchbuttons.js">
-</script>
+<!-- <script type = "text/javascript" src = "../static/js/patrondatabuttons.js"></script>
 <script>
-
 	let form = document.getElementById('patronForm');
-	let matchPrefOptionSelected = false;
-	let majorPrefButton = document.getElementById("toggle-button-Major/Year");
-	let randomPrefButton = document.getElementById("toggle-button-Random");
+	let patronResponseSelected = false;
+	let trueButton = document.getElementById("toggle-button-True");
+	let falseButton = document.getElementById("toggle-button-False");
+	let unknownButton = document.getElementById("toggle-button-Unknown");
 	let prefErrorBox = document.getElementById('prefErrorBox');
 
 
 	let initiallyActiveButtons = document.getElementsByClassName('active-button');
 	
 	if(initiallyActiveButtons.length > 0)
-		matchPrefOptionSelected = true;
+		optionSelected = true;
 
+	function registerSelected () { 
+		optionSelected = true; 	
+ 	}
 
-
-
-	function registerSelectedMatchPref () { 
-		
-		matchPrefOptionSelected = true; 
-		
- }
-
-	majorPrefButton.addEventListener('click', registerSelectedMatchPref);
-	randomPrefButton.addEventListener('click', registerSelectedMatchPref);
-
-
+	trueButton.addEventListener('click', registerSelected);
+	falseButton.addEventListener('click', registerSelected);
+	unknownButton.addEventListener('click', registerSelected);
 
 	form.addEventListener('submit', (event) => {
-		if(!matchPrefOptionSelected)
+		if(!optionSelected)
 			{
-				
 				event.preventDefault();
 				prefErrorBox.classList.remove('noError');
 				prefErrorBox.classList.add('error');
-
 			}
-	})
-	
-</script> -->
-
+	}) </script> -->
 
 </html>
+
+<style>
+	.active-button {
+		background-color: #ff9f46;
+	}
+
+	.inactive-button {
+		background-color: #bbb;
+	}
+	
+	.special-container{
+		display: table;
+		height: 100%;
+	}
+
+	.vertical-center{
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+	.active-recur-config {
+		display: block !important;
+	}
+
+	.inactive-recur-config {
+		display: none !important;
+	}
+
+</style>

@@ -13,7 +13,7 @@ from flask import render_template, make_response
 import os
 import sys
 sys.path.insert(0, '../TASKdbcode')
-from demographic_db import add_patron
+import demographic_db
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import database_constants
@@ -46,9 +46,23 @@ def index():
 
  #-----------------------------------------------------------------------
 
+@app.route('/selectmealsite', methods=['GET'])
+def selectmealsite():
+    global _mealsite 
+    _mealsite = request.args.get('mealsite')
+
+    html_code = render_template('selectmealsite.html',
+        ampm=get_ampm(),
+        current_time=get_current_time(),
+        mealsites = database_constants.mealsites)
+
+    response = make_response(html_code)
+    return response
+ #-----------------------------------------------------------------------
+
 @app.route('/submitpatrondata', methods=['GET'])
 def submitpatrondata():
-    meal_site = "First Baptist Church" #place holder, will fill in with options later
+    print(_mealsite)
     race = request.args.get('race')
     language = request.args.get('language')
     age_range = request.args.get('age_range')
@@ -59,12 +73,12 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"meal_site": meal_site, "race": [race], "language": language,
+    patron_data = {"meal_site": _mealsite, "race": [race], "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
 
-    add_patron(patron_data)
+    # demographic_db.add_patron(patron_data)
     
     print(patron_data)
 
@@ -83,6 +97,25 @@ def submitpatrondata():
         )
     response = make_response(html_code)
     return response
+
+ #-----------------------------------------------------------------------
+
+@app.route('/admindisplaydata', methods=['GET'])
+def admindisplaydata():
+
+    selects = ["service_timestamp", "meal_site", "race", "gender",
+               "age_range"]
+    filters = {"meal_site": "Trenton Area Soup Kitchen", "race": ["Hispanic"]}
+    df = demographic_db.get_patrons(selects, filters)
+
+    html_code = render_template('admindisplaydata.html',
+        ampm=get_ampm(),
+        current_time=get_current_time(),
+        data = df)
+
+    response = make_response(html_code)
+    return response
+
 
  #-----------------------------------------------------------------------
 

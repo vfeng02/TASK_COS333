@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TASK.com</title>
+        {% include 'imports.html' %}
+    </head>
+    <body>
+        {% include 'header.html' %}
+        <h1>Select Mealsite</h1>
+        <br>
+        <form action="/submitpatrondata" method="get">
+            <table>
+                <tr>
+                    <td align="right">Mealsite:</td>
+                    <td>
+                        <input type="search" name="mealsite" list = "mealsites">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id='go' type= "submit" value="Go">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+        {% include 'footer.html' %}
+    </body>
+</html>
+
+<datalist id = "mealsites">
+	{% for site in mealsites %}
+	<option value={{site}}>
+	{% endfor %}
+</datalist>
