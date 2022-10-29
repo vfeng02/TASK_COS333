@@ -15,7 +15,7 @@ from dash import html
 
 import demographic_db
 
-PAGE_SIZE = 5
+PAGE_SIZE = 50
 operators = [['ge ', '>='],
                  ['le ', '<='],
                  ['lt ', '<'],
@@ -39,15 +39,10 @@ def init_dashboard(server):
     dash_app.layout = dash_table.DataTable(
         id='table-filtering',
         columns=[
-            {"name": i, "id": i, "presentation": "markdown"} for i in df.columns
+            {"name": i, "id": i} for i in df.columns
             
         ],
-        markdown_options = {"dangerously_allow_html": True},
        # style_as_list_view = True,
-        css=[
-            dict(selector='table', rule='font-family: Courier New;'),
-            dict(selector='table', rule='text-align: left;')
-        ],
         page_current=0,
         page_size=PAGE_SIZE,
         page_action='custom',
