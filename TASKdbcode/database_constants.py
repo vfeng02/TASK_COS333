@@ -20,8 +20,9 @@ DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
                        "disabled", "patron_response"]
 
 # Check all that apply
+# Maybe display White as White/Caucasian
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
-    "Native Hawaiian/Pacific Islander", "White/Caucasian", "Hispanic",\
+    "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
         "Unknown"]
 
 races = sorted(RACE_OPTIONS)
@@ -56,7 +57,7 @@ VETERAN_OPTIONS = ["True", "False", "Unknown"]
 
 DISABLED_OPTIONS = ["True", "False", "Unknown"]
 
-PATRON_RESPONSE_OPTIONS = [True, False]
+PATRON_RESPONSE_OPTIONS = ["True", "False"]
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\

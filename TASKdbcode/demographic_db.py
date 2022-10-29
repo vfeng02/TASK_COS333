@@ -55,7 +55,7 @@ class MealSite(Base):
     __tablename__ = "meal_sites"
     service_timestamp = Column(DateTime, primary_key = True)
     meal_site = Column(String(), primary_key = True)
-    race = Column(ARRAY(String))
+    race = Column(String())
     language = Column(String())
     age_range = Column(String(7))
     gender = Column(String())
@@ -63,7 +63,7 @@ class MealSite(Base):
     homeless = Column(String(7))
     veteran = Column(String(7))
     disabled = Column(String(7))
-    patron_response = Column(String(7))
+    patron_response = Column(String(5))
 
 Base.registry.configure()
 #-----------------------------------------------------------------------
@@ -100,8 +100,8 @@ def get_patrons(select_fields, filter_dict):
     filter_dict = {key:value for (key, value) in\
                    filter_dict.items() if value}
 
-    select_fields = [getattr(MealSite, field) for\
-        field in select_fields]
+    # select_fields = [getattr(MealSite, field) for\
+    #     field in select_fields]
     
     
     try:
@@ -109,7 +109,8 @@ def get_patrons(select_fields, filter_dict):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(*select_fields)
+            query = session.query(MealSite)
+            # query = session.query(*select_fields)
             for key, value in filter_dict.items():
                 filter = {"field": key, "op" : "==", "value": value}
                 if key == "race":

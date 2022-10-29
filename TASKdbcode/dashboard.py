@@ -39,13 +39,14 @@ def init_dashboard(server):
     dash_app.layout = dash_table.DataTable(
         id='table-filtering',
         columns=[
-            {"name": i, "id": i} for i in df.columns
+            {"name": i, "id": i, "presentation": "markdown"} for i in df.columns
             
         ],
-        style_as_list_view = True,
+        markdown_options = {"dangerously_allow_html": True},
+       # style_as_list_view = True,
         css=[
-            dict(selector='td table', rule='font-family: Courier New;'),
-            dict(selector='td table', rule='text-align: left;')
+            dict(selector='table', rule='font-family: Courier New;'),
+            dict(selector='table', rule='text-align: left;')
         ],
         page_current=0,
         page_size=PAGE_SIZE,

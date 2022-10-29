@@ -8,8 +8,10 @@
 
 
 from numpy import dtype
+from sqlalchemy import true
 from demographic_db import *
 import database_constants as database
+import matplotlib
 
 def to_1D(series):
  return pandas.Series([x for _list in series for x in _list])
@@ -38,28 +40,28 @@ def main():
     #     print(DataFrameDict[meal_site]["race"].value_counts().to_string(dtype = False))
     #     print()
     
-    for meal_site in database.MEAL_SITE_OPTIONS:
-        site_df =  DataFrameDict[meal_site]
-        num_entries = len(site_df.index)
-        mask_condition = site_df["race"].map(len) == 1
-        site_df_multi = site_df[~mask_condition]
-        site_df = site_df[mask_condition]
-        single_counts = site_df["race"].value_counts()
-        num_multi = len(site_df_multi.index)
-        multi_count = pandas.Series([num_multi], ["[Other]"])
-        summary_counts = pandas.concat([single_counts, multi_count])
-        multi_counts = site_df_multi["race"].value_counts()
+    # for meal_site in database.MEAL_SITE_OPTIONS:
+    #     site_df =  DataFrameDict[meal_site]
+    #     num_entries = len(site_df.index)
+    #     mask_condition = site_df["race"].map(len) == 1
+    #     site_df_multi = site_df[~mask_condition]
+    #     site_df = site_df[mask_condition]
+    #     single_counts = site_df["race"].value_counts()
+    #     num_multi = len(site_df_multi.index)
+    #     multi_count = pandas.Series([num_multi], ["[Other]"])
+    #     summary_counts = pandas.concat([single_counts, multi_count])
+    #     multi_counts = site_df_multi["race"].value_counts()
         
-        # print percents instead of raw count
-        summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
-        multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
+    #     # print percents instead of raw count
+    #     summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
+    #     multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
         
-        print(meal_site)
-        print("-------------------------------------------------------")
-        print(summary_counts.to_string(dtype = False))
-        print("\nOther Breakdown")
-        print(multi_counts.to_string(dtype = False))
-        print("\n\n")
+    #     print(meal_site)
+    #     print("-------------------------------------------------------")
+    #     print(summary_counts.to_string(dtype = False))
+    #     print("\nOther Breakdown")
+    #     print(multi_counts.to_string(dtype = False))
+    #     print("\n\n")
 
     site_df = df
     num_entries = len(site_df.index)
@@ -76,12 +78,18 @@ def main():
     summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
     multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
     
-    print("All Meal Sites")
-    print("-------------------------------------------------------")
-    print(summary_counts.to_string(dtype = False))
-    print("\nOther Breakdown")
-    print(multi_counts.to_string(dtype = False))
-    print("\n\n")
+    summary_counts.plot.pie()
+    
+    matplotlib.pyplot.show(block=True)
+    
+    
+    
+    # print("All Meal Sites")
+    # print("-------------------------------------------------------")
+    # print(summary_counts.to_string(dtype = False))
+    # print("\nOther Breakdown")
+    # print(multi_counts.to_string(dtype = False))
+    # print("\n\n")
 
     # print(DataFrameDict["First Baptist Church"])
     # firstdf = DataFrameDict["First Baptist Church"]

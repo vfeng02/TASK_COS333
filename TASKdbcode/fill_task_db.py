@@ -68,11 +68,14 @@ def generate_demographics():
         if demographic == "race":
             race_options = getattr(database_constants, options_string)
             num_races = random.randint(1, 2)
-            random_fields[demographic] = random.sample(race_options,\
+            random_fields["race"] = random.sample(race_options,\
                 num_races)
-            if "Unknown" in random_fields[demographic]\
+            if "Unknown" in random_fields["race"]\
                 and num_races > 1:
-                random_fields[demographic].remove("Unknown")
+                random_fields["race"].remove("Unknown")
+            random_fields["race"].sort()
+            random_fields["race"] = ",".join(random_fields["race"])
+            
         else:
             random_fields[demographic] = random.choice\
             (getattr(database_constants, options_string))
