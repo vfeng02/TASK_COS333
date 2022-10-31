@@ -66,8 +66,6 @@ def init_callbacks(graph_app):
         fig1=go.Figure(data=[go.Pie(labels=df3[select_d2].value_counts().index.tolist(),
                             values=list(df3[select_d2].value_counts()))])
         ## customizing the title of the pie chart
-        names={'sex':'Sex','risk':'Case Origin'}
-        # title_att=names.get(select_d2)
         fig1.update_layout(title=
             f"{select_d2.title()} of Patrons at {select_d1}"
                         " Meal Site")
