@@ -136,7 +136,7 @@ def filter_dm(filter_dict):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(MealSite)
+            query = session.query(MealSite).order_by(MealSite.service_timestamp.desc())
             if filter_dict:
                 query = apply_filters(query, filter_dict)
             demographic_df = pandas.read_sql(query.statement, session.bind)

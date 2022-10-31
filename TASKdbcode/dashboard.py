@@ -47,7 +47,11 @@ def init_dashboard(server):
         page_action='custom',
 
         filter_action='custom',
-        filter_query=''
+        filter_query='',
+        
+        sort_action='custom',
+        sort_mode='multi',
+        sort_by=[]
     )
 
     init_callbacks(dash_app)
@@ -88,8 +92,9 @@ def init_callbacks(dash_app):
         Output('table-filtering', "data"),
         Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
+        Input('table-filtering', 'sort_by'),
         Input('table-filtering', "filter_query"))
-    def update_table(page_current, page_size, filter):
+    def update_table(page_current, page_size, sort_by, filter):
         print(filter)
         filtering_expressions = filter.split(' && ')
         dff = None
@@ -117,6 +122,16 @@ def init_callbacks(dash_app):
             #     # only works with complete fields in standard format
             #     dff = dff.loc[dff[col_name].str.startswith(
             #         filter_value)]
+            
+        if sort_by:
+            dff = dff.sort_values(
+                [col['column_id'] for col in sort_by],
+                ascending=[
+                    col['direction'] == 'asc'
+                    for col in sort_by
+                ],
+                inplace=False
+            )
 
         return dff.iloc[
             page_current*page_size:(page_current + 1)*page_size
