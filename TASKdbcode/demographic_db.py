@@ -138,11 +138,6 @@ def filter_dm(filter_dict):
             # Keep the filters that were entered in the dict
             query = session.query(MealSite)
             if filter_dict:
-                if filter_dict["op"] == "contains":
-                    filter_dict["op"] = "ilike"
-                    filter_dict["value"] = "%" + filter_dict["value"] + "%"
-                if filter_dict["op"] == "=":
-                    filter_dict["op"] = "=="
                 query = apply_filters(query, filter_dict)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         engine.dispose()

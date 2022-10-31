@@ -69,18 +69,20 @@ def split_filter_part(filter_part):
                     value = value_part[1: -1].replace('\\' + v0, v0)
                 else:
                     try:
-                        value = float(value_part)
+                        value = int(value_part)
                     except ValueError:
                         value = value_part
 
                 # word operators need spaces after them in the filter string,
                 # but we don't want these later
                 return {"field": name, "op": operator_type[0].strip(),\
-                    "value": value}
+                    "value": str(value)}
 
     return {}
 
 # update non time-based filters
+# fix age range filter
+
 def init_callbacks(dash_app):
     @dash_app.callback(
         Output('table-filtering', "data"),
