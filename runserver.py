@@ -9,11 +9,11 @@
 import sys
 import os
 import argparse
-import administrator
+import task
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-    description="The administrator interface")
+    description="The registrar application")
 
     parser.add_argument('port', type=int,
     help='the port at which the server should listen')
@@ -27,7 +27,9 @@ def main():
         print('Port must be an integer.', file=sys.stderr)
         sys.exit(1)
     try:
-        administrator.app.run(host='0.0.0.0', port=port, debug=True)
+        # To run the administrator app, uncomment the following line:
+        # administrator.app.run(host='0.0.0.0', port=port, debug=True)
+        task.app.run(host='0.0.0.0', port=port, debug=True)
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
