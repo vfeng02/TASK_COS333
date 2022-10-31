@@ -10,13 +10,12 @@ from dis import dis
 import time
 from flask import Flask, request
 from flask import render_template, make_response
-import os
-import sys
-sys.path.insert(0, '../TASKdbcode')
-import demographic_db
+# sys.path.insert(0, 'TASKdbcode')
+# sys.path.insert(0, 'TASKfrontend/templates')
+from TASKdbcode import database_constants
+from TASKdbcode import demographic_db
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
-import database_constants
 import psycopg2
 
 #-----------------------------------------------------------------------
