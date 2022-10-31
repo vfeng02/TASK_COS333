@@ -105,7 +105,7 @@ def admindisplaydata():
 
     selects = ["service_timestamp", "meal_site", "race", "gender",
                "age_range"]
-    filters = {"meal_site": "Trenton Area Soup Kitchen", "race": ["Hispanic"]}
+    filters = {"meal_site": "First Baptist Church"}
     df = demographic_db.get_patrons(selects, filters)
 
     html_code = render_template('admindisplaydata.html',
