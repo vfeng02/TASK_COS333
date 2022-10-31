@@ -130,6 +130,28 @@ def get_patrons(select_fields, filter_dict):
 
 #-----------------------------------------------------------------------
 
+def filter_dm(filter_dict):
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            # Keep the filters that were entered in the dict
+            query = session.query(MealSite)
+            if filter_dict:
+                if filter_dict["op"] == "contains":
+                    filter_dict["op"] = "ilike"
+                    filter_dict["value"] = "%" + filter_dict["value"] + "%"
+                if filter_dict["op"] == "=":
+                    filter_dict["op"] = "=="
+                query = apply_filters(query, filter_dict)
+            demographic_df = pandas.read_sql(query.statement, session.bind)
+        engine.dispose()
+        return demographic_df
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+    pass
 
 # class Trenton_Area_Soup_Kitchen(MealSite):
 #     __tablename__ = "trenton_area_soup_kitchen"

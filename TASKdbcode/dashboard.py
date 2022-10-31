@@ -22,8 +22,7 @@ operators = [['ge ', '>='],
                  ['gt ', '>'],
                  ['ne ', '!='],
                  ['eq ', '='],
-                 ['contains '],
-                 ['datestartswith ']]
+                 ['contains']]
 
 
 def init_dashboard(server):
@@ -76,11 +75,12 @@ def split_filter_part(filter_part):
 
                 # word operators need spaces after them in the filter string,
                 # but we don't want these later
-                return name, operator_type[0].strip(), value
+                return {"field": name, "op": operator_type[0].strip(),\
+                    "value": value}
 
-    return [None] * 3
+    return {}
 
-
+# update non time-based filters
 def init_callbacks(dash_app):
     @dash_app.callback(
         Output('table-filtering', "data"),
@@ -90,24 +90,31 @@ def init_callbacks(dash_app):
     def update_table(page_current, page_size, filter):
         print(filter)
         filtering_expressions = filter.split(' && ')
-        select_fields = []
-        filter_dict = {}
-        dff = demographic_db.get_patrons(select_fields, filter_dict)
+        dff = None
         for filter_part in filtering_expressions:
-            col_name, operator, filter_value = split_filter_part(
-                filter_part)
 
-            if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
-                # these operators match pandas series operator method names
-                dff = dff.loc[getattr(
-                    dff[col_name], operator)(filter_value)]
-            elif operator == 'contains':
-                dff = dff.loc[dff[col_name].str.contains(filter_value)]
-            elif operator == 'datestartswith':
-                # this is a simplification of the front-end filtering logic,
-                # only works with complete fields in standard format
-                dff = dff.loc[dff[col_name].str.startswith(
-                    filter_value)]
+            filter_dict = split_filter_part(filter_part)
+            print(filter_dict)
+            if filter_dict:
+                if filter_dict["op"] == "contains":
+                    filter_dict["op"] = "ilike"
+                    filter_dict["value"] = "%" + filter_dict["value"] + "%"
+                if filter_dict["op"] == "=":
+                    filter_dict["op"] = "=="
+
+            dff = demographic_db.filter_dm(filter_dict)
+
+            # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
+            #     # these operators match pandas series operator method names
+            #     dff = dff.loc[getattr(
+            #         dff[col_name], operator)(filter_value)]
+            # elif operator == 'contains':
+            #     dff = dff.loc[dff[col_name].str.contains(filter_value)]
+            # elif operator == 'datestartswith':
+            #     # this is a simplification of the front-end filtering logic,
+            #     # only works with complete fields in standard format
+            #     dff = dff.loc[dff[col_name].str.startswith(
+            #         filter_value)]
 
         return dff.iloc[
             page_current*page_size:(page_current + 1)*page_size
