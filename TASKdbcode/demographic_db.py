@@ -113,10 +113,10 @@ def get_patrons(select_fields, filter_dict):
             # query = session.query(*select_fields)
             for key, value in filter_dict.items():
                 filter = {"field": key, "op" : "==", "value": value}
-                if key == "race":
-                    for race in value:
-                        filter = {"field": key, "op" : "any", "value": race}
-                        query = apply_filters(query, filter)
+                # if key == "race":
+                #     for race in value:
+                #         filter = {"field": key, "op" : "==", "value": race}
+                #         query = apply_filters(query, filter)
                 query = apply_filters(query, filter)
             # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)

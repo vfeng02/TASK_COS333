@@ -122,6 +122,39 @@ Sets up HTML page to input patron data
         </form>
         {% include 'footer.html' %}
     </div>
+
+	<!-- <script type = "text/javascript" src = "../static/js/patrondatabuttons.js"></script>
+<script>
+	let form = document.getElementById('patronForm');
+	let patronResponseSelected = false;
+	let trueButton = document.getElementById("toggle-button-True");
+	let falseButton = document.getElementById("toggle-button-False");
+	let unknownButton = document.getElementById("toggle-button-Unknown");
+	let prefErrorBox = document.getElementById('prefErrorBox');
+
+
+	let initiallyActiveButtons = document.getElementsByClassName('active-button');
+	
+	if(initiallyActiveButtons.length > 0)
+		optionSelected = true;
+
+	function registerSelected () { 
+		optionSelected = true; 	
+ 	}
+
+	trueButton.addEventListener('click', registerSelected);
+	falseButton.addEventListener('click', registerSelected);
+	unknownButton.addEventListener('click', registerSelected);
+
+	form.addEventListener('submit', (event) => {
+		if(!optionSelected)
+			{
+				event.preventDefault();
+				prefErrorBox.classList.remove('noError');
+				prefErrorBox.classList.add('error');
+			}
+	}) </script> -->
+	
 </body>
 
 <datalist id = "races">
@@ -171,38 +204,6 @@ Sets up HTML page to input patron data
 	<option value={{pr_option}}>
 	{% endfor %}
 </datalist> -->
-
-<!-- <script type = "text/javascript" src = "../static/js/patrondatabuttons.js"></script>
-<script>
-	let form = document.getElementById('patronForm');
-	let patronResponseSelected = false;
-	let trueButton = document.getElementById("toggle-button-True");
-	let falseButton = document.getElementById("toggle-button-False");
-	let unknownButton = document.getElementById("toggle-button-Unknown");
-	let prefErrorBox = document.getElementById('prefErrorBox');
-
-
-	let initiallyActiveButtons = document.getElementsByClassName('active-button');
-	
-	if(initiallyActiveButtons.length > 0)
-		optionSelected = true;
-
-	function registerSelected () { 
-		optionSelected = true; 	
- 	}
-
-	trueButton.addEventListener('click', registerSelected);
-	falseButton.addEventListener('click', registerSelected);
-	unknownButton.addEventListener('click', registerSelected);
-
-	form.addEventListener('submit', (event) => {
-		if(!optionSelected)
-			{
-				event.preventDefault();
-				prefErrorBox.classList.remove('noError');
-				prefErrorBox.classList.add('error');
-			}
-	}) </script> -->
 
 </html>
 

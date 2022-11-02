@@ -11,7 +11,9 @@ from numpy import dtype
 from sqlalchemy import true
 from demographic_db import *
 import database_constants as database
-import matplotlib
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 def to_1D(series):
  return pandas.Series([x for _list in series for x in _list])
@@ -64,24 +66,123 @@ def main():
     #     print("\n\n")
 
     site_df = df
-    num_entries = len(site_df.index)
-    mask_condition = site_df["race"].map(len) == 1
-    site_df_multi = site_df[~mask_condition]
-    site_df = site_df[mask_condition]
-    single_counts = site_df["race"].value_counts()
-    num_multi = len(site_df_multi.index)
-    multi_count = pandas.Series([num_multi], ["[Other]"])
-    summary_counts = pandas.concat([single_counts, multi_count])
-    multi_counts = site_df_multi["race"].value_counts()
+    # print(site_df["race"])
+    # num_entries = len(site_df.index)
+    # mask_condition = site_df["race"].map(len) == 1
+    # print(str(site_df["race"]).split(","))
+    # site_df_multi = site_df[~mask_condition]
+    # site_df = site_df[mask_condition]
+    # site_df[mask_condition]
+
         
     # print percents instead of raw count
-    summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
-    multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
+    # summary_counts = summary_counts.map(lambda c: c / num_entries * 100)
+    # multi_counts = multi_counts.map(lambda c: c / num_entries * 100)
+    # summary_counts.rename(lambda x: str(x))
+    # print(summary_counts)
+#-----------------------------------------------------------------------
+    # Pie Chart (Race)
+    all_counts = site_df["race"].value_counts()
+    single_index = [i for i in all_counts.index if i in database.RACE_OPTIONS]
+    multi_index = [i for i in all_counts.index if i not in database.RACE_OPTIONS]
+    single_counts = all_counts.filter(items = single_index)
+    multi_counts = all_counts.filter(items = multi_index)
+    num_multi = multi_counts.size
+    multi_count = pandas.Series([num_multi], ["Other"])
+    summary_counts = pandas.concat([single_counts, multi_count])
+    print(summary_counts)
+    specs = [[{'type':'domain'}], [{'type':'domain'}]]
+    pie_charts = make_subplots(rows=2, cols=1, specs=specs)
+    single_chart = go.Pie(values = summary_counts, labels = summary_counts.index,
+                       title = "Races of Patrons at All Meal Sites", legendgroup=1)
+    other_chart = go.Pie(values = multi_counts, labels = multi_counts.index,
+                       title = "Other: Races of Multi-Racial Patrons at All Meal Sites", legendgroup=2)
+    pie_charts.add_trace(single_chart, 1, 1)
+    pie_charts.add_trace(other_chart, 2, 1)
+    pie_charts.update_layout(legend_tracegroupgap = 180)
+    pie_charts.show()
+
+#-----------------------------------------------------------------------
+    # Bar Chart All Comparison (complex demographic)
     
-    summary_counts.plot.pie()
+    filter_dict = {"homeless": "True", "veteran": "True"}
     
-    matplotlib.pyplot.show(block=True)
+    filtered_data = get_patrons([], filter_dict).groupby("meal_site")["service_timestamp"].count()
+    filtered_data.rename("count", inplace=True)
+    print(filtered_data)
+    bar_graph = px.bar(filtered_data, x = filtered_data.index,\
+        y = "count", title = "Comparison of Homeless Veterans Across All Meal Sites", text_auto = True)
+    bar_graph.update_layout(showlegend=False)
     
+    bar_graph.show()
+
+#-----------------------------------------------------------------------
+    # Popped Out Pie Chart (complex demographic)
+    
+    filter_dict = {"meal_site": "Pelletier Homes", "homeless": "True", "veteran": "True"}
+    
+    num_entries = len(get_patrons([], {"meal_site": "Pelletier Homes"}).index)
+
+    
+    
+    filtered_data = get_patrons([], filter_dict)["service_timestamp"].count()
+    num_entries = num_entries - filtered_data
+    filtered_data = pandas.Series([filtered_data],["Homeless Veterans"])
+    other_count = pandas.Series([num_entries], ["Other"])
+    #filtered_data.rename("count", inplace=True)
+        #     num_multi = len(site_df_multi.index)
+    #     
+    filtered_data = pandas.concat([filtered_data, other_count])
+    print(filtered_data)
+    exp_pie_chart = go.Figure(data = [go.Pie(values = filtered_data.values, labels = filtered_data.index, pull = [0.2,0],
+                                             title = "Homeless Veterans at Pelletier Homes")])
+    
+    exp_pie_chart.show()
+
+#-----------------------------------------------------------------------
+    # Bar Chart Pair Comparison (simple demographic)
+    filter_dict1 = {"meal_site": "First Baptist Church"}
+    filter_dict2 = {"meal_site": "Medallion Care Behavioral Health"}
+    
+    df1 = get_patrons([], filter_dict1)
+    df2 = get_patrons([], filter_dict2)
+    combined_df = pandas.concat([df1, df2])
+    histogram = px.histogram(combined_df, x="gender",
+             color='meal_site', barmode='group',
+             height=400, title =\
+                 "Gender of Patrons at First Baptist Church vs. Medallion Care Behavior Health")
+    
+    histogram.show()
+
+#-----------------------------------------------------------------------
+    # Bar Chart Comparison Single vs All (simple demographic)
+    filter_dict1 = {"field": "meal_site", "op": "==", "value": "First Baptist Church"}
+    filter_dict2 = {"field": "meal_site", "op": "!=", "value": "First Baptist Church"}
+    
+    df1 = filter_dm(filter_dict1)["gender"].value_counts()
+    df2 = filter_dm(filter_dict2)
+    
+    num_sites = len(df.meal_site.unique())
+    
+    df2["meal_site"] = "Other"
+
+    df2 = df2.groupby("gender")["service_timestamp"].count()
+    print(df2)
+    df2 = df2.map(lambda c: c / num_sites)
+
+    combined_histogram = go.Figure(data=[
+    go.Bar(x = df1.index, y = df1.values, name='First Baptist Church'),
+    go.Bar(x = df2.index, y = df2.values, name="Average of Other Sites")])
+    combined_histogram.update_layout(yaxis_title = "count", title =\
+        "Gender of Patrons at First Baptist Church vs. All Other Meal Site Average", barmode="group")
+    combined_histogram.show()
+#-----------------------------------------------------------------------
+    # Bar Chart Comparison All (simple demographic)
+    df_all = get_patrons([], {})
+    all_histogram = px.histogram(df_all, x="gender",
+             color='meal_site', barmode='group',
+             height=400, title = "Genders of Patrons at All Meal Sites")
+    all_histogram.show()
     
     
     # print("All Meal Sites")
