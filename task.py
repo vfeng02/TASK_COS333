@@ -14,6 +14,7 @@ from flask import render_template, make_response
 # sys.path.insert(0, 'TASKfrontend/templates')
 from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
+from TASKdbcode import dashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
@@ -99,21 +100,32 @@ def submitpatrondata():
 
  #-----------------------------------------------------------------------
 
-@app.route('/admindisplaydata', methods=['GET'])
+app = dashboard.init_dashboard(app)
+@app.route('/admin', methods=['GET'])
 def admindisplaydata():
+    global app
+    dashapp = render_template(
+        "admin.html",
+        title="Test",
+        description="Embed Plotly Dash into your Flask applications.",
+        template="home-template",
+        body="This is a homepage served with Flask.",
+    )
+    app = Flask(__name__, template_folder='templates')
+    return dashapp
 
-    selects = ["service_timestamp", "meal_site", "race", "gender",
-               "age_range"]
-    filters = {"meal_site": "First Baptist Church"}
-    df = demographic_db.get_patrons(selects, filters)
+    # selects = ["service_timestamp", "meal_site", "race", "gender",
+    #            "age_range"]
+    # filters = {"meal_site": "First Baptist Church"}
+    # df = demographic_db.get_patrons(selects, filters)
 
-    html_code = render_template('admindisplaydata.html',
-        ampm=get_ampm(),
-        current_time=get_current_time(),
-        data = df)
+    # html_code = render_template('admindisplaydata.html',
+    #     ampm=get_ampm(),
+    #     current_time=get_current_time(),
+    #     data = df)
 
-    response = make_response(html_code)
-    return response
+    # response = make_response(html_code)
+    # return response
 
 
  #-----------------------------------------------------------------------

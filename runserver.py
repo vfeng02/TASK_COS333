@@ -30,7 +30,7 @@ def main():
         sys.exit(1)
     try:
         # To run the administrator app, uncomment the following line:
-        administrator.app.run(host='0.0.0.0', port=port, debug=True)
+        #administrator.app.run(host='0.0.0.0', port=port, debug=True)
         task.app.run(host='0.0.0.0', port=port, debug=True)
     except Exception as ex:
         print(ex, file=sys.stderr)
