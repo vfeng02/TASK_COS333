@@ -8,8 +8,8 @@
 
 """Instantiate a Dash app."""
 import dash
-import demographic_db
-import database_constants
+from TASKdbcode import demographic_db
+from TASKdbcode import database_constants
 from dash import dcc
 from dash import html
 from dash.dependencies import Output, Input

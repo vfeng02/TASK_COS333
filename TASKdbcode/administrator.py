@@ -13,10 +13,9 @@ from flask import render_template
 
 app = Flask(__name__, template_folder="templates")
 with app.app_context():
-        from dashboard import init_dashboard
-        app = init_dashboard(app)
-        from graphdashboard import init_graphdashboard
-        app = init_graphdashboard(app)
+        from TASKdbcode import dashboard, graphdashboard
+        app = dashboard.init_dashboard(app)
+        app = graphdashboard.init_graphdashboard(app)
 
 
 @app.route("/")
