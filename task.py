@@ -90,12 +90,14 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"meal_site": mealsite, "race": race, "language": language,
+    patron_data = {"race": race, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
-
-    # demographic_db.add_patron(patron_data)
+    
+    if (any(patron_data.values())):
+        patron_data["meal_site"] = mealsite
+        demographic_db.add_patron(patron_data)
     
     print(patron_data)
 
