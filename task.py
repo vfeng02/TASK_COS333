@@ -55,14 +55,7 @@ def selectmealsite():
         current_time=get_current_time(),
         mealsites = database_constants.mealsites)
 
-    mealsite = request.args.get('mealsite')
-
     response = make_response(html_code)
-    # if mealsite is not None:
-    #     response.set_cookie('mealsite', mealsite)
-    #     print("select mealsite" + mealsite)
-    # else:
-    #     response.set_cookie('mealsite', '')
     return response
  #-----------------------------------------------------------------------
 
@@ -70,17 +63,25 @@ def selectmealsite():
 def submitpatrondata():
     # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
-    mealsite = request.cookies.get('mealsite')
+    mealsite = request.cookies.get('site')
 
     set_new_mealsite = False
+    
+            
+    print("selected site")
+    print(new_mealsite)
     
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
-        
-    print(mealsite)
+    
 
-    race = request.args.get('race')
+    races = []
+    for race in database_constants.RACE_OPTIONS:
+        races.append(request.args.get(race))
+    races = list(filter(None, races))
+    racecsv = ",".join(races)
+        
     language = request.args.get('language')
     age_range = request.args.get('age_range')
     gender = request.args.get('gender')
@@ -90,14 +91,15 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"race": race, "language": language,
+    patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
     
-    if (any(patron_data.values())):
+    if (any(patron_data.values()) and patron_data["patron_response"]):
         patron_data["meal_site"] = mealsite
         demographic_db.add_patron(patron_data)
+
     
     print(patron_data)
 
@@ -117,7 +119,8 @@ def submitpatrondata():
     response = make_response(html_code)
 
     if set_new_mealsite:
-        response.set_cookie('mealsite', mealsite)
+        response.set_cookie('site', mealsite)
+
     return response
 
  #-----------------------------------------------------------------------

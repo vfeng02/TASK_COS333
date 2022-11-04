@@ -22,9 +22,18 @@ Sets up HTML page to input patron data
 		<form id = "patronForm" action="/submitpatrondata" method="get">
 			<table>
 				<tr>
-					<td align="right">Race:</td>
+					<td align="right">Race (Select All That Apply):</td>
 					<td>
-						<input class="form-select patronInput" type="search" name="race" list = "races">
+						<div class = "row"></div>
+						<div class="btn-group" data-toggle="buttons">
+							{%for race in races%}
+							<label class="btn btn-primary">
+							  <input type="checkbox" name="{{race}}" value={{race}}> {{race}}
+							</label>
+							{%endfor%}
+						  </div>
+						</div>
+						  </td>
 					</td>
 				</tr>
                 <tr>
@@ -104,13 +113,13 @@ Sets up HTML page to input patron data
 					</td>
 				</tr>
                 <tr>
-                    <td>
-						<input id='submit' class="form-control patronInput mainButton enter-button"
-							type="submit" value="Submit">
-					</td>
 					<td>
 						<input id='switch' class="form-control patronInput mainButton enter-button" 
 						 type="button" onclick="location.href='/selectmealsite';" value="Switch Mealsite">
+					</td>
+                    <td>
+						<input id='submit' class="form-control patronInput mainButton enter-button"
+							type="submit" value="Submit">
 					</td>
 					<td>
 						<input id='logout' class="form-control patronInput mainButton enter-button"
@@ -157,11 +166,11 @@ Sets up HTML page to input patron data
 	
 </body>
 
-<datalist id = "races">
+<!-- <datalist id = "races">
 	{% for race in races %}
 	<option value={{race}}>
 	{% endfor %}
-</datalist>
+</datalist> -->
 
 <datalist id = "languages">
 	{% for language in languages %}
