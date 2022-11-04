@@ -16,6 +16,7 @@ from flask import render_template, make_response
 from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
 from TASKdbcode import dashboard
+from TASKdbcode import graphdashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
@@ -23,6 +24,9 @@ import psycopg2
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
+with app.app_context():
+        app = dashboard.init_dashboard(app)
+        app = graphdashboard.init_graphdashboard(app)
 
 #-----------------------------------------------------------------------
 
@@ -125,19 +129,13 @@ def submitpatrondata():
 
  #-----------------------------------------------------------------------
 
-app = dashboard.init_dashboard(app)
+
 @app.route('/admin', methods=['GET'])
 def admindisplaydata():
-    global app
-    dashapp = render_template(
-        "admin.html",
-        title="Test",
-        description="Embed Plotly Dash into your Flask applications.",
-        template="home-template",
-        body="This is a homepage served with Flask.",
+    
+    return render_template(
+        "admin.html"
     )
-    app = Flask(__name__, template_folder='templates')
-    return dashapp
 
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
