@@ -1,16 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
+    <<head>
         <title>TASK.com</title>
+		{% include 'imports.html' %}
     </head>
     <body>
         {% include 'header.html' %}
-        <h1>Welcome</h1>
+        <div class="container-fluid col-sm-4">
+            <center>
+                <img src="/static/photos/task_logo.jpg" style="width:80%;">
+            </center>
+            <br>
+            <div class="row">
+                <center>
+                    <input id='volunteerloginbtn' class="form-control dark-blue enter-button"
+                    type="button" onclick="location.href='/selectmealsite';" value="Volunteer">
+                    <!-- <a class="btn btn-primary btn-lg dark-blue btn-outline-secondary enter-button" href="/selectmealsite" role="button">
+                        Volunteer</a> -->
+                </center>
+            </div>
+            <br>
+            <div class="row">
+                <center>
+                    <input id='adminloginbtn' class="form-control orange enter-button"
+                    type="button" onclick="location.href='/admin';" value="Admin">
+                    <!-- <a id='adminloginbtn' class="btn btn-primary btn-lg dark-blue enter-button"
+                    href='/admin' role="button">Admin</a> -->
+                </center>
+            </div>
+        </div>
+        <!-- <h1>Welcome</h1>
         <br>
         Click <a href="selectmealsite">here</a> to submit data.<br>
         <br>
         Click <a href="admin">here</a> to see admin data.<br>
-        <br>
+        <br> -->
         {% include 'footer.html' %}
     </body>
 </html>
+
+<style>
+.dark-blue {
+    background: #145078;
+    
+    /* fallback for old browsers */
+    /* background: -webkit-linear-gradient(to right, #145078, #145078);  */
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: linear-gradient(to right, #145078, #145078); */
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: white;
+}
+
+.orange{
+    background: #ff911f;
+    color: white;
+}
+
+</style>

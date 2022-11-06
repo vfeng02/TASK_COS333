@@ -1,4 +1,4 @@
-.menuButton {
+/* .menuButton {
     font-size: 18px;
     padding-left: 10px;
     padding-top: 10px;
@@ -20,21 +20,21 @@
     margin-left: 20px;
     margin-right: 20px;
     color: white;
-}
+} */
 
-.orange-moon {
-    background: #fc4a1a;
+.dark-blue {
+    background: #145078;
     /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #f7b733, #fc4a1a);
+    background: -webkit-linear-gradient(to right, #33A7B5, #145078);
     /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #f7b733, #fc4a1a);
+    background: linear-gradient(to right, #33A7B5, #145078);
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     color: white;
 
 }
 
 .enter-button {
-    border: 3px solid #eee;
+    border: 3px solid #d9dad9;
 }
 
 .forceOpenSans {
