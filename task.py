@@ -6,6 +6,7 @@
 # Runs simple HTML form to input data into the TASK demographic database
 #-----------------------------------------------------------------------
 
+from ctypes import set_errno
 from dis import dis
 import time
 from flask import Flask, request
@@ -15,6 +16,7 @@ from flask import render_template, make_response
 from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
 from TASKdbcode import dashboard
+from TASKdbcode import graphdashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
@@ -22,6 +24,9 @@ import psycopg2
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
+with app.app_context():
+        app = dashboard.init_dashboard(app)
+        app = graphdashboard.init_graphdashboard(app)
 
 #-----------------------------------------------------------------------
 
@@ -48,8 +53,6 @@ def index():
 
 @app.route('/selectmealsite', methods=['GET'])
 def selectmealsite():
-    global _mealsite 
-    _mealsite = request.args.get('mealsite')
 
     html_code = render_template('selectmealsite.html',
         ampm=get_ampm(),
@@ -62,8 +65,27 @@ def selectmealsite():
 
 @app.route('/submitpatrondata', methods=['GET'])
 def submitpatrondata():
-    print(_mealsite)
-    race = request.args.get('race')
+    # mealsite = request.args.get('mealsite')
+    new_mealsite = request.args.get('mealsite')
+    mealsite = request.cookies.get('site')
+
+    set_new_mealsite = False
+    
+            
+    print("selected site")
+    print(new_mealsite)
+    
+    if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
+        set_new_mealsite = True
+        mealsite = new_mealsite
+    
+
+    races = []
+    for race in database_constants.RACE_OPTIONS:
+        races.append(request.args.get(race))
+    races = list(filter(None, races))
+    racecsv = ",".join(races)
+        
     language = request.args.get('language')
     age_range = request.args.get('age_range')
     gender = request.args.get('gender')
@@ -73,12 +95,15 @@ def submitpatrondata():
     disabled = request.args.get('disabled')
     patron_response = request.args.get('patron_response')
 
-    patron_data = {"meal_site": _mealsite, "race": [race], "language": language,
+    patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
+    
+    if (any(patron_data.values()) and patron_data["patron_response"]):
+        patron_data["meal_site"] = mealsite
+        demographic_db.add_patron(patron_data)
 
-    # demographic_db.add_patron(patron_data)
     
     print(patron_data)
 
@@ -96,23 +121,21 @@ def submitpatrondata():
         patron_response_options = database_constants.PATRON_RESPONSE_OPTIONS
         )
     response = make_response(html_code)
+
+    if set_new_mealsite:
+        response.set_cookie('site', mealsite)
+
     return response
 
  #-----------------------------------------------------------------------
 
-app = dashboard.init_dashboard(app)
+
 @app.route('/admin', methods=['GET'])
 def admindisplaydata():
-    global app
-    dashapp = render_template(
-        "admin.html",
-        title="Test",
-        description="Embed Plotly Dash into your Flask applications.",
-        template="home-template",
-        body="This is a homepage served with Flask.",
+    
+    return render_template(
+        "admin.html"
     )
-    app = Flask(__name__, template_folder='templates')
-    return dashapp
 
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
