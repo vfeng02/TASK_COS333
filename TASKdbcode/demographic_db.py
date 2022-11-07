@@ -71,6 +71,9 @@ Base.registry.configure()
 def add_patron(input_dict):
     
     for key in input_dict:
+        if key == "language" and not input_dict["key"]:
+            input_dict[key] = "English"
+
         if not input_dict[key] and key != "patron_response":
             input_dict[key] = "Unknown"
 
