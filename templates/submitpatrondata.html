@@ -24,22 +24,24 @@ Sets up HTML page to input patron data
 				<tr>
 					<td align="right">Race (Select All That Apply):</td>
 					<td>
-						<div class = "row"></div>
-						<div class="btn-group" data-toggle="buttons">
+						<div id="race-btns" data-toggle="buttons">
 							{%for race in races%}
-							<label class="btn btn-primary">
-							  <input type="checkbox" name="{{race}}" value={{race}}> {{race}}
+							<label class="btn btn-secondary inactive-button">
+								<input type="checkbox" name="{{race}}" value={{race}}>{{race}}
 							</label>
 							{%endfor%}
-						  </div>
 						</div>
-						  </td>
 					</td>
 				</tr>
                 <tr>
 					<td align="right">Language:</td>
 					<td>
-						<input class="form-select patronInput" name="language" list = "languages">
+						<div id="lang-btns" data-toggle="buttons">
+							{%for lang in languages%}
+							<input class="btn btn-secondary inactive-button" id="{{lang}}" type="button" name="{{lang}}" value="{{lang}}">
+							{%endfor%}
+						</div>
+						<!-- <input class="form-select patronInput" name="language" list = "languages"> -->
 					</td>
 				</tr>
                 <tr>
@@ -131,40 +133,11 @@ Sets up HTML page to input patron data
         </form>
         {% include 'footer.html' %}
     </div>
-
-	<!-- <script type = "text/javascript" src = "../static/js/patrondatabuttons.js"></script>
-<script>
-	let form = document.getElementById('patronForm');
-	let patronResponseSelected = false;
-	let trueButton = document.getElementById("toggle-button-True");
-	let falseButton = document.getElementById("toggle-button-False");
-	let unknownButton = document.getElementById("toggle-button-Unknown");
-	let prefErrorBox = document.getElementById('prefErrorBox');
-
-
-	let initiallyActiveButtons = document.getElementsByClassName('active-button');
-	
-	if(initiallyActiveButtons.length > 0)
-		optionSelected = true;
-
-	function registerSelected () { 
-		optionSelected = true; 	
- 	}
-
-	trueButton.addEventListener('click', registerSelected);
-	falseButton.addEventListener('click', registerSelected);
-	unknownButton.addEventListener('click', registerSelected);
-
-	form.addEventListener('submit', (event) => {
-		if(!optionSelected)
-			{
-				event.preventDefault();
-				prefErrorBox.classList.remove('noError');
-				prefErrorBox.classList.add('error');
-			}
-	}) </script> -->
 	
 </body>
+
+<script type = "text/javascript" src = "../static/js/racebuttons.js">
+</script>
 
 <!-- <datalist id = "races">
 	{% for race in races %}
