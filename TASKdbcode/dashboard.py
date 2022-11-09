@@ -12,10 +12,11 @@ from dash import Dash, dash_table
 from dash.dependencies import Input, Output
 from dash import dcc
 from dash import html
+import pandas
 
 from TASKdbcode import demographic_db
 
-PAGE_SIZE = 50
+PAGE_SIZE = 100
 operators = [['ge ', '>='],
                  ['le ', '<='],
                  ['lt ', '<'],
@@ -35,7 +36,10 @@ def init_dashboard(server):
     df = demographic_db.get_patrons(select_fields, filter_dict)
 
     # Create Layout
-    dash_app.layout = dash_table.DataTable(
+    dash_app.layout = html.Div([
+        dcc.Store(id='table'),
+        dcc.Store(id='filters'),
+        dash_table.DataTable(
         id='table-filtering',
         columns=[
             {"name": i, "id": i} for i in df.columns
@@ -51,8 +55,9 @@ def init_dashboard(server):
         
         sort_action='custom',
         sort_mode='multi',
-        sort_by=[]
+        sort_by=[],
     )
+])
 
     init_callbacks(dash_app)
 
@@ -88,6 +93,25 @@ def split_filter_part(filter_part):
 # fix age range filter
 
 def init_callbacks(dash_app):
+    
+    # @dash_app.callback(
+    #     Output('table', 'data'),
+    #     Input('table-filtering', 'filter_query'),
+    #     Input('filters', 'data'))
+    # def filter_data(new_filters, old_filters):
+    #  # some expensive data processing step
+    #  old_filters = pandas.read_json(old_filters, orient='split')
+    #  filtering_expressions = new_filters.split(' && ')
+     
+    #  dff = pandas.read_json(jsonified_cleaned_data, orient='split')
+     
+    #  cleaned_df = slow_processing_step(value)
+
+
+    #  # more generally, this line would be
+    #  # json.dumps(cleaned_df)
+    #  return cleaned_df.to_json(date_format='iso', orient='split')
+ 
     @dash_app.callback(
         Output('table-filtering', "data"),
         Input('table-filtering', "page_current"),
@@ -97,19 +121,23 @@ def init_callbacks(dash_app):
     def update_table(page_current, page_size, sort_by, filter):
         print(filter)
         filtering_expressions = filter.split(' && ')
-        dff = None
+        filter_dicts = []
+        
         for filter_part in filtering_expressions:
 
             filter_dict = split_filter_part(filter_part)
             print(filter_dict)
+
             if filter_dict:
                 if filter_dict["op"] == "contains":
                     filter_dict["op"] = "ilike"
                     filter_dict["value"] = "%" + filter_dict["value"] + "%"
                 if filter_dict["op"] == "=":
                     filter_dict["op"] = "=="
+                filter_dicts.append(filter_dict)
 
-            dff = demographic_db.filter_dm(filter_dict)
+        dff = demographic_db.filter_dms(filter_dicts)
+                
 
             # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
             #     # these operators match pandas series operator method names
@@ -138,14 +166,3 @@ def init_callbacks(dash_app):
         ].to_dict('records')
 
 
-def create_data_table(df):
-    """Create Dash datatable from Pandas DataFrame."""
-    table = dash_table.DataTable(
-        id="database-table",
-        columns=[{"name": i, "id": i} for i in df.columns],
-        data=df.to_dict("records"),
-        sort_action="native",
-        sort_mode="native",
-        page_size=300,
-    )
-    return table
