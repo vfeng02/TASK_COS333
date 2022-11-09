@@ -159,8 +159,8 @@ def main():
     filter_dict1 = {"field": "meal_site", "op": "==", "value": "First Baptist Church"}
     filter_dict2 = {"field": "meal_site", "op": "!=", "value": "First Baptist Church"}
     
-    df1 = filter_dm(filter_dict1)["gender"].value_counts()
-    df2 = filter_dm(filter_dict2)
+    df1 = filter_dms([filter_dict1])["gender"].value_counts()
+    df2 = filter_dms([filter_dict2])
     
     num_sites = len(df.meal_site.unique())
     
