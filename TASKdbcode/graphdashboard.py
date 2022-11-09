@@ -27,7 +27,7 @@ def init_graphdashboard(server):
     demographic_options = []
     for option in database_constants.DEMOGRAPHIC_OPTIONS:
         demographic_options.append({"label": option.title(), "value": option})
-
+# additional filtering needed
     graph_app.layout = html.Div(
         children=[
             html.Div(children=[
@@ -72,7 +72,7 @@ def init_callbacks(graph_app):
             single_counts = all_counts.filter(items = single_index)
             multi_counts = all_counts.filter(items = multi_index)
             num_multi = multi_counts.size
-            multi_count = pandas.Series([num_multi], ["Other"])
+            multi_count = pandas.Series([num_multi], ["Other/Multiracial"])
             summary_counts = pandas.concat([single_counts, multi_count])
             # print(summary_counts)
             specs = [[{'type':'domain'}], [{'type':'domain'}]]

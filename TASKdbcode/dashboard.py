@@ -8,14 +8,12 @@
 
 """Instantiate a Dash app."""
 import dash
-from dash import Dash, dash_table
+from dash import Dash, dash_table, dcc, html
 from dash.dependencies import Input, Output
-from dash import dcc
-from dash import html
 import pandas
 
 from TASKdbcode import demographic_db
-
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 PAGE_SIZE = 100
 operators = [['ge ', '>='],
                  ['le ', '<='],
@@ -45,6 +43,27 @@ def init_dashboard(server):
             {"name": i, "id": i} for i in df.columns
             
         ],
+        style_cell_conditional=[
+        {
+            'if': {'column_id': c},
+            'textAlign': 'left'
+        } for c in ['Date', 'Region']
+    ],
+    style_data={
+        'color': 'black',
+        'backgroundColor': 'white'
+    },
+    style_data_conditional=[
+        {
+            'if': {'row_index': 'odd'},
+            'backgroundColor': 'rgb(220, 220, 220)',
+        }
+    ],
+    style_header={
+        'backgroundColor': 'rgb(210, 210, 210)',
+        'color': 'black',
+        'fontWeight': 'bold'
+    },
        # style_as_list_view = True,
         page_current=0,
         page_size=PAGE_SIZE,
@@ -62,7 +81,6 @@ def init_dashboard(server):
     init_callbacks(dash_app)
 
     return dash_app.server
-
 
 def split_filter_part(filter_part):
     for operator_type in operators:

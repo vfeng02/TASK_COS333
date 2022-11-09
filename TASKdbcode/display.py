@@ -15,11 +15,7 @@ import demographic_db as database
 from database_constants import DATABASE_URL
 from database_constants import MEAL_SITE_OPTIONS
 from database_constants import DEMOGRAPHIC_OPTIONS
-
-
 #-----------------------------------------------------------------------
-
-
 def main():
 
     if len(sys.argv) != 1:
