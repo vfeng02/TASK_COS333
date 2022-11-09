@@ -89,7 +89,7 @@ def submitpatrondata():
     language = request.args.get('language')
     age_range = request.args.get('age_range')
     gender = request.args.get('gender')
-    zip_code = request.args.get('zip_code')
+    zip_code = request.args.get('zip_codes')
     homeless = request.args.get('homeless')
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
@@ -99,13 +99,15 @@ def submitpatrondata():
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "patron_response": patron_response}
+
+    print(patron_data)
     
     if (any(patron_data.values()) and patron_data["patron_response"]):
         patron_data["meal_site"] = mealsite
         demographic_db.add_patron(patron_data)
 
     
-    print(patron_data)
+    
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
