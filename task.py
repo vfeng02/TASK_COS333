@@ -112,7 +112,7 @@ def submitpatrondata():
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
-        languages = database_constants.languages,
+        otherlanguages = database_constants.otherlanguages,
         races = database_constants.races,
         ages = database_constants.ages,
         genders = database_constants.genders,

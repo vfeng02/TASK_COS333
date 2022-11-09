@@ -34,9 +34,15 @@ LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
                     "Vietnamese", "Other", "Unknown"]
 
 languages = sorted(LANGUAGE_OPTIONS)
+OTHER_LANGUAGE_OPTIONS = ["Dari", "Farsi", "French",\
+                    "German", "Polish", "Russian", "Swahili", "Urdu",\
+                    "Vietnamese", "Other", "Unknown"]
+
+otherlanguages = sorted(OTHER_LANGUAGE_OPTIONS)
 
 AGE_RANGE_OPTIONS = ["<18", "18-24", "25-34", "35-44", "45-54",\
     "55-64", ">65", "Unknown"]
+    
 
 ages = sorted(AGE_RANGE_OPTIONS)
 

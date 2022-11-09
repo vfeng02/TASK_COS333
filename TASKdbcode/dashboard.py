@@ -13,7 +13,6 @@ from dash.dependencies import Input, Output
 import pandas
 
 from TASKdbcode import demographic_db
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 PAGE_SIZE = 100
 operators = [['ge ', '>='],
                  ['le ', '<='],

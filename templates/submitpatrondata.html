@@ -86,17 +86,17 @@ Sets up HTML page to input patron data
 					<td>
 						<center>
 						<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-							{%for race in ['White','Black','Hispanic','Asian']%}
+							{%for race in ['White','Black','Hispanic','Asian','American Indian', 'Pacific Islander', 'Other']%}
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
 							{%endfor%}
 						</div>
-							<text> Other: </text>
+							<!-- <text> Other: </text>
 							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+								{% for race in ['Unknown'] %}
 								<option value="{{race}}">{{race}}</option>
 								{% endfor %}
-							</select>
+							</select> -->
 						</center>
 					</td>
 				</tr>
@@ -104,14 +104,16 @@ Sets up HTML page to input patron data
 					<td align="right">Language: </td>
 					<td>
 						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
-							{%for lang in ['English','Spanish']%}
+							{%for lang in ["English", "Spanish", "ASL", "Arabic", "Bengali",
+							"Chinese", "Creole"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="language" value={{lang}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
-							{%endfor%}
+							{%endfor%} 
+							<!-- ask vicky how she did this -->
 						</div>
 						<text>Other: </text>
 						<select name="otherlangs" id = "otherlangs">  
-							{% for lang in languages %}
+							{% for lang in otherlanguages %}
 							<option value="{{lang}}">{{lang}}</option>
 							{% endfor %}
 						</select>

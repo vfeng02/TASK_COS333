@@ -41,7 +41,12 @@ def init_graphdashboard(server):
                              options=demographic_options,
                              clearable=False,
                              value='race',
-                             )
+                             ),
+                dcc.Dropdown(id='dropdown3',
+                options=['Pie Chart', 'Bar Chart', 'Time Graph'],
+                clearable=False,
+                value='Pie Chart',
+                )
             ], className='menu-l'
             ),
             dcc.Graph(id='interaction2',
