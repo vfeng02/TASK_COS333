@@ -13,6 +13,7 @@ from dash.dependencies import Input, Output
 import pandas
 
 from TASKdbcode import demographic_db
+
 PAGE_SIZE = 100
 operators = [['ge ', '>='],
                  ['le ', '<='],
@@ -42,13 +43,22 @@ def init_dashboard(server):
             {"name": i, "id": i} for i in df.columns
             
         ],
-        style_cell_conditional=[
-        {
-            'if': {'column_id': c},
-            'textAlign': 'left'
-        } for c in ['Date', 'Region']
+    css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
+    style_cell = {'textAlign': 'left', 
+                  'height': 'auto'},
+    style_cell_conditional=[
+        {'if': {'column_id': 'service_timestamp'},
+         'width': '17%'},
+        {'if': {'column_id': 'meal_site'},
+         'width': '15%'},
+        {'if': {'column_id': 'race'},
+         'width': '15%'},
+        {'if': {'column_id': 'gender'},
+         'width': '7%'}
     ],
     style_data={
+        'whiteSpace': 'normal',
+        'height': 'auto',
         'color': 'black',
         'backgroundColor': 'white'
     },
@@ -61,7 +71,8 @@ def init_dashboard(server):
     style_header={
         'backgroundColor': 'rgb(210, 210, 210)',
         'color': 'black',
-        'fontWeight': 'bold'
+        'fontWeight': 'bold',
+        'height': 'auto'
     },
        # style_as_list_view = True,
         page_current=0,
