@@ -167,7 +167,7 @@ def init_callbacks(bar_app):
                 all_site_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
                 all_histogram = px.histogram(all_site_data, x=selected_demographic,
                 color='meal_site', barmode='group',
-                title = f"{selected_demographic.title()} of Diners at All Meal Sites")
+                title = f"Comparison of {selected_demographic.title()} of Diners at All Meal Sites")
                 return all_histogram
 
         elif selected_filters:
@@ -192,11 +192,11 @@ def init_callbacks(bar_app):
                 all_site_data = demographic_db.get_patrons(
                                 filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
                 all_site_data.rename("count", inplace=True)
-                bar_graph = px.bar(all_site_data, x = all_site_data.index,\
+                all_bar_graph = px.bar(all_site_data, x = all_site_data.index,\
                                     y = "count", title = "Comparison of Diners With Selected Filters Across All Meal Sites", text_auto = True,
                                     color = all_site_data.index)
-                bar_graph.update_layout(showlegend=False)
-                return bar_graph
+                all_bar_graph.update_layout(showlegend=False)
+                return all_bar_graph
 
 
 
