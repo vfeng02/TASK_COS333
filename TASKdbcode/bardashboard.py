@@ -42,11 +42,11 @@ def init_bardashboard(server):
                              clearable=True,
                              value='race'
                              )                # maybe make this hover text or something? I really don't know how this should look
-                , html.H4("And/Or Select Filters (If no demographic is selected, your filters will be compared across all meal sites"),
+                , html.H4("And/Or Select Filters"),
                 dbc.Row(id="filter_options", children=[]),
                 html.Div(id="site_selection", children=[
                 html.H4(
-                    "Select Meal Sites (recommended max 4. you could select more than 4, but your bar graph might look ugly)"),
+                    "Select Meal Sites (Clear Selections to Show All Sites)"),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
@@ -135,7 +135,7 @@ def init_callbacks(bar_app):
             State('site_options', 'value'),
             State('demographic', 'value'),
             State({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
-        # B) defining the callback and what to return here
+
     )
     def update_bar_graph(html, selected_sites, selected_demographic, selected_filters):
         if selected_sites is None and selected_demographic is None and selected_filters is None:
