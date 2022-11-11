@@ -47,7 +47,7 @@ def fill_db(num_entries):
                 for _ in range(num_entries):
                     random_fields = generate_demographics()
                     
-                    row = database.MealSite(service_timestamp = func.now(),\
+                    row = database.MealSite(entry_timestamp = func.now(),\
                         meal_site = meal_site_option,
                         **random_fields)
 

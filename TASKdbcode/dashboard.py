@@ -29,9 +29,7 @@ def init_dashboard(server):
         server=server,
         routes_pathname_prefix="/dashapp/")
     # Load DataFrame
-    select_fields = []
-    filter_dict = {}
-    df = demographic_db.get_patrons(select_fields, filter_dict)
+    df = demographic_db.get_patrons()
 
     # Create Layout
     dash_app.layout = html.Div([
@@ -47,7 +45,7 @@ def init_dashboard(server):
     style_cell = {'textAlign': 'left', 
                   'height': 'auto'},
     style_cell_conditional=[
-        {'if': {'column_id': 'service_timestamp'},
+        {'if': {'column_id': 'entry_timestamp'},
          'width': '17%'},
         {'if': {'column_id': 'meal_site'},
          'width': '15%'},
@@ -72,7 +70,6 @@ def init_dashboard(server):
         'backgroundColor': 'rgb(210, 210, 210)',
         'color': 'black',
         'fontWeight': 'bold',
-        'height': 'auto'
     },
        # style_as_list_view = True,
         page_current=0,

@@ -53,7 +53,7 @@ class Administrators(User):
 # The primary key is the timestamp + the meal site name
 class MealSite(Base):
     __tablename__ = "meal_sites"
-    service_timestamp = Column(DateTime, primary_key = True)
+    entry_timestamp = Column(DateTime, primary_key = True)
     meal_site = Column(String(), primary_key = True)
     race = Column(String())
     language = Column(String())
@@ -63,7 +63,7 @@ class MealSite(Base):
     homeless = Column(String(7))
     veteran = Column(String(7))
     disabled = Column(String(7))
-    patron_response = Column(String(5))
+    guessed = Column(String(5))
 
 Base.registry.configure()
 #-----------------------------------------------------------------------
@@ -85,7 +85,7 @@ def add_patron(input_dict):
             # for demographic in demographic_options:
             #     demographics[demographic] = args_dict[demographic]
             entry = MealSite(\
-                service_timestamp = sqlalchemy.func.now(),\
+                entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
             session.commit()
@@ -98,13 +98,13 @@ def add_patron(input_dict):
 
 #-----------------------------------------------------------------------
 
-def get_patrons(select_fields, filter_dict):
+def get_patrons(filter_dict = {}, select_fields = []):
 
     filter_dict = {key:value for (key, value) in\
                    filter_dict.items() if value}
 
-    # select_fields = [getattr(MealSite, field) for\
-    #     field in select_fields]
+    select_fields = [getattr(MealSite, field) for\
+        field in select_fields]
     
     
     try:
@@ -112,8 +112,11 @@ def get_patrons(select_fields, filter_dict):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(MealSite)
-            # query = session.query(*select_fields)
+            if (select_fields):
+                query = session.query(*select_fields)
+            else:
+                query = session.query(MealSite)
+                
             for key, value in filter_dict.items():
                 filter = {"field": key, "op" : "==", "value": value}
                 # if key == "race":
@@ -139,7 +142,7 @@ def filter_dms(filter_dicts):
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
-            query = session.query(MealSite).order_by(MealSite.service_timestamp.desc())
+            query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
             if filter_dicts:
                 for filter_dict in filter_dicts:
                     query = apply_filters(query, filter_dict)
