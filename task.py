@@ -17,6 +17,7 @@ from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
 from TASKdbcode import dashboard
 from TASKdbcode import graphdashboard
+from TASKdbcode import bardashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
@@ -27,6 +28,7 @@ app = Flask(__name__, template_folder='templates')
 with app.app_context():
         app = dashboard.init_dashboard(app)
         app = graphdashboard.init_graphdashboard(app)
+        app = bardashboard.init_bardashboard(app)
 
 #-----------------------------------------------------------------------
 
