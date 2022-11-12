@@ -24,12 +24,12 @@ def demographic_distribution(demographic, meal_site = None):
 
 def main():
     
-    select_fields = ["service_timestamp", "meal_site", "race",]
+    select_fields = ["entry_timestamp", "meal_site", "race",]
     # for name, group in df.groupby("meal_site")
     # filter_dict = {"meal_site": "First Baptist Church"}
     filter_dict = {}
 
-    df = get_patrons(select_fields, filter_dict)
+    df = get_patrons(select_fields = select_fields)
     # create a data frame dictionary to store your data frames
     DataFrameDict = {elem: pandas.DataFrame() for elem in database.MEAL_SITE_OPTIONS}
 
@@ -107,7 +107,7 @@ def main():
     
     filter_dict = {"homeless": "True", "veteran": "True"}
     
-    filtered_data = get_patrons([], filter_dict).groupby("meal_site")["service_timestamp"].count()
+    filtered_data = get_patrons(select_fields=["entry_timestamp", "meal_site", "homeless", "veteran"], filter_dict = filter_dict).groupby("meal_site")["entry_timestamp"].count()
     filtered_data.rename("count", inplace=True)
     print(filtered_data)
     bar_graph = px.bar(filtered_data, x = filtered_data.index,\
@@ -121,11 +121,11 @@ def main():
     
     filter_dict = {"meal_site": "Pelletier Homes", "homeless": "True", "veteran": "True"}
     
-    num_entries = len(get_patrons([], {"meal_site": "Pelletier Homes"}).index)
+    num_entries = len(get_patrons(filter_dict = {"meal_site": "Pelletier Homes"}).index)
 
     
     
-    filtered_data = get_patrons([], filter_dict)["service_timestamp"].count()
+    filtered_data = get_patrons(filter_dict = filter_dict)["entry_timestamp"].count()
     num_entries = num_entries - filtered_data
     filtered_data = pandas.Series([filtered_data],["Homeless Veterans"])
     other_count = pandas.Series([num_entries], ["Other"])
@@ -144,8 +144,8 @@ def main():
     filter_dict1 = {"meal_site": "First Baptist Church"}
     filter_dict2 = {"meal_site": "Medallion Care Behavioral Health"}
     
-    df1 = get_patrons([], filter_dict1)
-    df2 = get_patrons([], filter_dict2)
+    df1 = get_patrons(filter_dict = filter_dict1)
+    df2 = get_patrons(filter_dict = filter_dict2)
     combined_df = pandas.concat([df1, df2])
     histogram = px.histogram(combined_df, x="gender",
              color='meal_site', barmode='group',
@@ -178,7 +178,7 @@ def main():
     combined_histogram.show()
 #-----------------------------------------------------------------------
     # Bar Chart Comparison All (simple demographic)
-    df_all = get_patrons([], {})
+    df_all = get_patrons()
     all_histogram = px.histogram(df_all, x="gender",
              color='meal_site', barmode='group',
              height=400, title = "Genders of Patrons at All Meal Sites")

@@ -16,7 +16,9 @@ from flask import render_template, make_response
 from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
 from TASKdbcode import dashboard
-from TASKdbcode import graphdashboard
+from TASKdbcode import piedashboard
+from TASKdbcode import bardashboard
+
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
@@ -26,7 +28,8 @@ import psycopg2
 app = Flask(__name__, template_folder='templates')
 with app.app_context():
         app = dashboard.init_dashboard(app)
-        app = graphdashboard.init_graphdashboard(app)
+        app = piedashboard.init_piedashboard(app)
+        app = bardashboard.init_bardashboard(app)
 
 #-----------------------------------------------------------------------
 
@@ -93,16 +96,16 @@ def submitpatrondata():
     homeless = request.args.get('homeless')
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
-    patron_response = request.args.get('patron_response')
+    guessed = request.args.get('patron_response')
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
-    "patron_response": patron_response}
+    "guessed": guessed}
 
     print(patron_data)
     
-    if (any(patron_data.values()) and patron_data["patron_response"]):
+    if (any(patron_data.values()) and patron_data["guessed"]):
         patron_data["meal_site"] = mealsite
         demographic_db.add_patron(patron_data)
 
@@ -120,7 +123,7 @@ def submitpatrondata():
         homeless_options = database_constants.HOMELESS_OPTIONS,
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
-        patron_response_options = database_constants.PATRON_RESPONSE_OPTIONS
+        patron_response_options = database_constants.GUESSED_OPTIONS
         )
     response = make_response(html_code)
 

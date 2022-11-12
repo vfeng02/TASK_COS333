@@ -17,7 +17,7 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
 
 DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
                        "gender", "zip_code", "homeless", "veteran",\
-                       "disabled", "patron_response"]
+                       "disabled", "guessed"]
 
 # Check all that apply
 # Maybe display White as White/Caucasian
@@ -63,7 +63,7 @@ VETERAN_OPTIONS = ["True", "False", "Unknown"]
 
 DISABLED_OPTIONS = ["True", "False", "Unknown"]
 
-PATRON_RESPONSE_OPTIONS = ["True", "False"]
+GUESSED_OPTIONS = ["True", "False"]
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\
