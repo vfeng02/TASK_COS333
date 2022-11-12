@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 # piedashboard.py
 # Author: Andres Blanco Bonilla
 # dash app for pie charts
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
 import dash
@@ -19,6 +19,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
+from TASKdbcode import graphdashboard_helpers as helpers
 
 
 def init_piedashboard(server):
@@ -81,41 +82,9 @@ def init_callbacks(pie_app):
             State({'type': 'graph_filter', 'name': dash.ALL}, 'value')
     )
     def update_filter_options(selected_demographic, selected_filters):
-        selected_fields = list(dash.callback_context.states)
-        selected_fields = [eval(field.strip(".value"))
-                                for field in selected_fields]
-        selected_fields = [field["name"] for field in selected_fields]
-        
+        selected_fields = helpers.selected_fields_helper(dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
-
-        filters = []
-        for demographic_option in database_constants.DEMOGRAPHIC_OPTIONS:
-            if demographic_option != selected_demographic:
-                options_string = demographic_option.upper() + "_OPTIONS"
-                if demographic_option in selected_fields:
-                    filters.append(
-                        dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
-                                                'name': demographic_option},
-                                options=[{'value': o, 'label': o} for o in getattr(
-                                    database_constants, options_string)],
-                                clearable=True,
-                                value=filter_dict[demographic_option],
-                                placeholder=demographic_option.replace(
-                                    "_", " ").title() + "..."
-                                ))
-                    )
-                else:
-                    filters.append(
-                    dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
-                                               'name': demographic_option},
-                             options=[{'value': o, 'label': o} for o in getattr(
-                                 database_constants, options_string)],
-                             clearable=True,
-                             value='',
-                             placeholder=demographic_option.replace(
-                                 "_", " ").title() + "..."
-                             ))
-                    )
+        filters = helpers.filter_options_helper(selected_demographic, filter_dict)
         return filters
 
     @pie_app.callback(
@@ -125,15 +94,9 @@ def init_callbacks(pie_app):
             Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
     )
     def update_pie_chart(selected_sites, selected_demographic, selected_filters):
-        selected_fields = list(dash.callback_context.inputs.keys())
-        selected_fields.pop(0)
-        selected_fields.pop(0)
-        selected_fields = [eval(field.strip(".value")) for field in selected_fields]
-        selected_fields = [field["name"] for field in selected_fields]
+        selected_fields = helpers.selected_fields_helper(dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
-            
-        site_df = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
         #print(site_df)
         if selected_demographic:
             selected_fields.append(selected_demographic)
@@ -156,6 +119,7 @@ def init_callbacks(pie_app):
                                                  values=list(all_site_df[selected_demographic].value_counts()))])
                 all_pie_chart.update_layout(title=
                 f"Distribution of {selected_demographic.title()} of Diners at All Sites")
+                return all_pie_chart
         else: 
             if selected_sites:
                 site_dfs = []
@@ -184,3 +148,6 @@ def init_callbacks(pie_app):
                 all_exp_pie_chart = go.Figure(data = [go.Pie(values = all_site_data.values, labels = all_site_data.index, pull = [0.2,0],
                                           title = "Percentage of Diners with Selected Filters Across All Meal Sites")])
                 return all_exp_pie_chart
+                
+                
+        
