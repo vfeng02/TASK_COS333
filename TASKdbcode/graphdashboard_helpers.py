@@ -31,6 +31,7 @@ def selected_fields_helper(callback_context):
     selected_fields = [eval(field.strip(".value"))
                                 for field in list(callback_context)]
     selected_fields = [field["name"] for field in selected_fields]
+
     return selected_fields
 
 #-----------------------------------------------------------------------

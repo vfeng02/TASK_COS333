@@ -74,6 +74,7 @@ def init_piedashboard(server):
 
     return pie_app.server
 
+
 def init_callbacks(pie_app):
 
     @pie_app.callback(
@@ -94,49 +95,54 @@ def init_callbacks(pie_app):
             Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
     )
     def update_pie_chart(selected_sites, selected_demographic, selected_filters):
+        
         selected_fields = helpers.selected_fields_helper(dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
-        #print(site_df)
+        
+        # The control flow of these if/else statements is logical,
+        # but a little complicated
+        # Maybe there is a cleaner way of arranging these chunks?
+
         if selected_demographic:
             selected_fields.append(selected_demographic)
+
             if selected_sites:
-                site_dfs = []
-                for site in selected_sites:
-                    site_filter_dict = filter_dict
-                    site_filter_dict["meal_site"] = site
-                    site_dfs.append(demographic_db.get_patrons(
-                        filter_dict=site_filter_dict, select_fields=selected_fields))
-                combined_df = pandas.concat(site_dfs)
-                pie_chart=go.Figure(data=[go.Pie(labels=combined_df[selected_demographic].value_counts().index.tolist(),
-                                                 values=list(combined_df[selected_demographic].value_counts()))])
+                filter_dict["meal_site"] = selected_sites
+                print(filter_dict)
+                selected_site_df = demographic_db.get_patrons(
+                        filter_dict=filter_dict, select_fields=selected_fields)
+                pie_chart=go.Figure(data=[go.Pie(labels=selected_site_df[selected_demographic].value_counts().index.tolist(),
+                                                 values=list(selected_site_df[selected_demographic].value_counts()))])
                 pie_chart.update_layout(title=
                 f"Distribution of {selected_demographic.title()} of Diners at Selected Sites")
                 return pie_chart
+
             else:
-                all_site_df = demographic_db.get_patrons(filter_dict = filter_dict)
+                all_site_df = demographic_db.get_patrons(filter_dict = filter_dict, select_fields=selected_fields)
                 all_pie_chart=go.Figure(data=[go.Pie(labels=all_site_df[selected_demographic].value_counts().index.tolist(),
                                                  values=list(all_site_df[selected_demographic].value_counts()))])
                 all_pie_chart.update_layout(title=
                 f"Distribution of {selected_demographic.title()} of Diners at All Sites")
                 return all_pie_chart
-        else: 
+
+        else:
+
             if selected_sites:
-                site_dfs = []
-                for site in selected_sites:
-                    site_filter_dict = filter_dict
-                    site_filter_dict["meal_site"] = site
-                    site_dfs.append(demographic_db.get_patrons(
-                        filter_dict=site_filter_dict, select_fields=selected_fields))
-                combined_data = pandas.concat(site_dfs)["entry_timestamp"].count()
-                num_entries = len(site_dfs) * 50
-                num_entries = num_entries - combined_data
-                combined_data = pandas.Series([combined_data],["Diners with Selected Filters"])
+                selected_site_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
+                # I know every site has 50 entries bc I put 50 in there
+                # maybe add table with num entries of each site?
+                num_entries = len(selected_sites) * 50
+                num_entries = num_entries - selected_site_data
+                selected_site_data = pandas.Series([selected_site_data],["Diners with Selected Filters"])
                 other_count = pandas.Series([num_entries], ["Other"])
-                combined_data = pandas.concat([combined_data, other_count])
-                exp_pie_chart = go.Figure(data = [go.Pie(values = combined_data.values, labels = combined_data.index, pull = [0.2,0],
+                selected_site_data = pandas.concat([selected_site_data, other_count])
+                # creates an exploded pie chart, with the relevant slice pulled out by the pull factor specified
+                # right now the pull looks weird if 0% of the diners meet the filters, somebody should make it look better
+                exp_pie_chart = go.Figure(data = [go.Pie(values = selected_site_data.values, labels = selected_site_data.index, pull = [0.2,0],
                                                          title = "Percentage of Diners with Selected Filters at Selected Meal Site")])
                 return exp_pie_chart
+
             else:
                 all_site_data = demographic_db.get_patrons(
                                 filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
