@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 # graphdashboard.py
 # Author: Andres Blanco Bonilla
-# Test
+# Test, obsolete now
 #-----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
@@ -30,7 +30,8 @@ def init_graphdashboard(server):
     for option in database_constants.DEMOGRAPHIC_OPTIONS:
         demographic_options.append({"label": option.title(), "value": option})
 
-# additional filtering needed
+# added dropdowns for filtering
+# the dropdowns are on a bootstrap grid made using dash bootstrap components (dbc)
     graph_app.layout = html.Div(
         children=[
             html.Div(children=[
@@ -51,7 +52,7 @@ def init_graphdashboard(server):
             ], className='menu-l'
             ),
             dcc.Graph(id='interaction2',
-                      config={'displayModeBar': False},
+                      config={'displayModeBar': True, 'displayLogo': False},
                       className='card',
                       style = {'width': '100vw', 'height': '100vh'}
                       )
@@ -64,6 +65,10 @@ def init_graphdashboard(server):
 
 def init_callbacks(graph_app):
     
+    
+    # this callback is called when a demographic is selected
+    # it removes that demographic from the filter dropdown options
+    # bc that would make no sense
     @graph_app.callback(
             Output('filter_options', 'children'),
             Input('demographic', 'value')
@@ -85,13 +90,13 @@ def init_callbacks(graph_app):
                     )
         return filters
     
-    
+    # this calllback is called whenever the site, demographic, or any of the filter drop downs change
+    # and creates a new graph based on that
     @graph_app.callback(
             Output('interaction2', 'figure'),
             [Input('site', 'value'),
             Input('demographic', 'value'),
             Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
-        # B) defining the callback and what to return here
     )
     def update_pie_chart(selected_site, selected_demographic, selected_filters):
         selected_fields = list(dash.callback_context.inputs.keys())
@@ -116,6 +121,7 @@ def init_callbacks(graph_app):
             # print(summary_counts)
             specs = [[{'type':'domain'}], [{'type':'domain'}]]
             pie_charts = make_subplots(rows=2, cols=1, specs=specs)
+            # the titles of the charts could posssibly include the filters but idk how to make that look good
             single_chart = go.Pie(values = summary_counts, labels = summary_counts.index,
                                   title = f"Races of Single Race Diners at {selected_site} Meal Site",
                                   legendgroup=1)
@@ -134,6 +140,8 @@ def init_callbacks(graph_app):
                                         values=list(site_df[selected_demographic].value_counts()))])
             
             ## customizing the title of the pie chart
+            # titles could be different to include active filters
+            # also stuff like "Homeless of Diners at Meal Site" makes no sense lol that needs to be different
             pie_chart.update_layout(title=
             f"{selected_demographic.title()} of Diners at {selected_site}"
                         " Meal Site")

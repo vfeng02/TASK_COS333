@@ -3,7 +3,8 @@
 #-----------------------------------------------------------------------
 # piedashboard.py
 # Author: Andres Blanco Bonilla
-# dash app for pie charts
+# Dash app for pie chart display
+# route: /pieapp
 #-----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
@@ -26,19 +27,14 @@ def init_piedashboard(server):
     pie_app = dash.Dash(
         server=server,
         routes_pathname_prefix="/pieapp/",
+        # using default bootstrap style sheet, could be changed
         external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-    df = demographic_db.get_patrons()
-    demographic_options = []
-    for option in database_constants.DEMOGRAPHIC_OPTIONS:
-        demographic_options.append(
-            {"label": option.title(), "value": option})
 
     pie_app.layout = html.Div(
         children=[
             html.Div(children=[
                 html.H4(
-                    "Select Meal Sites (Clear Selections to Show All Sites)"),
+                    "Select Meal Sites (Clear Selections to Select All Sites)"),
                 html.H5("Data from selected sites will be aggregated together into a single pie chart"),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
@@ -47,13 +43,15 @@ def init_piedashboard(server):
                              multi=True,
                              value=["First Baptist Church"]
                              ),
-                html.H4("Select a Demographic"),
+                html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',
-                             options=demographic_options,
+                             options= [{"label": option.replace("_", " ").title(), "value": option}
+                                       for option in database_constants.DEMOGRAPHIC_OPTIONS],
                              clearable=True,
                              value='gender'
                              )         
                 , html.H4("Select Filters"),
+                # the options for race look weird bc they're long
                 dbc.Row(id="filter_options", children=[]),
 
             ], className='menu-l'
@@ -104,16 +102,34 @@ def init_callbacks(pie_app):
         # but a little complicated
         # Maybe there is a cleaner way of arranging these chunks?
 
+        # overall, would be great if the title of the charts were clearer
+        # kinda hard to understand what exactly you're looking at atm lol
+        
+        # to do for pie charts:
+        # include the demographic on the slice (like "Female" on the Female slice)
+        # include the percentage of each slice on the key (like Black: 15%)
+        # change colors to be readable in black and white and less ugly
+        
+        # fix scrolling and iframe, there's like 4 overlapping scrollbars
+        # and it looks hideous lol, may need to mess with the iframe
+        # size and page layout
+        # ideally, the chart section doesn't have its own scrollbar
+        # and it just scrolls with the rest of the page
+        
+        # There is also an issue where the chart completely disappears
+        # if no diner fits all those filters,
+        # there should be something less ugly than just a blank space
+        
         if selected_demographic:
             selected_fields.append(selected_demographic)
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
                 print(filter_dict)
-                selected_site_df = demographic_db.get_patrons(
+                selected_sites_df = demographic_db.get_patrons(
                         filter_dict=filter_dict, select_fields=selected_fields)
-                pie_chart=go.Figure(data=[go.Pie(labels=selected_site_df[selected_demographic].value_counts().index.tolist(),
-                                                 values=list(selected_site_df[selected_demographic].value_counts()))])
+                pie_chart=go.Figure(data=[go.Pie(labels=selected_sites_df[selected_demographic].value_counts().index.tolist(),
+                                                 values=list(selected_sites_df[selected_demographic].value_counts()))])
                 pie_chart.update_layout(title=
                 f"Distribution of {selected_demographic.title()} of Diners at Selected Sites")
                 return pie_chart
@@ -129,17 +145,17 @@ def init_callbacks(pie_app):
         else:
 
             if selected_sites:
-                selected_site_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
+                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
                 # I know every site has 50 entries bc I put 50 in there
                 # maybe add table with num entries of each site?
                 num_entries = len(selected_sites) * 50
-                num_entries = num_entries - selected_site_data
-                selected_site_data = pandas.Series([selected_site_data],["Diners with Selected Filters"])
+                num_entries = num_entries - selected_sites_data
+                selected_sites_data = pandas.Series([selected_sites_data],["Diners with Selected Filters"])
                 other_count = pandas.Series([num_entries], ["Other"])
-                selected_site_data = pandas.concat([selected_site_data, other_count])
+                selected_sites_data = pandas.concat([selected_sites_data, other_count])
                 # creates an exploded pie chart, with the relevant slice pulled out by the pull factor specified
                 # right now the pull looks weird if 0% of the diners meet the filters, somebody should make it look better
-                exp_pie_chart = go.Figure(data = [go.Pie(values = selected_site_data.values, labels = selected_site_data.index, pull = [0.2,0],
+                exp_pie_chart = go.Figure(data = [go.Pie(values = selected_sites_data.values, labels = selected_sites_data.index, pull = [0.2,0],
                                                          title = "Percentage of Diners with Selected Filters at Selected Meal Site")])
                 return exp_pie_chart
 
