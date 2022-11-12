@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 # -----------------------------------------------------------------------
-# bardashboard.py
+# piedashboard.py
 # Author: Andres Blanco Bonilla
-# dash app for bar graphs
+# dash app for pie charts
 # -----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
@@ -21,10 +21,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def init_bardashboard(server):
-    bar_app = dash.Dash(
+def init_piedashboard(server):
+    pie_app = dash.Dash(
         server=server,
-        routes_pathname_prefix="/barapp/",
+        routes_pathname_prefix="/pieapp/",
         external_stylesheets=[dbc.themes.BOOTSTRAP])
 
     df = demographic_db.get_patrons()
@@ -33,33 +33,31 @@ def init_bardashboard(server):
         demographic_options.append(
             {"label": option.title(), "value": option})
 
-    bar_app.layout = html.Div(
+    pie_app.layout = html.Div(
         children=[
             html.Div(children=[
-                html.H4("Select a Demographic"),
-                dcc.Dropdown(id='demographic',
-                             options=demographic_options,
-                             clearable=True,
-                             value='race'
-                             )                # maybe make this hover text or something? I really don't know how this should look
-                , html.H4("Select Filters"),
-                dbc.Row(id="filter_options", children=[]),
-                html.Div(id="site_selection", children=[
                 html.H4(
-                    "Select Meal Sites (Clear Selections to Show All Sites)\nSelected sites will each have their own bar(s) on the graph"),
+                    "Select Meal Sites (Clear Selections to Show All Sites)"),
+                html.H5("Data from selected sites will be aggregated together into a single pie chart"),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church",
-                                 "Trenton Area Soup Kitchen"]
-                             )
+                             value=["First Baptist Church"]
+                             ),
+                html.H4("Select a Demographic"),
+                dcc.Dropdown(id='demographic',
+                             options=demographic_options,
+                             clearable=True,
+                             value='gender'
+                             )         
+                , html.H4("Select Filters"),
+                dbc.Row(id="filter_options", children=[]),
 
-                ], style={'display': 'block'})
             ], className='menu-l'
             ),
-            dcc.Graph(id='bar_graph',
+            dcc.Graph(id='pie_chart',
                       config={'displayModeBar': True,
                           'displaylogo': False},
                       className='card',
@@ -68,30 +66,22 @@ def init_bardashboard(server):
         ]
     )
 
-    init_callbacks(bar_app)
-    bar_app.enable_dev_tools(
+    init_callbacks(pie_app)
+    pie_app.enable_dev_tools(
     dev_tools_ui=True,
     dev_tools_serve_dev_bundles=True,)
 
-    return bar_app.server
+    return pie_app.server
 
+def init_callbacks(pie_app):
 
-def init_callbacks(bar_app):
-
-    @bar_app.callback(
+    @pie_app.callback(
             Output('filter_options', 'children'),
-            [Input('demographic', 'value'),
-            Input('site_options', 'value'),
-            Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
+            Input('demographic', 'value'),
+            State({'type': 'graph_filter', 'name': dash.ALL}, 'value')
     )
-    def update_filter_options(selected_demographic, selected_sites, selected_filters):
-        
-        triggered_component = dash.callback_context.triggered_id
-        if triggered_component != "demographic":
-            dash.exceptions.PreventUpdate
-        selected_fields = list(dash.callback_context.inputs)
-        selected_fields.pop(0)
-        selected_fields.pop(0)
+    def update_filter_options(selected_demographic, selected_filters):
+        selected_fields = list(dash.callback_context.states)
         selected_fields = [eval(field.strip(".value"))
                                 for field in selected_fields]
         selected_fields = [field["name"] for field in selected_fields]
@@ -128,28 +118,23 @@ def init_callbacks(bar_app):
                     )
         return filters
 
-
-    @bar_app.callback(
-            Output('bar_graph', 'figure'),
-            [Input('filter_options', 'children'),
-            State('site_options', 'value'),
-            State('demographic', 'value'),
-            State({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
-
+    @pie_app.callback(
+            Output('pie_chart', 'figure'),
+            [Input('site_options', 'value'),
+            Input('demographic', 'value'),
+            Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
     )
-    def update_bar_graph(html, selected_sites, selected_demographic, selected_filters):
-        if selected_sites is None and selected_demographic is None and selected_filters is None:
-            raise dash.exceptions.PreventUpdate
-        selected_fields = list(dash.callback_context.states.keys())
+    def update_pie_chart(selected_sites, selected_demographic, selected_filters):
+        selected_fields = list(dash.callback_context.inputs.keys())
         selected_fields.pop(0)
         selected_fields.pop(0)
-        selected_fields = [eval(field.strip(".value"))
-                                for field in selected_fields]
+        selected_fields = [eval(field.strip(".value")) for field in selected_fields]
         selected_fields = [field["name"] for field in selected_fields]
         filter_dict = dict(zip(selected_fields, selected_filters))
-        selected_fields.append("meal_site")
         selected_fields.append("entry_timestamp")
-
+            
+        site_df = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
+        #print(site_df)
         if selected_demographic:
             selected_fields.append(selected_demographic)
             if selected_sites:
@@ -160,19 +145,18 @@ def init_callbacks(bar_app):
                     site_dfs.append(demographic_db.get_patrons(
                         filter_dict=site_filter_dict, select_fields=selected_fields))
                 combined_df = pandas.concat(site_dfs)
-                histogram = px.histogram(combined_df, x=selected_demographic,
-                color='meal_site', barmode='group', title=f"Comparison of {selected_demographic} of Diners at Selected Meal Sites")
-                return histogram
+                pie_chart=go.Figure(data=[go.Pie(labels=combined_df[selected_demographic].value_counts().index.tolist(),
+                                                 values=list(combined_df[selected_demographic].value_counts()))])
+                pie_chart.update_layout(title=
+                f"Distribution of {selected_demographic.title()} of Diners at Selected Sites")
+                return pie_chart
             else:
-                all_site_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                all_histogram = px.histogram(all_site_data, x=selected_demographic,
-                color='meal_site', barmode='group',
-                title = f"Comparison of {selected_demographic.title()} of Diners at All Meal Sites")
-                return all_histogram
-
-        elif selected_filters:
-            # print(filter_dict)
-            # print(selected_fields)
+                all_site_df = demographic_db.get_patrons(filter_dict = filter_dict)
+                all_pie_chart=go.Figure(data=[go.Pie(labels=all_site_df[selected_demographic].value_counts().index.tolist(),
+                                                 values=list(all_site_df[selected_demographic].value_counts()))])
+                all_pie_chart.update_layout(title=
+                f"Distribution of {selected_demographic.title()} of Diners at All Sites")
+        else: 
             if selected_sites:
                 site_dfs = []
                 for site in selected_sites:
@@ -180,29 +164,23 @@ def init_callbacks(bar_app):
                     site_filter_dict["meal_site"] = site
                     site_dfs.append(demographic_db.get_patrons(
                         filter_dict=site_filter_dict, select_fields=selected_fields))
-                combined_df = pandas.concat(site_dfs).groupby("meal_site")["entry_timestamp"].count()
-                combined_df.rename("count", inplace=True)
-                bar_graph = px.bar(combined_df, x = combined_df.index,\
-                                    y = "count", title = "Comparison of Diners With Selected Filters At Selected Meal Sites", text_auto = True,
-                                    color=combined_df.index)
-                bar_graph.update_layout(showlegend=False)
-                return bar_graph
-                
+                combined_data = pandas.concat(site_dfs)["entry_timestamp"].count()
+                num_entries = len(site_dfs) * 50
+                num_entries = num_entries - combined_data
+                combined_data = pandas.Series([combined_data],["Diners with Selected Filters"])
+                other_count = pandas.Series([num_entries], ["Other"])
+                combined_data = pandas.concat([combined_data, other_count])
+                exp_pie_chart = go.Figure(data = [go.Pie(values = combined_data.values, labels = combined_data.index, pull = [0.2,0],
+                                                         title = "Percentage of Diners with Selected Filters at Selected Meal Site")])
+                return exp_pie_chart
             else:
                 all_site_data = demographic_db.get_patrons(
-                                filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
-                all_site_data.rename("count", inplace=True)
-                all_bar_graph = px.bar(all_site_data, x = all_site_data.index,\
-                                    y = "count", title = "Comparison of Diners With Selected Filters Across All Meal Sites", text_auto = True,
-                                    color = all_site_data.index)
-                all_bar_graph.update_layout(showlegend=False)
-                return all_bar_graph
-
-
-
-
-            
-            
-
-
-
+                                filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
+                num_entries = len(database_constants.MEAL_SITE_OPTIONS) * 50
+                num_entries = num_entries - all_site_data
+                all_site_data = pandas.Series([all_site_data],["Diners with Selected Filters"])
+                other_count = pandas.Series([num_entries], ["Other"])
+                all_site_data = pandas.concat([all_site_data, other_count])
+                all_exp_pie_chart = go.Figure(data = [go.Pie(values = all_site_data.values, labels = all_site_data.index, pull = [0.2,0],
+                                          title = "Percentage of Diners with Selected Filters Across All Meal Sites")])
+                return all_exp_pie_chart
