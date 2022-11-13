@@ -11,7 +11,6 @@ Sets up HTML page to input patron data
 		{% include 'imports.html' %}
     </head>
     
-	< -- 
     <body class="forceOpenSans">
     {% include 'header.html' %}
     <div class="container-fluid">
@@ -248,9 +247,11 @@ Sets up HTML page to input patron data
 <script>
 	'use strict';
 	function validateForm() {
+		
 		var x = document.forms["patronForm"]["presp"].value;
-		if (x == None) {
-			alert("Name must be filled out");
+		console.log(x)
+		if (x == '') {
+		alert("Please select True or False for Guess.");
 			return false;
 		}
 		return true;
