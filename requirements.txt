@@ -47,4 +47,4 @@ tomli==2.0.1
 tomlkit==0.11.4
 Werkzeug==2.2.2
 wrapt==1.14.1
-dash-bootstrap-components==2.0.0
+dash-bootstrap-components==1.2.1
