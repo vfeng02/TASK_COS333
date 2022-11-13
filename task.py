@@ -22,7 +22,7 @@ from TASKdbcode import bardashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
+#from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 
 
 #----------------------------------------------------------------------
@@ -58,7 +58,7 @@ with app.app_context():
         app = dashboard.init_dashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
-        SimpleLogin(app, login_checker=check_my_users)
+        #SimpleLogin(app, login_checker=check_my_users)
 
 #-----------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ def get_current_time():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-@login_required(basic=True)
+#@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -166,7 +166,7 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[be_admin])
+#@login_required(must=[be_admin])
 def admindisplaydata():
     
     return render_template(
