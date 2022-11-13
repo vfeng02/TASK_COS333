@@ -192,8 +192,7 @@ Sets up HTML page to input patron data
 					<td>
                         <div class = 'row'>
 							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
-								{%for option in ['True', 'False'] %}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-presp-{{option}}" name="patron_response" value={{option}}>
+								name="patron_response" value={{option}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-presp-{{option}}">{{option}} </label>
 								{%endfor%}
                             </div>
@@ -214,6 +213,7 @@ Sets up HTML page to input patron data
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
+							<
 					</center>
 				</div>
 				<div class="col-sm" style="width:20%; align-content:left;">
@@ -249,7 +249,7 @@ Sets up HTML page to input patron data
 	{% endfor %}
 </datalist> -->
 
-<datalist id = "languages">
+<!-- <datalist id = "languages">
 	{% for language in languages %}
 	<option value={{language}}>
 	{% endfor %}
@@ -270,7 +270,7 @@ Sets up HTML page to input patron data
 	{% for code in zip_codes %}
 	<option value={{code}}>
 	{% endfor %}
-</datalist>
+</datalist> -->
 
 <!-- <datalist id = "homeless_options">
 	{% for h_option in homeless_options %}
