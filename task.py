@@ -22,7 +22,35 @@ from TASKdbcode import bardashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 
+
+#----------------------------------------------------------------------
+my_users = {
+    "chuck": {"password": "norris", "roles": "admin"},
+    "lee": {"password": "douglas", "roles": ""},
+    "mary": {"password": "jane", "roles": ""},
+    "steven": {"password": "wilson", "roles": "admin"},
+}
+
+def be_admin(username):
+    """Validator to check if user has admin role"""
+    user_data = my_users.get(username)
+    if 'admin' not in user_data.get('roles'):
+        return "User does not have admin role"
+
+def check_my_users(user):
+    """Check if user exists and its credentials.
+    Take a look at encrypt_app.py and encrypt_cli.py
+     to see how to encrypt passwords
+    """
+    user_data = my_users.get(user["username"])
+    if not user_data:
+        return False  # <--- invalid credentials
+    elif user_data.get("password") == user["password"]:
+        return True  # <--- user is logged in!
+
+    return False  # <--- invalid credentials
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
@@ -30,6 +58,7 @@ with app.app_context():
         app = dashboard.init_dashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
+        SimpleLogin(app, login_checker=check_my_users)
 
 #-----------------------------------------------------------------------
 
@@ -45,6 +74,7 @@ def get_current_time():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
+@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -136,6 +166,7 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
+@login_required(must=[be_admin])
 def admindisplaydata():
     
     return render_template(
