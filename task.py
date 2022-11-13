@@ -59,6 +59,7 @@ with app.app_context():
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         SimpleLogin(app, login_checker=check_my_users)
+        app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
 #-----------------------------------------------------------------------
 
@@ -85,6 +86,7 @@ def index():
  #-----------------------------------------------------------------------
 
 @app.route('/selectmealsite', methods=['GET'])
+@login_required(basic=True)
 def selectmealsite():
 
     html_code = render_template('selectmealsite.html',
@@ -172,6 +174,7 @@ def admindisplaydata():
     return render_template(
         "admin.html"
     )
+
 
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
