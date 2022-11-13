@@ -44,23 +44,23 @@ def init_bardashboard(server):
                                         value=["First Baptist Church",
                                             "Trenton Area Soup Kitchen"]
                                         ),
-                        html.Div(childen = [
+                        html.Div(children = [
                             html.P("Clear Selections to Show All Sites. Selected sites will each have their own bar(s) on the graph")
                             ],
-                            style = {
-                                {'width': '100vw', 'height': '100vh'}
+                            # style = {
+                            #     {'width': '100vw', 'height': '100vh'}
                                 
-                                # top: 18px;
-                                # right: 18px;
-                                # text-align: center;
-                                # background-color: #BCDBEA;
-                                # border-radius: 50%;
-                                # width: 24px;
-                                # height: 24px;
-                                # font-size: 14px;
-                                # line-height: 26px;
-                                # cursor: default;
-                            },
+                            #     # top: 18px;
+                            #     # right: 18px;
+                            #     # text-align: center;
+                            #     # background-color: #BCDBEA;
+                            #     # border-radius: 50%;
+                            #     # width: 24px;
+                            #     # height: 24px;
+                            #     # font-size: 14px;
+                            #     # line-height: 26px;
+                            #     # cursor: default;
+                            # },
                             className = "help-tip"
                             
                         )
