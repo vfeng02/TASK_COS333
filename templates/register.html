@@ -1,81 +1,90 @@
-<!DOCTYPE html>
-<!-- code by SAMIR PAUL adapted by Rohan Amin  -->
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Registration Form | Samir Paul</title>
-  
-  
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-      <link rel="stylesheet" href="style.css">
-
-  
-</head>
-
-<body background="bg.jpg">
-
-  <div class="row">
-  <section class="section">
-    <header>
-      <h3>Register</h3>
-      <h4>Please fill your information in this form</h4>
-    </header>
-    <main>
-      <form>
-        <div class="form-item box-item">
-          <input type="email" name="email" class="tx1" placeholder="𝙀𝙢𝙖𝙞𝙡" data-email data-required>
-          <small class="errorReq"><i class="fa fa-asterisk" aria-hidden="true"></i> required field</small>
-        </div>
-        </div>
-        <div class="form-item box-item">
-          <div class="form-item-triple">
-            <div class="radio-label"> 
-              <label class="label">𝘼𝙘𝙘𝙤𝙪𝙣𝙩 𝙏𝙮𝙥𝙚</label>
-            </div>
-            <div class="form-item"> 
-              <input id="sponsored" type="radio" name="gender2" value="sponsored" data-once>
-              <label for="sponsored">Volunteer</label>
-            </div>
-            <div class="form-item"> 
-              <input id="paid" type="radio" name="gender2" value="paid" data-once>
-              <label for="paid">Admin</label>
-            </div>
-          </div>
-          <small class="errorOnce"><i class="fa fa-asterisk" aria-hidden="true"></i> choose at least one</small>
-        </div>
-        <div class="form-item box-item">
-          <input type="text" name="username1" placeholder="𝙐𝙨𝙚𝙧𝙣𝙖𝙢𝙚" data-required>
-          <small class="errorReq"><i class="fa fa-asterisk" aria-hidden="true"></i> required field</small>
-        </div>
-        <div class="form-item-double box-item">
-        <div class="form-item box-item">
-          <input type="text" name="phone" placeholder="𝙋assword" data-required data-number data-count="10">
-          <small class="errorReq"><i class="fa fa-asterisk" aria-hidden="true"></i> required field</small>
-        </div>
-        <div class="col-sm" style="width:20%; align-content:center;">
-            <center>
-                 <input id='submit' class="form-control patronInput mainButton enter-button"
-                    type="submit" value="Submit"
-            </center>
-        </div>
-      </form>
-    </main>
-    <footer>
-      <p>Already have an account? <a href="/login">Login</a></p>
-    </footer>
-    <i class="wave"></i>
-  </section>
-</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
   
 
-    <script  src="function.js"></script>
-
-
-
-
-</body>
-
-</html>
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <style>
+  body{
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  * {box-sizing: border-box}
+  input[type=text], input[type=password] {
+     width: 100%;
+     font-size: 28px;
+     padding: 15px;
+     margin: 5px 0 22px 0;
+     display: inline-block;
+     border: none;
+     background: #f1f1f1;
+  }
+  label{
+     font-size: 15px;
+  }
+  input[type=text]:focus, input[type=password]:focus {
+     background-color: #ddd;
+     outline: none;
+  }
+  hr {
+     border: 1px solid #f1f1f1;
+     margin-bottom: 25px;
+  }
+  button {
+     font-size: 18px;
+     font-weight: bold;
+     background-color: rgb(10, 119, 13);
+     color: white;
+     padding: 14px 20px;
+     margin: 8px 0;
+     border: none;
+     cursor: pointer;
+     width: 100%;
+     opacity: 0.9;
+  }
+  button:hover {
+     opacity:1;
+  }
+  .cancel {
+     padding: 14px 20px;
+     background-color: #ff3d2f;
+  }
+  .formContainer {
+     padding: 16px;
+  }
+  .formContainer p{
+     font-size: 28px;
+  }
+  </style>
+  <body>
+  <form>
+  <div class="formContainer">
+  <h1>Register User</h1>
+  <hr>
+  <label for="email"><b>Email</b></label>
+  <input type="text" placeholder="Enter Email" name="email" required>
+  <label for="password"><b>Password</b></label>
+  <input type="password" placeholder="Enter Password" name="password" required>
+  <label for="repeatPassword"><b>Repeat Password</b></label>
+  <input type="password" placeholder="Repeat Password" name="repeatPassword"
+  required>
+  <div class="form-item box-item">
+    <div class="form-item-triple">
+      <div class="radio-label"> 
+        <label class="label">Account Type</label>
+      </div>
+      <div class="form-item"> 
+        <input id="sponsored" type="radio" name="gender2" value="sponsored" data-once>
+        <label for="sponsored">Volunteer</label>
+      </div>
+      <div class="form-item"> 
+        <input id="paid" type="radio" name="gender2" value="paid" data-once>
+        <label for="paid">Admin</label>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="signup">Sign Up</button>
+  </div>
+  </div>
+  </form>
+  </body>
+  </html>
