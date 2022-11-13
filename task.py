@@ -135,30 +135,29 @@ def submitpatrondata():
 
     # print(any(patron_data.values()))
     
+    if (any(patron_data.values()) and patron_data["guessed"]):
+            patron_data["meal_site"] = mealsite
+            demographic_db.add_patron(patron_data)
 
-    patron_data["meal_site"] = mealsite
-    demographic_db.add_patron(patron_data)
     html_code = render_template('submitpatrondata.html',
-    ampm=get_ampm(),
-    current_time=get_current_time(),
-    otherlanguages = database_constants.otherlanguages,
-    races = database_constants.races,
-    ages = database_constants.ages,
-    genders = database_constants.genders,
-    zip_codes = database_constants.ZIP_CODE_OPTIONS,
-    homeless_options = database_constants.HOMELESS_OPTIONS,
-    veteran_options = database_constants.VETERAN_OPTIONS,
-    disabled_options = database_constants.DISABLED_OPTIONS,
-    patron_response_options = database_constants.GUESSED_OPTIONS
-    )
-   
+        ampm=get_ampm(),
+        current_time=get_current_time(),
+        otherlanguages = database_constants.otherlanguages,
+        races = database_constants.races,
+        ages = database_constants.ages,
+        genders = database_constants.genders,
+        zip_codes = database_constants.ZIP_CODE_OPTIONS,
+        homeless_options = database_constants.HOMELESS_OPTIONS,
+        veteran_options = database_constants.VETERAN_OPTIONS,
+        disabled_options = database_constants.DISABLED_OPTIONS,
+        patron_response_options = database_constants.GUESSED_OPTIONS
+        )
     response = make_response(html_code)
 
     if set_new_mealsite:
         response.set_cookie('site', mealsite)
 
     return response
-    
 
  #-----------------------------------------------------------------------
 
