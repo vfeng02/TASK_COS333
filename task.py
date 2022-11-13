@@ -175,6 +175,14 @@ def admindisplaydata():
         "admin.html"
     )
 
+@app.route('/register', methods=['GET'])
+@login_required(must=[be_admin])
+def register(): 
+
+    return render_template(
+        "register.html"
+    )
+
 
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
