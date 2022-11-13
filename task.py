@@ -135,12 +135,15 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "guessed": guessed}
 
-    print(patron_data)
+    # print(patron_data)
+
+    # print(any(patron_data.values()))
     
     if (any(patron_data.values()) and patron_data["guessed"]):
         patron_data["meal_site"] = mealsite
         demographic_db.add_patron(patron_data)
-        html_code = render_template('submitpatrondata.html',
+
+    html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
         current_time=get_current_time(),
         otherlanguages = database_constants.otherlanguages,
@@ -153,15 +156,12 @@ def submitpatrondata():
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS
         )
-        response = make_response(html_code)
+    response = make_response(html_code)
 
-        if set_new_mealsite:
-            response.set_cookie('site', mealsite)
+    if set_new_mealsite:
+        response.set_cookie('site', mealsite)
 
-        return response
-    else:
-        html_code = '<p color = red> "Invalid Syntax"<\p>'
-        response = make_response(html_code)
+    return response
     
 
  #-----------------------------------------------------------------------
