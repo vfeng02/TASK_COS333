@@ -44,6 +44,7 @@ def init_bardashboard(server):
                              value=["First Baptist Church",
                                  "Trenton Area Soup Kitchen"]
                              ),
+
                 html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',
                              options= [{"label": option.replace("_", " ").title(), "value": option}
