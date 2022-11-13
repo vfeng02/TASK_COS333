@@ -216,7 +216,19 @@ Sets up HTML page to input patron data
 							type="submit" value="Submit">
 					</center>
 				</div>
-				<ddiv class="col-sm" style="width:20%; align-content:left;">
+				<div class="col-sm" style="width:20%; align-content:left;">
+					<center>
+						<input id='logout' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="location.href='/previous';" value="Previous Submission">
+					</center>
+				</div>
+				<div class="col-sm" style="width:20%; align-content:left;">
+					<center>
+						<input id='logout' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="location.href='/undo';" value="Undo Previous Submission">
+					</center>
+				</div>
+				<div class="col-sm" style="width:20%; align-content:left;">
 					<center>
 						<input id='logout' class="form-control patronInput mainButton enter-button"
 						type="button" onclick="location.href='/index';" value="Log out">
@@ -230,8 +242,6 @@ Sets up HTML page to input patron data
 	
 </body>
 
-<script type = "text/javascript" src = "../static/js/racebuttons.js">
-</script>
 
 <!-- <datalist id = "races">
 	{% for race in races %}
