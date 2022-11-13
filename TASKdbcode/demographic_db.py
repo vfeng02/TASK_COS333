@@ -14,6 +14,7 @@ from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import ARRAY
 # sql_alchemy filters has to be downloaded from this repo
+#from TASKdbcode.constants import DATABASE_URL
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
 # from TASKdbcode import database_constants
@@ -90,6 +91,38 @@ def add_patron(input_dict):
             session.add(entry)
             session.commit()
 
+        engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+#-----------------------------------------------------------------------
+def get_last_patron(MealSite):
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+        with sqlalchemy.orm.Session(engine) as session:
+            # session.delete(entry)
+            # session.commit()
+            query = session.query(MealSite)
+            entry = pandas.read_sql(query.statement, session.bind).tail(1)
+        engine.dispose()
+        return entry
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+#-----------------------------------------------------------------------
+def delete_last_patron(MealSite):
+
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            query = session.query(MealSite)
+            obj=session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
+            session.delete(obj)
+            session.commit()
         engine.dispose()
 
     except Exception as ex:
