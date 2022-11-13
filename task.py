@@ -22,7 +22,7 @@ from TASKdbcode import bardashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
+#from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 
 
 #----------------------------------------------------------------------
@@ -58,8 +58,9 @@ with app.app_context():
         app = dashboard.init_dashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
-        SimpleLogin(app, login_checker=check_my_users)
-        app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+
+        # SimpleLogin(app, login_checker=check_my_users)
+        # app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
 #-----------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ def get_current_time():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-@login_required(basic=True)
+#@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -86,7 +87,7 @@ def index():
  #-----------------------------------------------------------------------
 
 @app.route('/selectmealsite', methods=['GET'])
-@login_required(basic=True)
+#@login_required(basic=True)
 def selectmealsite():
 
     html_code = render_template('selectmealsite.html',
@@ -103,17 +104,12 @@ def submitpatrondata():
     # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
-
-    set_new_mealsite = False
-    
-            
+    set_new_mealsite = False         
     print("selected site")
     print(new_mealsite)
-    
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
-    
 
     races = []
     for race in database_constants.RACE_OPTIONS:
@@ -140,8 +136,8 @@ def submitpatrondata():
     # print(any(patron_data.values()))
     
     if (any(patron_data.values()) and patron_data["guessed"]):
-        patron_data["meal_site"] = mealsite
-        demographic_db.add_patron(patron_data)
+            patron_data["meal_site"] = mealsite
+            demographic_db.add_patron(patron_data)
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
@@ -162,13 +158,12 @@ def submitpatrondata():
         response.set_cookie('site', mealsite)
 
     return response
-    
 
  #-----------------------------------------------------------------------
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[be_admin])
+#@login_required(must=[be_admin])
 def admindisplaydata():
     
     return render_template(
@@ -176,14 +171,21 @@ def admindisplaydata():
     )
 
 @app.route('/register', methods=['GET'])
-@login_required(must=[be_admin])
+#@login_required(must=[be_admin])
 def register(): 
 
     return render_template(
         "register.html"
     )
 
+@app.route('/deletelastpatron')
+def deletelast():
+    demographic_db.delete_last_patron()
+    return 0
 
+@app.route('/getlastpatron')
+def getlast():
+    return 0
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
     # filters = {"meal_site": "First Baptist Church"}
