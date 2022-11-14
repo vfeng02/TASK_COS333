@@ -20,7 +20,8 @@ operators = [['ge ', '>='],
              ['gt ', '>'],
              ['ne ', '!='],
              ['eq ', '='],
-             ['contains']]
+             ['contains'],
+             ['datestartswith']]
 
 def init_tabledashboard(server):
     table_app = dash.Dash(
@@ -99,7 +100,7 @@ def init_tabledashboard(server):
 
 
 def split_filter_part(filter_part):
-    print(filter_part)
+    # print(filter_part)
     for operator_type in operators:
         for operator in operator_type:
             if operator in filter_part:
@@ -142,11 +143,13 @@ def init_callbacks(table_app):
         # print(filter)
         filtering_expressions = filter.split(' && ')
         filter_dicts = []
+        time_filter = {}
 
         for filter_part in filtering_expressions:
 
             filter_dict = split_filter_part(filter_part)
             print(filter_dict)
+            
 
             if filter_dict:
                 if filter_dict["op"] == "contains":
@@ -161,9 +164,17 @@ def init_callbacks(table_app):
                         
                 if filter_dict["op"] == "=":
                     filter_dict["op"] = "=="
-                filter_dicts.append(filter_dict)
+
+                if filter_dict["op"] == "datestartswith":
+                    time_filter = filter_dict
+                else:
+                    filter_dicts.append(filter_dict)
 
         dff = demographic_db.filter_dms(filter_dicts)
+        if time_filter:
+            dff = dff.loc[dff["entry_timestamp"].astype(str).str.startswith(time_filter["value"])]
+            print(dff)
+
         num_entries = len(dff.index)
 
         # selected_sites = list(dff["meal_site"].unique())
