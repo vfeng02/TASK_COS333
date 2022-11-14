@@ -22,7 +22,35 @@ from TASKdbcode import bardashboard
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 
+
+#----------------------------------------------------------------------
+my_users = {
+    "chuck": {"password": "norris", "roles": "admin"},
+    "lee": {"password": "douglas", "roles": ""},
+    "mary": {"password": "jane", "roles": ""},
+    "steven": {"password": "wilson", "roles": "admin"},
+}
+
+def be_admin(username):
+    """Validator to check if user has admin role"""
+    user_data = my_users.get(username)
+    if 'admin' not in user_data.get('roles'):
+        return "User does not have admin role"
+
+def check_my_users(user):
+    """Check if user exists and its credentials.
+    Take a look at encrypt_app.py and encrypt_cli.py
+     to see how to encrypt passwords
+    """
+    user_data = my_users.get(user["username"])
+    if not user_data:
+        return False  # <--- invalid credentials
+    elif user_data.get("password") == user["password"]:
+        return True  # <--- user is logged in!
+
+    return False  # <--- invalid credentials
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
@@ -30,6 +58,9 @@ with app.app_context():
         app = dashboard.init_dashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
+
+        SimpleLogin(app, login_checker=check_my_users)
+        app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
 #-----------------------------------------------------------------------
 
@@ -45,6 +76,7 @@ def get_current_time():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
+@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -55,6 +87,7 @@ def index():
  #-----------------------------------------------------------------------
 
 @app.route('/selectmealsite', methods=['GET'])
+@login_required(basic=True)
 def selectmealsite():
 
     html_code = render_template('selectmealsite.html',
@@ -71,17 +104,12 @@ def submitpatrondata():
     # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
-
-    set_new_mealsite = False
-    
-            
+    set_new_mealsite = False         
     print("selected site")
     print(new_mealsite)
-    
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
-    
 
     races = []
     for race in database_constants.RACE_OPTIONS:
@@ -103,14 +131,13 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "guessed": guessed}
 
-    print(patron_data)
+    # print(patron_data)
+
+    # print(any(patron_data.values()))
     
     if (any(patron_data.values()) and patron_data["guessed"]):
-        patron_data["meal_site"] = mealsite
-        demographic_db.add_patron(patron_data)
-
-    
-    
+            patron_data["meal_site"] = mealsite
+            demographic_db.add_patron(patron_data)
 
     html_code = render_template('submitpatrondata.html',
         ampm=get_ampm(),
@@ -136,12 +163,29 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
+@login_required(must=[be_admin])
 def admindisplaydata():
     
     return render_template(
         "admin.html"
     )
 
+@app.route('/register', methods=['GET'])
+#@login_required(must=[be_admin])
+def register(): 
+
+    return render_template(
+        "register.html"
+    )
+
+@app.route('/deletelastpatron')
+def deletelast():
+    demographic_db.delete_last_patron()
+    return 0
+
+@app.route('/getlastpatron')
+def getlast():
+    return 0
     # selects = ["service_timestamp", "meal_site", "race", "gender",
     #            "age_range"]
     # filters = {"meal_site": "First Baptist Church"}

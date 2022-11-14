@@ -33,43 +33,18 @@ def init_bardashboard(server):
     bar_app.layout = html.Div(
         children=[
             html.Div(children=[
-                html.Div(children = [
-                        html.H4(
-                            "Select Meal Sites"),
-                            dcc.Dropdown(id='site_options',
-                                        options=[{'value': o, 'label': o}
-                                            for o in database_constants.MEAL_SITE_OPTIONS],
-                                        clearable=True,
-                                        multi=True,
-                                        value=["First Baptist Church",
-                                            "Trenton Area Soup Kitchen"]
-                                        ),
-                        html.Div(childen = [
-                            html.P("Clear Selections to Show All Sites. Selected sites will each have their own bar(s) on the graph")
-                            ],
-                            style = {
-                                {'width': '100vw', 'height': '100vh'}
-                                
-                                # top: 18px;
-                                # right: 18px;
-                                # text-align: center;
-                                # background-color: #BCDBEA;
-                                # border-radius: 50%;
-                                # width: 24px;
-                                # height: 24px;
-                                # font-size: 14px;
-                                # line-height: 26px;
-                                # cursor: default;
-                            },
-                            className = "help-tip"
-                            
-                        )
-                    ],
-                    style ={
+                html.H4(
+                "Select Meal Sites (Clear Selections to Show All Sites)"),
+                html.H5("Selected sites will each have their own bar(s) on the graph"),
+                dcc.Dropdown(id='site_options',
+                             options=[{'value': o, 'label': o}
+                                 for o in database_constants.MEAL_SITE_OPTIONS],
+                             clearable=True,
+                             multi=True,
+                             value=["First Baptist Church",
+                                 "Trenton Area Soup Kitchen"]
+                             ),
 
-                    }
-                ),
-                
                 html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',
                              options= [{"label": option.replace("_", " ").title(), "value": option}
@@ -89,7 +64,6 @@ def init_bardashboard(server):
                       style={'width': '100vw', 'height': '100vh'}
                       )
         ]
-        
     )
 
     init_callbacks(bar_app)
@@ -119,7 +93,6 @@ def init_callbacks(bar_app):
             [Input('site_options', 'value'),
             Input('demographic', 'value'),
             Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
-
     )
     def update_bar_graph(selected_sites, selected_demographic, selected_filters):
         
@@ -182,6 +155,3 @@ def init_callbacks(bar_app):
 
             
             
-
-
-

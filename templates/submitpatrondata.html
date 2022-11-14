@@ -11,17 +11,16 @@ Sets up HTML page to input patron data
 		{% include 'imports.html' %}
     </head>
     
-
     <body class="forceOpenSans">
     {% include 'header.html' %}
     <div class="container-fluid">
 		<div style="margin-top: 10px;">
 			<center>
-				<h2>Enter Patron Data</h2>
+				<h2>Enter Diner Data</h2>
 			</center>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitpatrondata" method="get">
+		<form id = "patronForm" action="/submitpatrondata" onsubmit="return validateForm()" method="get">
 			<!-- <div class="row">
 				<div class="col-sm-4">
 					<div class="row">
@@ -188,12 +187,12 @@ Sets up HTML page to input patron data
 					</td>
 				</tr>
                 <tr>
-					<td align="right">Patron response:</td>
+					<td align="right">Diner response:</td>
 					<td>
                         <div class = 'row'>
 							<div class="btn-group btn-group-toggle" role="group" data-toggle = "buttons">
 								{%for option in ['True', 'False'] %}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-presp-{{option}}" name="patron_response" value={{option}}>
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-presp-{{option}}" name="presp" value={{option}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{option}}" for="btn-check-presp-{{option}}">{{option}} </label>
 								{%endfor%}
                             </div>
@@ -219,13 +218,13 @@ Sets up HTML page to input patron data
 				<div class="col-sm" style="width:20%; align-content:left;">
 					<center>
 						<input id='logout' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/previous';" value="Previous Submission">
+						type="button" onclick="location.href='/getlastpatron';" value="Previous Submission">
 					</center>
 				</div>
 				<div class="col-sm" style="width:20%; align-content:left;">
 					<center>
 						<input id='logout' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/undo';" value="Undo Previous Submission">
+						type="button" onclick="location.href='/deletelastpatron';" value="Undo Previous Submission">
 					</center>
 				</div>
 				<div class="col-sm" style="width:20%; align-content:left;">
@@ -234,7 +233,7 @@ Sets up HTML page to input patron data
 						type="button" onclick="location.href='/index';" value="Log out">
 					</center>
 				</div>
-				
+				<div id = 'error'></div>
 		</div>
         </form>
         {% include 'footer.html' %}
@@ -242,59 +241,47 @@ Sets up HTML page to input patron data
 	
 </body>
 
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+</script>
 
-<!-- <datalist id = "races">
-	{% for race in races %}
-	<option value={{race}}>
-	{% endfor %}
-</datalist> -->
-
-<datalist id = "languages">
-	{% for language in languages %}
-	<option value={{language}}>
-	{% endfor %}
-</datalist>
-
-<datalist id = "genders">
-	{% for gender in genders %}
-	<option value={{gender}}>
-	{% endfor %}
-</datalist>
-
-<datalist id = "ages">
-	{% for age in ages %}
-	<option value={{age}}>
-	{% endfor %}
-</datalist>
-<datalist id = "zip_codes">
-	{% for code in zip_codes %}
-	<option value={{code}}>
-	{% endfor %}
-</datalist>
-
-<!-- <datalist id = "homeless_options">
-	{% for h_option in homeless_options %}
-	<option value={{h_option}}>
-	{% endfor %}
-</datalist>
-
-<datalist id = "veteran_options">
-	{% for v_option in homeless_options %}
-	<option value={{v_option}}>
-	{% endfor %}
-</datalist>
-
-<datalist id = "disabled_options">
-	{% for d_option in homeless_options %}
-	<option value={{d_option}}>
-	{% endfor %}
-</datalist>
-
-<datalist id = "patron_response_options">
-	{% for pr_option in homeless_options %}
-	<option value={{pr_option}}>
-	{% endfor %}
-</datalist> -->
+<script>
+	'use strict';
+	function validateForm() {
+		
+		var x = document.forms["patronForm"]["presp"].value;
+		console.log(x)
+		if (x == '') {
+		alert("Please select True or False for Guess.");
+			return false;
+		}
+		return true;
+	}
+	function handleResponse(response)
+	{
+		$('#error').html(response);
+	}
+	let request = null;
+	function getResults()
+	{
+		
+		request = $.ajax(
+			{
+				type: 'GET',
+				url:url,
+				success: handleResponse
+			}
+		);
+	}
+	function setup()
+	{
+		$(window).on('load', getResults);
+		$('#dept').on('input', getResults);
+		$('#coursenum').on('input', getResults);
+		$('#area').on('input', getResults);
+		$('#title').on('input', getResults);
+	}
+	$('document').ready(setup);
+</script>
 
 </html>
 
