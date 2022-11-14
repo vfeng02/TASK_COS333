@@ -157,7 +157,15 @@ def filter_dms(filter_dicts):
             query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
             if filter_dicts:
                 for filter_dict in filter_dicts:
-                    query = apply_filters(query, filter_dict)
+                    # or filtering
+                    if type(filter_dict["value"]) is list:
+                        filter_spec = {"or": []}
+                        for item in filter_dict["value"]:
+                            filter_spec["or"].append({"field": filter_dict["field"], "op" : filter_dict["op"], "value": item})
+                    else:
+                        filter_spec = filter_dict
+                        
+                    query = apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         engine.dispose()
         return demographic_df
@@ -165,7 +173,24 @@ def filter_dms(filter_dicts):
         print(ex, file=sys.stderr)
         sys.exit(1)
 
-    pass
+#-----------------------------------------------------------------------
+
+def get_num_entries(meal_site):
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            # Keep the filters that were entered in the dict
+            query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
+            num_entries = query.one().num_entries
+        engine.dispose()
+        return num_entries
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+    
 
 # class Trenton_Area_Soup_Kitchen(MealSite):
 #     __tablename__ = "trenton_area_soup_kitchen"
