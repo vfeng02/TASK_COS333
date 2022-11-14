@@ -44,7 +44,6 @@ def init_bardashboard(server):
                              value=["First Baptist Church",
                                  "Trenton Area Soup Kitchen"]
                              ),
-
                 html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',
                              options= [{"label": option.replace("_", " ").title(), "value": option}
@@ -65,6 +64,8 @@ def init_bardashboard(server):
                       )
         ]
     )
+
+
 
     init_callbacks(bar_app)
     bar_app.enable_dev_tools(
@@ -93,6 +94,7 @@ def init_callbacks(bar_app):
             [Input('site_options', 'value'),
             Input('demographic', 'value'),
             Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
+
     )
     def update_bar_graph(selected_sites, selected_demographic, selected_filters):
         
@@ -155,3 +157,6 @@ def init_callbacks(bar_app):
 
             
             
+
+
+

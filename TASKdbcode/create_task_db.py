@@ -16,6 +16,7 @@ from sqlalchemy import func
 import psycopg2
 
 import demographic_db as database
+import database_constants
 from database_constants import DATABASE_URL
 
 #-----------------------------------------------------------------------
@@ -23,36 +24,42 @@ from database_constants import DATABASE_URL
 def insert_users(session):
     #-------------------------------------------------------------------
 
-    admin = database.Administrators(id="1234",
-                                    name="Jaime Parker")
+    admin = database.User(username = "jaimeparker",
+                          email = "jaimep@trentonsoupkitchen.org",
+                          role = "administrator")
     admin.set_password("Jaime's password")
     session.add(admin)
     session.commit()
 
     #-------------------------------------------------------------------
 
-    rep = database.Representatives(id="5678",
-                                   name="Charlie Kelly")
+    rep = database.User(username = "charleskelly",
+                        email = "charlie@fx.com",
+                        role = "representative")
     rep.set_password("Charlie's password")
     session.add(rep)
-
-    rep = database.Representatives(id="8912",
-                                   name="Ronald McDonald")
+    
+    rep = database.User(username = "ronaldmcdonald",
+                        email = "mac@fx.com",
+                        role = "representative")
     rep.set_password("Mac's password")
     session.add(rep)
-
-    rep = database.Representatives(id="3456",
-                                   name="Dennis Reynolds")
+    
+    rep = database.User(username = "dennisreynolds",
+                        email = "dennis@fx.com",
+                        role = "representative")
     rep.set_password("Dennis' password")
     session.add(rep)
-
-    rep = database.Representatives(id="6789",
-                                   name="Dee Reynolds")
+    
+    rep = database.User(username = "deandrareynolds",
+                        email = "dee@fx.com",
+                        role = "representative")
     rep.set_password("Dee's password")
     session.add(rep)
-
-    rep = database.Representatives(id="1234",
-                                   name="Frank Reynolds")
+    
+    rep = database.User(username = "franklinreynolds",
+                        email = "frank@fx.com",
+                        role = "representative")
     rep.set_password("Frank's password")
     session.add(rep)
 
@@ -60,17 +67,15 @@ def insert_users(session):
 
     #-------------------------------------------------------------------
 
-    # task = database.Trenton_Area_Soup_Kitchen(
-    #     service_timestamp=func.now(),
-    #     race="W", ethnicity="H",
-    #     language="English", age_range="20-24",
-    #     gender="M", zip_code="08610", homeless="N",
-    #     veteran="N", disabled="N", patron_response="Y")
-    # session.add(task)
-    # session.commit()
+#-----------------------------------------------------------------------
 
-    #-------------------------------------------------------------------
+def add_entry_counts(session):
+    for site in database_constants.MEAL_SITE_OPTIONS:
+        entry_count = database.EntryCount(meal_site = site, num_entries = 0)
+        session.add(entry_count)
+    session.commit()
 
+#-------------------------------------------------------------------
 
 def main():
 
@@ -86,6 +91,7 @@ def main():
 
         with sqlalchemy.orm.Session(engine) as session:
             insert_users(session)
+            add_entry_counts(session)
 
         engine.dispose()
 

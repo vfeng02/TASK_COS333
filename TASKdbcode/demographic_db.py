@@ -9,12 +9,10 @@
 import sys
 import pandas
 import sqlalchemy
-from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import ARRAY
 # sql_alchemy filters has to be downloaded from this repo
-#from TASKdbcode.constants import DATABASE_URL
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
 # from TASKdbcode import database_constants
@@ -29,12 +27,14 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
 
-# This is the base model for both types of Users in the database
-# Both types of Users inherit these fields
-class User(AbstractConcreteBase, Base):
-    id = Column(Integer, primary_key=True)
-    name = Column(String())
+# Table for both types of users in the database
+# Role will either be representative or administrator
+class User(Base):
+    __tablename__ = "users"
+    username = Column(String(), primary_key = True)
     password_hash = Column(String())
+    email = Column(String())
+    role = Column(String())
     # idrk about this hashing stuff I just stole it from here
     # https://dev.to/kaelscion/authentication-hashing-in-sqlalchemy-1bem
     # need to figure out authentication later
@@ -44,11 +44,6 @@ class User(AbstractConcreteBase, Base):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Representatives(User):
-    __tablename__ = "representatives"
-    
-class Administrators(User):
-    __tablename__ = "administrators"
 
 # Big table that stores info about every patron at every meal site
 # The primary key is the timestamp + the meal site name
@@ -66,17 +61,24 @@ class MealSite(Base):
     disabled = Column(String(7))
     guessed = Column(String(5))
 
+class EntryCount(Base):
+    __tablename__ = "entry_counts"
+    meal_site = Column(String(), primary_key = True)
+    num_entries = Column(Integer())
+
 Base.registry.configure()
 #-----------------------------------------------------------------------
 
 def add_patron(input_dict):
     
     for key in input_dict:
-        if key == "language" and not input_dict[key]:
-            input_dict[key] = "English"
-
-        if not input_dict[key] and key != "patron_response":
-            input_dict[key] = "Unknown"
+        if not input_dict["key"]:
+            if key == "language":
+                input_dict[key] = "English"
+            elif key == "guessed":
+                input_dict[key] = "False"
+            else:
+                input_dict[key] = "Unknown"
 
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
@@ -89,40 +91,11 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
+            query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
+            row = query.one()
+            row.num_entries += 1
             session.commit()
 
-        engine.dispose()
-
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
-
-#-----------------------------------------------------------------------
-def get_last_patron(MealSite):
-    try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
-        with sqlalchemy.orm.Session(engine) as session:
-            # session.delete(entry)
-            # session.commit()
-            query = session.query(MealSite)
-            entry = pandas.read_sql(query.statement, session.bind).tail(1)
-        engine.dispose()
-        return entry
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
-
-#-----------------------------------------------------------------------
-def delete_last_patron(MealSite):
-
-    try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
-
-        with sqlalchemy.orm.Session(engine) as session:
-            query = session.query(MealSite)
-            obj=session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
-            session.delete(obj)
-            session.commit()
         engine.dispose()
 
     except Exception as ex:
@@ -155,6 +128,10 @@ def get_patrons(filter_dict = {}, select_fields = []):
                     filter_spec = {"or": []}
                     for item in value:
                         filter_spec["or"].append({"field": key, "op" : "==", "value": item})
+                elif type(value) is dict:
+                    filter_spec = {"and": []}
+                    filter_spec["and"].append({"field": "entry_timestamp", "op": ">=", "value": value["start_date"]})
+                    filter_spec["and"].append({"field": "entry_timestamp", "op": "<=", "value": value["end_date"]})
                 else:
                     filter_spec = {"field": key, "op" : "==", "value": value}
                     

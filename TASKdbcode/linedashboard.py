@@ -135,7 +135,7 @@ def init_callbacks(line_app):
                 line_graph = go.Figure()
                 for key in sites_dict.keys():
                     sites_dict[key] = selected_sites_data[:][selected_sites_data.meal_site == key]
-                    line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers"))
+                    line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
                 line_graph.update_layout(title="Change Over Time of the Amount of Diners with Selected Filters at Selected Meal Sites (Separate)",
                                          xaxis_title = "dates",
                                          yaxis_title = "count",
@@ -150,7 +150,7 @@ def init_callbacks(line_app):
                 all_line_graph = go.Figure()
                 for key in sites_dict.keys():
                     sites_dict[key] = selected_sites_data[:][selected_sites_data.meal_site == key]
-                    all_line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers"), name = key)
+                    all_line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
                 all_line_graph.update_layout(title="Change Over Time of the Amount of Diners with Selected Filters Across All Meal Sites (Separate)",
                                          xaxis_title = "dates",
                                          yaxis_title = "count")
