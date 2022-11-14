@@ -113,13 +113,12 @@ def split_filter_part(filter_part):
                 if (v0 == value_part[-1] and v0 in ("'", '"', '`')):
                     value = value_part[1: -1].replace('\\' + v0, v0)
                 else:
-                    try:
-                        value = int(value_part)
-                    except ValueError:
-                        value = value_part
+                    value = value_part
 
                 if " or " in value:
                     value = value.split(" or ")
+                else:
+                    value = str(value)
 
                 return {"field": name, "op": operator_type[0].strip(),
                         "value": value}
@@ -148,7 +147,7 @@ def init_callbacks(table_app):
         for filter_part in filtering_expressions:
 
             filter_dict = split_filter_part(filter_part)
-            print(filter_dict)
+            # print(filter_dict)
             
 
             if filter_dict:
@@ -169,6 +168,8 @@ def init_callbacks(table_app):
                     time_filter = filter_dict
                 else:
                     filter_dicts.append(filter_dict)
+
+        print(filter_dicts)
 
         dff = demographic_db.filter_dms(filter_dicts)
         if time_filter:

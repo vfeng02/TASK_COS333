@@ -11,7 +11,7 @@ import pandas
 import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.sql import functions
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
@@ -178,17 +178,40 @@ def filter_dms(filter_dicts):
 def get_num_entries(meal_site):
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
+        num_entries = 0
 
         with sqlalchemy.orm.Session(engine) as session:
-            # Keep the filters that were entered in the dict
-            query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
-            num_entries = query.one().num_entries
+            if type(meal_site) is list:
+                query = session.query(functions.sum(EntryCount.num_entries).label("total_num")).filter(EntryCount.meal_site.in_(meal_site))
+                num_entries = query.one().total_num
+            else:
+                query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
+                num_entries = query.one().num_entries
         engine.dispose()
         return num_entries
 
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+#-----------------------------------------------------------------------
+
+def get_total_entries():
+    
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            # Keep the filters that were entered in the dict
+            query = session.query(functions.sum(EntryCount.num_entries).label('total_num'))
+            num_entries = query.one().total_num
+            #print(query)
+        engine.dispose()
+        return num_entries
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+    
 
     
 

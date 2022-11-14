@@ -146,12 +146,10 @@ def init_callbacks(pie_app):
 
             if selected_sites:
                 selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
-                # I know every site has 50 entries bc I put 50 in there
-                # maybe add table with num entries of each site?
-                num_entries = len(selected_sites) * 50
-                num_entries = num_entries - selected_sites_data
+                num_entries = demographic_db.get_num_entries(selected_sites)
+                num_other_entries = num_entries - selected_sites_data
                 selected_sites_data = pandas.Series([selected_sites_data],["Diners with Selected Filters"])
-                other_count = pandas.Series([num_entries], ["Other"])
+                other_count = pandas.Series([num_other_entries], ["Other"])
                 selected_sites_data = pandas.concat([selected_sites_data, other_count])
                 # creates an exploded pie chart, with the relevant slice pulled out by the pull factor specified
                 # right now the pull looks weird if 0% of the diners meet the filters, somebody should make it look better
@@ -160,12 +158,13 @@ def init_callbacks(pie_app):
                 return exp_pie_chart
 
             else:
+                num_entries = demographic_db.get_total_entries()
                 all_site_data = demographic_db.get_patrons(
                                 filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
-                num_entries = len(database_constants.MEAL_SITE_OPTIONS) * 50
-                num_entries = num_entries - all_site_data
+
+                num_other_entries = num_entries - all_site_data
                 all_site_data = pandas.Series([all_site_data],["Diners with Selected Filters"])
-                other_count = pandas.Series([num_entries], ["Other"])
+                other_count = pandas.Series([num_other_entries], ["Other"])
                 all_site_data = pandas.concat([all_site_data, other_count])
                 all_exp_pie_chart = go.Figure(data = [go.Pie(values = all_site_data.values, labels = all_site_data.index, pull = [0.2,0],
                                           title = "Percentage of Diners with Selected Filters Across All Meal Sites")])
