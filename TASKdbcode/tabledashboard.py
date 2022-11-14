@@ -22,7 +22,6 @@ operators = [['ge ', '>='],
              ['eq ', '='],
              ['contains']]
 
-
 def init_tabledashboard(server):
     table_app = dash.Dash(
         server=server,
@@ -38,8 +37,17 @@ def init_tabledashboard(server):
         dash_table.DataTable(
             id='table-filtering',
             columns=[
-                {"name": i, "id": i} for i in df.columns
-
+                {"name": "entry timestamp", "id": "entry_timestamp", "type": "datetime"},
+                {"name": "meal site", "id": "meal_site", "type": "text"},
+                {"name": "race", "id": "race", "type": "text"},
+                {"name": "language", "id": "language", "type": "text"},
+                {"name": "age range", "id": "age_range", "type": "text"},
+                {"name": "gender", "id": "gender", "type": "text"},
+                {"name": "zip code", "id": "zip_code", "type": "text"},
+                {"name": "homeless", "id": "homeless", "type": "text"},
+                {"name": "veteran", "id": "veteran", "type": "text"},
+                {"name": "disabled", "id": "disabled", "type": "text"},
+                {"name": "guessed", "id": "guessed", "type": "text"}    
             ],
             css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
             style_cell={'textAlign': 'left',
