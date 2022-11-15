@@ -100,6 +100,14 @@ def selectmealsite():
     response = make_response(html_code)
     return response
  #-----------------------------------------------------------------------
+@app.route('/help', methods=['GET'])
+@login_required(basic=True)
+def selectmealsit1e():
+
+    html_code = render_template('about.html')
+    response = make_response(html_code)
+    return response
+ #-----------------------------------------------------------------------
 
 @app.route('/submitpatrondata', methods=['GET'])
 #@login_required(basic=True)
