@@ -101,7 +101,7 @@ Sets up HTML page to input patron data
 					<td>
 						<center>
 						<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-							{%for option in ['White','Black','Hispanic','Asian','American Indian', 'Pacific Islander', 'Other']%}
+							{%for option in ['White','Black','Hispanic','Asian','American Indian', 'Pacific Islander', 'Unknown']%}
 							{% if (racecheck==option) %}
 							<input type="checkbox" checked class="btn-check form-control patronInput mainButton" id="btn-check-{{option}}" name="{{option}}" value={{race}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{option}}</label>
