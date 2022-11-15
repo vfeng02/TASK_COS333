@@ -35,13 +35,14 @@ def init_piedashboard(server):
             html.Div(children=[
                 html.H4(
                     "Select Meal Sites (Clear Selections to Select All Sites)"),
-                html.H5("Data from selected sites will be aggregated together into a single pie chart"),
+                html.H5("Data from selected sites will be grouped together into a single pie chart"),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church"]
+                             value=["First Baptist Church"],
+                             optionHeight=50
                              ),
                 html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',

@@ -42,6 +42,13 @@ def filter_options_helper(selected_demographic, filter_dict):
     for demographic_option in database_constants.DEMOGRAPHIC_OPTIONS:
         if demographic_option != selected_demographic:
             options_string = demographic_option.upper() + "_OPTIONS"
+            # American Indian/Alaska Native
+            # and Native Hawaiian/Pacific Islander
+            # are too tall to fit in the default dropdown option height
+            if demographic_option == "race":
+                height = 80
+            else:
+                height = 35
             if demographic_option in filter_dict.keys():
                 filters.append(
                         dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
@@ -49,6 +56,7 @@ def filter_options_helper(selected_demographic, filter_dict):
                                 options=[{'value': o, 'label': o} for o in getattr(
                                     database_constants, options_string)],
                                 clearable=True,
+                                optionHeight=height,
                                 value=filter_dict[demographic_option],
                                 placeholder=demographic_option.replace(
                                     "_", " ").title() + "..."
@@ -62,6 +70,7 @@ def filter_options_helper(selected_demographic, filter_dict):
                                  database_constants, options_string)],
                              clearable=True,
                              value='',
+                             optionHeight=height,
                              placeholder=demographic_option.replace(
                                  "_", " ").title() + "..."
                              ))
