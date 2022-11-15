@@ -98,15 +98,16 @@ def add_patron(input_dict):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
-def get_last_patron(MealSite):
+def get_last_patron(meal_site):
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
-            # session.delete(entry)
-            # session.commit()
-            query = session.query(MealSite)
+            query = session.query(MealSite).filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
+            
         engine.dispose()
+        print(entry)
+        print(type(entry))
         return entry
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -174,7 +175,6 @@ def get_patrons(filter_dict = {}, select_fields = []):
 def filter_dms(filter_dicts):
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
-
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
             query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
@@ -188,69 +188,6 @@ def filter_dms(filter_dicts):
         print(ex, file=sys.stderr)
         sys.exit(1)
 
-    pass
 
-# class Trenton_Area_Soup_Kitchen(MealSite):
-#     __tablename__ = "trenton_area_soup_kitchen"
-    
-# class First_Baptist_Church(MealSite):
-#     __tablename__ = "first_baptist_church"
-    
-# class Trinity_Episcopal_Cathedral(MealSite):
-#     __tablename__ = "trinity_episcopal_church"
-
-# class First_United_Methodist_Church_of_Hightstown(MealSite):
-#     __tablename__ = "first_united_methodist_church_of_hightstown"
-
-# class First_Presbyterian_Church_of_Hightstown(MealSite):
-#     __tablename__ = "first_presbyterian_church_of_hightstown"
-    
-# class Princeton_United_Methodist_Church(MealSite):
-#     __tablename__ = "princeton_united_methodist_church"
-
-# class Holy_Apostles_Episcopal_Church(MealSite):
-#     __tablename__ = "holy_apostles_episcopal_church"
-
-# class Rescue_Mission(MealSite):
-#     __tablename__ = "rescue_mission"
-
-# class Medallion_Care_Behavioral_Health(MealSite):
-#     __tablename__ = "medallion_care_behavioral_health"
-    
-# class Trenton_Circus_Squad(MealSite):
-#     __tablename__ = "trenton_circus_squad"
-    
-# class Harvest_Intercontinental_Ministries_United(MealSite):
-#     __tablename__ = "harvest_intercontinental_ministries_united"
-
-# class St_James_AME_Church(MealSite):
-#     __tablename__ = "st_james_ame_church"
-
-# class Bible_Way_Cathedral_of_Deliverance(MealSite):
-#     __tablename__ = "bible_way_cathedral_of_deliverance"
-
-# class Redding_Circle_Senior_Center(MealSite):
-#     __tablename__ = "redding_circle_senior_center"
-
-# class Mercer_Behavioral_Health(MealSite):
-#     __tablename__ = "mercer_behavioral_health"
-
-# class Turning_Point_United_Methodist_Church(MealSite):
-#     __tablename__ = "turning_point_united_methodist_church"
-
-# class Princeton_Family_YMCA(MealSite):
-#     __tablename__ = "princeton_family_ymca"
-
-# class St_Lukes_Church(MealSite):
-#     __tablename__ = "st_lukes_church"
-
-# class Morrisville_United_Methodist_Church(MealSite):
-#     __tablename__ = "morrisville_united_methodist_church"
-
-# class Cartet_Arms(MealSite):
-#     __tablename__ = "cartet_arms"
-
-# class Masjidul_Taowa(MealSite):
-#     __tablename__ = "masjidul_taowa"
 
 
