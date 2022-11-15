@@ -117,7 +117,7 @@ def submitpatrondata():
     mealsite = request.cookies.get('site')
     set_new_mealsite = False         
     print("selected site")
-    print(new_mealsite)
+    print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
@@ -146,7 +146,7 @@ def submitpatrondata():
 
     # print(any(patron_data.values()))
     
-    if (any(patron_data.values()) and patron_data["guessed"]):
+    if (any(patron_data.values())):
             patron_data["meal_site"] = mealsite
             demographic_db.add_patron(patron_data)
 
@@ -194,16 +194,34 @@ def register():
 @app.route('/deletelastpatron')
 #@login_required(basic=True)
 def deletelast():
-    demographic_db.delete_last_patron()
-    return 0
+    meal_site = request.args.get('mealsite')
+    demographic_db.delete_last_patron(meal_site)
+    html_code = render_template('submitpatrondata.html',
+        mealsite = meal_site,
+        ampm=get_ampm(),
+        current_time=get_current_time(),
+        otherlanguages = database_constants.otherlanguages,
+        races = database_constants.races,
+        ages = database_constants.ages,
+        genders = database_constants.genders,
+        zip_codes = database_constants.ZIP_CODE_OPTIONS,
+        homeless_options = database_constants.HOMELESS_OPTIONS,
+        veteran_options = database_constants.VETERAN_OPTIONS,
+        disabled_options = database_constants.DISABLED_OPTIONS,
+        patron_response_options = database_constants.GUESSED_OPTIONS,
+        racecheck = ""
+        )
+    response = make_response(html_code)
+    return response
 
 @app.route('/getlastpatron')
 #@login_required(basic=True)
 def getlast():
-    meal_site = request.args.get("mealsite")
+    meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
 
     html_code = render_template('submitpatrondata.html',
+        mealsite = meal_site,
         ampm=get_ampm(),
         current_time=get_current_time(),
         otherlanguages = database_constants.otherlanguages,

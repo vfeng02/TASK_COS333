@@ -72,7 +72,7 @@ Base.registry.configure()
 def add_patron(input_dict):
     
     for key in input_dict:
-        if not input_dict["key"]:
+        if not input_dict[key]:
             if key == "language":
                 input_dict[key] = "English"
             elif key == "guessed":
@@ -91,6 +91,7 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
+            print(entry)
             query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
             row = query.one()
             row.num_entries += 1
@@ -107,7 +108,10 @@ def get_last_patron(meal_site):
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
-            query = session.query(MealSite).filter_by(meal_site=meal_site)
+            query = session.query(MealSite)
+            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
+            query = apply_filters(query, filter_spec)
+            #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
             
         engine.dispose()
@@ -119,14 +123,14 @@ def get_last_patron(meal_site):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
-def delete_last_patron(MealSite):
+def delete_last_patron(meal_site):
 
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
-            query = session.query(MealSite)
-            obj=session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
+            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
+            obj=apply_filters(session.query(MealSite), filter_spec).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
             session.commit()
         engine.dispose()
