@@ -41,8 +41,7 @@ def init_piedashboard(server):
                                  for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church"],
-                             optionHeight=50
+                             value=["First Baptist Church"]
                              ),
                 html.H4("Select a Demographic Category"),
                 dcc.Dropdown(id='demographic',
@@ -140,6 +139,8 @@ def init_callbacks(pie_app):
                                                  texttemplate="%{label}<br>(%{value} Entries)")])
                 pie_chart.update_layout(title=
                 f"Distribution of {selected_demographic.title()} of Diners with Selected Filters at Selected Sites")
+                pie_chart.update_traces(textposition='inside')
+                pie_chart.update_layout(uniformtext_minsize=9, uniformtext_mode='hide')
                 return pie_chart
 
             else:
