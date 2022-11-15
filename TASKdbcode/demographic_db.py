@@ -9,12 +9,10 @@
 import sys
 import pandas
 import sqlalchemy
-from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.sql import functions
 # sql_alchemy filters has to be downloaded from this repo
-#from TASKdbcode.constants import DATABASE_URL
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
 # from TASKdbcode import database_constants
@@ -29,12 +27,14 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
 
-# This is the base model for both types of Users in the database
-# Both types of Users inherit these fields
-class User(AbstractConcreteBase, Base):
-    id = Column(Integer, primary_key=True)
-    name = Column(String())
+# Table for both types of users in the database
+# Role will either be representative or administrator
+class User(Base):
+    __tablename__ = "users"
+    username = Column(String(), primary_key = True)
     password_hash = Column(String())
+    email = Column(String())
+    role = Column(String())
     # idrk about this hashing stuff I just stole it from here
     # https://dev.to/kaelscion/authentication-hashing-in-sqlalchemy-1bem
     # need to figure out authentication later
@@ -44,11 +44,6 @@ class User(AbstractConcreteBase, Base):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Representatives(User):
-    __tablename__ = "representatives"
-    
-class Administrators(User):
-    __tablename__ = "administrators"
 
 # Big table that stores info about every patron at every meal site
 # The primary key is the timestamp + the meal site name
@@ -66,17 +61,24 @@ class MealSite(Base):
     disabled = Column(String(7))
     guessed = Column(String(5))
 
+class EntryCount(Base):
+    __tablename__ = "entry_counts"
+    meal_site = Column(String(), primary_key = True)
+    num_entries = Column(Integer())
+
 Base.registry.configure()
 #-----------------------------------------------------------------------
 
 def add_patron(input_dict):
     
     for key in input_dict:
-        if key == "language" and not input_dict[key]:
-            input_dict[key] = "English"
-
-        if not input_dict[key] and key != "patron_response":
-            input_dict[key] = "Unknown"
+        if not input_dict["key"]:
+            if key == "language":
+                input_dict[key] = "English"
+            elif key == "guessed":
+                input_dict[key] = "False"
+            else:
+                input_dict[key] = "Unknown"
 
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
@@ -89,6 +91,9 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
+            query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
+            row = query.one()
+            row.num_entries += 1
             session.commit()
 
         engine.dispose()
@@ -130,7 +135,7 @@ def delete_last_patron(MealSite):
         print(ex, file=sys.stderr)
         sys.exit(1)
 
-#-----------------------------------------------------------------------
+
 
 def get_patrons(filter_dict = {}, select_fields = []):
 
@@ -156,6 +161,10 @@ def get_patrons(filter_dict = {}, select_fields = []):
                     filter_spec = {"or": []}
                     for item in value:
                         filter_spec["or"].append({"field": key, "op" : "==", "value": item})
+                elif type(value) is dict:
+                    filter_spec = {"and": []}
+                    filter_spec["and"].append({"field": "entry_timestamp", "op": ">=", "value": value["start_date"]})
+                    filter_spec["and"].append({"field": "entry_timestamp", "op": "<=", "value": value["end_date"]})
                 else:
                     filter_spec = {"field": key, "op" : "==", "value": value}
                     
@@ -180,13 +189,105 @@ def filter_dms(filter_dicts):
             query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
             if filter_dicts:
                 for filter_dict in filter_dicts:
-                    query = apply_filters(query, filter_dict)
+                    # or filtering
+                    if type(filter_dict["value"]) is list:
+                        filter_spec = {"or": []}
+                        for item in filter_dict["value"]:
+                            filter_spec["or"].append({"field": filter_dict["field"], "op" : filter_dict["op"], "value": item})
+                    else:
+                        filter_spec = filter_dict
+                        
+                    query = apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         engine.dispose()
         return demographic_df
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+
+def get_num_entries(meal_site):
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+        num_entries = 0
+
+        with sqlalchemy.orm.Session(engine) as session:
+            if type(meal_site) is list:
+                query = session.query(functions.sum(EntryCount.num_entries).label("total_num")).filter(EntryCount.meal_site.in_(meal_site))
+                num_entries = query.one().total_num
+            else:
+                query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
+                num_entries = query.one().num_entries
+        engine.dispose()
+        return num_entries
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+#-----------------------------------------------------------------------
+
+def get_total_entries():
+    
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            # Keep the filters that were entered in the dict
+            query = session.query(functions.sum(EntryCount.num_entries).label('total_num'))
+            num_entries = query.one().total_num
+            #print(query)
+        engine.dispose()
+        return num_entries
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+    
+
+    
+
+# class Trenton_Area_Soup_Kitchen(MealSite):
+#     __tablename__ = "trenton_area_soup_kitchen"
+    
+# class First_Baptist_Church(MealSite):
+#     __tablename__ = "first_baptist_church"
+    
+# class Trinity_Episcopal_Cathedral(MealSite):
+#     __tablename__ = "trinity_episcopal_church"
+
+# class First_United_Methodist_Church_of_Hightstown(MealSite):
+#     __tablename__ = "first_united_methodist_church_of_hightstown"
+
+# class First_Presbyterian_Church_of_Hightstown(MealSite):
+#     __tablename__ = "first_presbyterian_church_of_hightstown"
+    
+# class Princeton_United_Methodist_Church(MealSite):
+#     __tablename__ = "princeton_united_methodist_church"
+
+# class Holy_Apostles_Episcopal_Church(MealSite):
+#     __tablename__ = "holy_apostles_episcopal_church"
+
+# class Rescue_Mission(MealSite):
+#     __tablename__ = "rescue_mission"
+
+# class Medallion_Care_Behavioral_Health(MealSite):
+#     __tablename__ = "medallion_care_behavioral_health"
+    
+# class Trenton_Circus_Squad(MealSite):
+#     __tablename__ = "trenton_circus_squad"
+    
+# class Harvest_Intercontinental_Ministries_United(MealSite):
+#     __tablename__ = "harvest_intercontinental_ministries_united"
+
+# class St_James_AME_Church(MealSite):
+#     __tablename__ = "st_james_ame_church"
+
+# class Bible_Way_Cathedral_of_Deliverance(MealSite):
+#     __tablename__ = "bible_way_cathedral_of_deliverance"
+
+# class Redding_Circle_Senior_Center(MealSite):
+#     __tablename__ = "redding_circle_senior_center"
+
 
 
 

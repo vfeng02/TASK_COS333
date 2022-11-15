@@ -11,6 +11,8 @@ import argparse
 import sqlalchemy
 import sqlalchemy.orm
 from sqlalchemy import func
+import faker
+import datetime
 import sys
 
 import demographic_db as database
@@ -43,16 +45,24 @@ def fill_db(num_entries):
             database_constants.DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
+            start_date = datetime.datetime(2022, 10, 1, 0, 0, 0)
+            end_date = datetime.datetime(2022, 11, 1, 0, 0, 0)
+
             for meal_site_option in database_constants.MEAL_SITE_OPTIONS:
                 for _ in range(num_entries):
                     random_fields = generate_demographics()
+
+                    random_date = faker.Faker().date_time_between(start_date=start_date, end_date=end_date)
                     
-                    row = database.MealSite(entry_timestamp = func.now(),\
+                    entry= database.MealSite(entry_timestamp = random_date,\
                         meal_site = meal_site_option,
                         **random_fields)
-
-                    session.add(row)
-                    session.commit()
+                    query = session.query(database.EntryCount).filter(database.EntryCount.meal_site == meal_site_option)
+                    row = query.one()
+                    row.num_entries += 1
+                    session.add(entry)
+                    
+            session.commit()
                 
         engine.dispose()
 

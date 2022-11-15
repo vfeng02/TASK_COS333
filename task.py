@@ -18,11 +18,12 @@ from TASKdbcode import demographic_db
 from TASKdbcode import dashboard
 from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
+from TASKdbcode import linedashboard
 
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-#from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 
 
 #----------------------------------------------------------------------
@@ -58,9 +59,10 @@ with app.app_context():
         app = dashboard.init_dashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
+        app = linedashboard.init_linedashboard(app)
 
-        # SimpleLogin(app, login_checker=check_my_users)
-        # app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+        SimpleLogin(app, login_checker=check_my_users)
+        app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
 #-----------------------------------------------------------------------
 
@@ -76,7 +78,7 @@ def get_current_time():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-#@login_required(basic=True)
+@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -87,7 +89,7 @@ def index():
  #-----------------------------------------------------------------------
 
 @app.route('/selectmealsite', methods=['GET'])
-#@login_required(basic=True)
+@login_required(basic=True)
 def selectmealsite():
 
     html_code = render_template('selectmealsite.html',
@@ -166,7 +168,7 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-#@login_required(must=[be_admin])
+@login_required(must=[be_admin])
 def admindisplaydata():
     
     return render_template(
