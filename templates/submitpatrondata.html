@@ -54,13 +54,18 @@
 					</div>
 							<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 								
-								{%for race in [' White ',' Black ',' Hispanic ',' Asian ']%}
-								{% if checkedrace == race %}
-								
-								<input type="checkbox" checked = "checked" onclick = "uncheck();"  id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}} 
+								{%for race in ['White','Black','Hispanic','Asian']%}
+								<!-- {% set i = False %} -->
+								{% for item in lastrace %}
+								{% if item== race %}
+								<input type="checkbox" checked = "checked"  id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}}
+								<!-- {set i = True %} -->
 								{% else %}
-								<input type="checkbox"  class="patronInput" id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}}
 								{% endif %}
+								{% endfor %}
+								<!-- {if i == False %} -->
+								<input type="checkbox"  class="patronInput" id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}}
+								
 								
 								{%endfor%}
 							</div>
@@ -85,7 +90,7 @@
 						<center>
 							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
 								{%for age in ['{<}18','18-29', '30-42', '43-54', '55-66', '>66']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age" value={{age}}>
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age_range" value={{age}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-check-{{age}}">{{age}} </label>
 								{%endfor%}
 							</div>
@@ -100,7 +105,7 @@
 						<center>
 							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
 								{%for lang in ['English','Spanish']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="lang" value={{lang}}>
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="language" value={{lang}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
 								{%endfor%}
 							</div>
@@ -148,9 +153,9 @@
 						<center><p>Zip Code</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="zip-btns" data-toggle="buttons">
 							{%for zip in ["08540", "08618", "08648", "08610", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip" value={{zip}}>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip_codes" value={{zip}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
 							{%endfor%}
 						</div>
@@ -162,24 +167,22 @@
 						<center><p>Homeless</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
 							{%for zip in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="homeless" value={{zip}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-zip-{{zip}}" name="homeless" value={{zip}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-zip-{{zip}}" for="btn-check-zip-{{zip}}">{{zip}} </label>
 							{%endfor%}
 						</div>
 					</center>
 					</div>
 				</div>
-				
-			
 			<div class = "row">
 				<div class="col-sm-4">
 					<div class="row">
 						<center><p>Veteran</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{option}}" name="veteran" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}">{{option}} </label>
@@ -193,7 +196,7 @@
 						<center><p>Disabled</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{option}}" name="disabled" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-disabled-{{option}}" for="btn-check-disabled-{{option}}">{{option}} </label>
@@ -207,7 +210,7 @@
 						<center><p>Guessed</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
 							{%for option in ["True", "False"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label>
