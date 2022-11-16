@@ -24,7 +24,7 @@ Sets up HTML page to input patron data
 		</ul>
 		</div>
 		</div>
-		</nav>
+	</nav>
     <body class="forceOpenSans">
     {% include 'header.html' %}
     <div class="container-fluid">
@@ -37,22 +37,34 @@ Sets up HTML page to input patron data
 		</div>
 		<hr>
 		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get" style="margin-left: 15%; margin-right: 15%; width:70%;background-color: white;">
-			<!-- <div class="row">
-				<div class="col-sm-4">
-					<div class="row">
+			<div class="container fluid">
+				<div class="row container fluid">
+					<div class= "col-sm-1"></div>
+					<div class="col-sm-3">
 						<center><p>Race (Select All That Apply):</p></center>
 					</div>
-					<div class="row">
+					<div class="col-sm-6">
 						<center>
+							<!-- <text>Race (Select All That Apply):</text> -->
 							<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-								{%for race in ['White','Black','Hispanic','Asian']%}
+								{%for race in ['White/Caucasian','Black','Hispanic','Asian']%}
 								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
 								{%endfor%}
+								<div>
+									<text> Other: </text>
+													<select name="otherraces" id = "otherraces">  
+														{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+														<option value="{{race}}">{{race}}</option>
+														{% endfor %}
+													</select>
+								</div>
 							</div>
+							
 						</center>
 					</div>
-					<div class="row">
+					
+					<!-- <div class="row">
 						<center>
 							<br>
 							<text>Other: </text>
@@ -62,41 +74,162 @@ Sets up HTML page to input patron data
 								{% endfor %}
 							</select>
 						</center>
-					</div>
+					</div> -->
 				</div>
-				<div class="col-sm-4">
-					<div class="row">
+				<div class="row"><br></div>
+				<div class="row">
+					<!-- <div class="row">
 						<center><p>Language:</p></center>
-					</div>
+					</div> -->
+					
 					<div class="row">
 						<center>
+							<text>Language:</text>
 							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
 								{%for lang in ['English','Spanish']%}
 								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="lang" value={{lang}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
 								{%endfor%}
+								<div>
+									
+									<text>Other: </text>
+									<select name="otherlangs" id = "otherlangs">  
+										{% for lang in otherlanguages %}
+										<option value="{{lang}}">{{lang}}</option>
+										{% endfor %}
+									</select>
+								</div>
 							</div>
 						</center>
 					</div>
-					<div class="row">
+					<!-- <div class="row">
 						<center>
 							<br>
 							<text>Other: </text>
 							<select name="otherlangs" id = "otherlangs">  
-								{% for lang in languages %}
+								{% for lang in otherlanguages %}
 								<option value="{{lang}}">{{lang}}</option>
 								{% endfor %}
 							</select>
 						</center>
+					</div> -->
+				</div>
+				<div class="row"><br></div>
+				<div class="row">
+					<!-- <div class="row">
+						<center><p>Age Range:</p></center>
+					</div> -->
+					<center>
+						<text>Age Range:</text>
+						<div class="btn-group btn-group-toggle" role="group" id="age-btns" data-toggle="buttons">
+							{%for age in ages%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age_range" value={{age}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{age}}">{{age}} </label>
+							{%endfor%}
+						</div>
+					</center>
+				</div>
+				<div class="row"><br></div>
+				<div class="row">
+					<!-- <div class="row">
+						<center><p>Gender:</p></center>
+					</div> -->
+					<div class="row">
+						<center>
+							<text>Gender:</text>
+							<div class="btn-group btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
+								{%for gender in ['Male','Female']%}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{gender}}" name="gender" value={{gender}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{gender}}" for="btn-check-{{gender}}">{{gender}} </label>
+								{%endfor%}
+								<div>
+									<center>
+										<br>
+										<text>Other: </text>
+										<select name="othergenders" id = "othergenders">  
+											{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other', 'Unknown'] %}
+											<option value="{{gender}}">{{gender}}</option>
+											{% endfor %}
+										</select>
+									</center>
+								</div>
+							</div>
+						</center>
 					</div>
 				</div>
-				<div class="col-sm-4">
-					
+				<div class="row"><br></div>
+				<div class="row">
+					<!-- <div class="row">
+						<center><p>Zip Code:</p></center>
+					</div> -->
+					<center>
+						<text>Zip Code: </text>
+						<div class="btn-group btn-group-toggle" role="group" id="zipcode-btns" data-toggle="buttons">
+							{%for zipcode in zip_codes%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zipcode}}" name="zip_codes" value={{zipcode}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zipcode}}" for="btn-check-{{zipcode}}">{{zipcode}} </label>
+							{%endfor%}
+						</div>
+					</center>
 				</div>
-			</div> -->
-			<center>
-			<table>
-				<tr>
+				<div class="row"><br></div>
+				<div class="row">
+						<!-- <div class="row">
+							<center><p>Homeless:</p></center>
+						</div> -->
+						<center>
+							<text>Homeless: </text>
+							<div class="btn-group btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
+								{%for homeless in ['True', 'False', 'Unknown']%}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-homeless-{{homeless}}" name="homeless" value={{homeless}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-homeless-{{homeless}}" for="btn-check-homeless-{{homeless}}">{{homeless}} </label>
+								{%endfor%}
+							</div>
+						</center>
+					</div>	
+				</div>
+				<div class="row"><br></div>
+				<div class="row">
+					<div class="row">
+						<!-- <div class="row">
+							<center><p>Veteran:</p></center>
+						</div> -->
+						<center>
+							<text>Veteran: </text>
+							<div class="btn-group btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
+								{%for veteran in ['True', 'False', 'Unknown']%}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{veteran}}" name="veteran" value={{veteran}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-veteran-{{veteran}}" for="btn-check-veteran-{{veteran}}">{{veteran}} </label>
+								{%endfor%}
+							</div>
+						</center>
+					</div>	
+				</div>
+				<div class="row"><br></div>
+				<div class="row">
+					<div class="row">
+						<!-- <div class="row">
+							<center><p>Guessed:</p></center>
+						</div> -->
+						<center>
+							<text>Guessed: </text>
+							<div class="btn-group btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
+								{%for guessed in ['True', 'False']%}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{guessed}}" name="guessed" value={{guessed}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{guessed}}" for="btn-check-guessed-{{guessed}}">{{guessed}} </label>
+								{%endfor%}
+							</div>
+						</center>
+					</div>
+				</div>
+
+			</div>
+
+
+
+			<!-- <center> -->
+			<!-- <table> -->
+				<!-- <tr>
 					<td align="right">Race (Select All That Apply): </td>
 					<td>
 						<center>
@@ -113,8 +246,8 @@ Sets up HTML page to input patron data
 						</div>
 						</center>
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Language: </td>
 					<td>
 						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
@@ -123,7 +256,6 @@ Sets up HTML page to input patron data
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="language" value={{lang}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
 							{%endfor%} 
-							<!-- ask vicky how she did this -->
 						</div>
 						<text>Other: </text>
 						<select name="otherlangs" id = "otherlangs">  
@@ -132,14 +264,14 @@ Sets up HTML page to input patron data
 							{% endfor %}
 						</select>
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Age range:</td>
 					<td>
 						<input class="form-select patronInput" name="age_range" list = "ages">
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Gender:</td>
 					<td>
 						<div class="btn-group btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
@@ -149,20 +281,20 @@ Sets up HTML page to input patron data
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-female" for="btn-check-female">Female</label>
 						</div>
 							<text> Other: </text>
-							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
+							<select name="othergenders" id = "othergenders">  
+								{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other', 'Unknown'] %}
+								<option value="{{gender}}">{{gender}}</option>
 								{% endfor %}
 							</select>
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Zip code:</td>
 					<td>
 						<input class="form-select patronInput" name="zip_codes" list = "zip_codes">
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Homeless:</td>
 					<td>
 						<div class = 'row'>
@@ -174,8 +306,8 @@ Sets up HTML page to input patron data
                             </div>
                         </div>
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Veteran:</td>
 					<td>
 						<div class = 'row'>
@@ -187,8 +319,8 @@ Sets up HTML page to input patron data
                             </div>
                         </div>
 					</td>
-				</tr>
-                <tr>
+				</tr> -->
+                <!-- <tr>
 					<td align="right">Disabled:</td>
 					<td>
 						<div class = 'row'>
@@ -215,7 +347,7 @@ Sets up HTML page to input patron data
 					</td>
 				</tr>
             </table>
-		</center>
+		</center> -->
 		<div class="row" style="justify-content:center">
 			<tr>
 				<div class="col-sm-3" style="width:58.5%; align-content:center;">
@@ -321,9 +453,9 @@ Sets up HTML page to input patron data
 	.inactive-recur-config {
 		display: none !important;
 	}
-	body {
+	/* body {
 	background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG/1200px-Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG);
 	background-color: #cccccc;
-	}
+	} */
 
 </style>

@@ -135,7 +135,7 @@ def submitpatrondata():
     homeless = request.args.get('homeless')
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
-    guessed = request.args.get('patron_response')
+    guessed = request.args.get('guessed')
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
@@ -176,9 +176,8 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[be_admin])
+# @login_required(must=[be_admin])
 def admindisplaydata():
-    
     return render_template(
         "admin.html"
     )
@@ -251,51 +250,4 @@ def getlast():
     # return response
 
 
- #-----------------------------------------------------------------------
 
-# @app.route('/submitresult', methods=['GET'])
-# def submit_result():
-#     name = flask.request.args.get('name')
-#     if name is None:
-#         name = ''
-#         name = name.strip()
-
-#     if name == '':
-#         prev_name = '(None)'
-#     else:
-#         prev_name = name
-
-#     # add_patron()
-#         # submit name to the db
-
-#     html_code = flask.render_template('submitresult.html',
-#         ampm=get_ampm(),
-#         current_time=get_current_time(),
-#         name=prev_name)
-#     response = flask.make_response(html_code)
-#     response.set_cookie('prev_name', prev_name)
-#     return response
-
- #-----------------------------------------------------------------------
-
-# def submit_data():
-#     try:
-#         up.uses_netloc.append("postgres")
-#         url = up.urlparse(os.environ["DATABASE_URL"])
-#         with psycopg2.connect(database=url.path[1:],
-#             user=url.username,
-#             password=url.password,
-#             host=url.hostname,
-#             port=url.port
-#             ) as connection:
-#                 with contextlib.closing(connection.cursor()) as cursor:
-#                     cursor.execute("PRAGMA case_sensitive_like=OFF")
-#                     stmt_str ="SELECT classid, dept, coursenum, area, title"
-#                     stmt_str += " FROM courses, classes, crosslistings "
-#                     stmt_str += "WHERE classes.courseid = courses.courseid "
-#                     stmt_str += "AND courses.courseid = "
-#                     stmt_str += "crosslistings.courseid "
-#                     arr = []
-#     except Exception as ex:
-#         #print(sys.argv[0] + ": " + str(ex), file=sys.stderr)
-#         return False, None
