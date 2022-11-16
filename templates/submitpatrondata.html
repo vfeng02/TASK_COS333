@@ -22,22 +22,22 @@ Sets up HTML page to input patron data
                 <h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
             </center>
         </div>
-		<script>
-			// function check()
-			// {
-			//  var check=document.getElementsByTagName('input');
-			//  for(var i=0;i<check.length;i++)
-			//  {
-			//   if(check[i].type=='checkbox')
-			//   {
-			//    check[i].checked=true;
-			//   }
-			//   if(check[i].type=='radio')
-			//   {
-			//    check[i].checked=true;
-			//   }
-			//  }
-			// }
+		<!-- <script>
+			function check()
+			{
+			 var check=document.getElementsByTagName('input');
+			 for(var i=0;i<check.length;i++)
+			 {
+			  if(check[i].type=='checkbox')
+			  {
+			   check[i].checked=true;
+			  }
+			  if(check[i].type=='radio')
+			  {
+			   check[i].checked=true;
+			  }
+			 }
+			}
 			
 			function uncheck()
 			{
@@ -63,7 +63,7 @@ Sets up HTML page to input patron data
 				</center>
 			
 		
-			</div>
+			</div> -->
 			<hr>
         
         <form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get" style="margin-left: 15%; margin-right: 15%; width:70%;background-color: white;">
@@ -78,7 +78,7 @@ Sets up HTML page to input patron data
                             <!-- <text>Race (Select All That Apply):</text> -->
                             <div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
                                 {%for race in ['White/Caucasian','Black','Hispanic','Asian']%}
-                                <input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
+                                <input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
                                 <label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
                                 {%endfor%}
                                 <div>
@@ -194,8 +194,8 @@ Sets up HTML page to input patron data
                         <text>Zip Code: </text>
                         <div class="btn-group btn-group-toggle" role="group" id="zipcode-btns" data-toggle="buttons">
                             {%for zipcode in zip_codes%}
-                            <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zipcode}}" name="zip_codes" value={{zipcode}}>
-                            <label class="btn btn-secondary inactive-button" id = "toggle-button-{{zipcode}}" for="btn-check-{{zipcode}}">{{zipcode}} </label>
+                            <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-zipcode-{{zipcode}}" name="zip_codes" value={{zipcode}}>
+                            <label class="btn btn-secondary inactive-button" id = "toggle-button-{{zipcode}}" for="btn-check-zipcode-{{zipcode}}">{{zipcode}} </label>
                             {%endfor%}
                         </div>
                     </center>
@@ -234,6 +234,22 @@ Sets up HTML page to input patron data
                     </div>  
                 </div>
                 <div class="row"><br></div>
+				<div class="row">
+					<!-- <div class="row">
+						<center><p>Homeless:</p></center>
+					</div> -->
+					<center>
+						<text>Disabled: </text>
+						<div class="btn-group btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
+							{%for disabled in ['True', 'False', 'Unknown']%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{disabled}}" name="disabled" value={{disabled}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-disabled-{{disabled}}" for="btn-check-disabled-{{disabled}}">{{disabled}} </label>
+							{%endfor%}
+						</div>
+					</center>
+				</div>  
+			</div>
+			<div class="row"><br></div>
                 <div class="row">
                     <div class="row">
                         <!-- <div class="row">

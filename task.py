@@ -124,12 +124,13 @@ def submitpatrondata():
         mealsite = new_mealsite
 
     races = []
-    for race in database_constants.RACE_OPTIONS:
-        races.append(request.args.get(race))
-    races = list(filter(None, races))
-    racecsv = ",".join(races)
+    if request.args.get('race') is not None:
+        for race in request.args.get('race'):
+            races.append(race)
+        races = list(filter(None, races))
+    racecsv = "".join(races)
         
-    language = request.args.get('language')
+    language = request.args.get('lang')
     print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
