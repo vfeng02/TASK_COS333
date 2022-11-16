@@ -25,8 +25,16 @@
 						<center>
 							<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 								{%for race in ['White','Black','Hispanic','Asian']%}
-								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
+								<!-- <label class="btn btn-outline-secondary" id ="toggle-button-{{race}}">
+									<input type="checkbox" name="race" id="btn-check-{{race}}" autocomplete="off">
+									{{race}}
+								</label> -->
+								<label class="btn btn-outline-secondary" id ="toggle-button-{{race}}">
+									<input type="checkbox" class="btn-check form-control patronInput mainButton" name="race" id="btn-check-{{race}}" autocomplete="off">
+									{{race}}
+								</label>
+								<!-- <input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label> -->
 								{%endfor%}
 							</div>
 						</center>
@@ -49,10 +57,14 @@
 					</div>
 					<div class="row">
 						<center>
-							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+							<div class="btn-group btn-group-toggle" role="group" id="age-btns" data-toggle="buttons">
 								{%for age in ['{<}18','18-29', '30-42', '43-54', '55-66', '>66']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age" value={{age}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-check-{{age}}">{{age}} </label>
+								<label class="btn btn-outline-secondary" id ="toggle-button-{{age}}">
+									<input type="radio" name="age_range" id="btn-check-{{age}}" autocomplete="off">
+									{{age}}
+								</label>
+								<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age" value={{age}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-check-{{age}}">{{age}} </label> -->
 								{%endfor%}
 							</div>
 						</center>
@@ -66,8 +78,12 @@
 						<center>
 							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
 								{%for lang in ['English','Spanish']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="lang" value={{lang}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
+								<label class="btn btn-outline-secondary" id ="toggle-button-{{lang}}">
+									<input type="radio" name="lang" id="btn-check-{{lang}}" autocomplete="off">
+									{{lang}}
+								</label>
+								<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="lang" value={{lang}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label> -->
 								{%endfor%}
 							</div>
 						</center>
@@ -91,10 +107,18 @@
 					</div>
 					<center>
 						<div class="btn-group btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
-						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-male" name="gender" value="Male">
+							<label class="btn btn-outline-secondary" id ="toggle-button-Male">
+								<input type="radio" name="gender" id="btn-check-Male" autocomplete="off">
+								Male
+							</label>
+							<label class="btn btn-outline-secondary" id ="toggle-button-female">
+								<input type="radio" name="gender" id="btn-check-female" autocomplete="off">
+								Female
+							</label>
+						<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-male" name="gender" value="Male">
 						<label class="btn btn-secondary inactive-button" id = "toggle-button-male" for="btn-check-male">Male</label>
 						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-female" name="gender" value="Female">
-						<label class="btn btn-secondary inactive-button" id = "toggle-button-female" for="btn-check-female">Female</label>
+						<label class="btn btn-secondary inactive-button" id = "toggle-button-female" for="btn-check-female">Female</label> -->
 						</div>
 					</center>
 					<div class="row">
@@ -114,10 +138,14 @@
 						<center><p>Zip Code</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
-							{%for zip in ["08540", "08618", "08648", "08610", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip" value={{zip}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
+						<div class="btn-group btn-group-toggle" role="group" id="zipcode-btns" data-toggle="buttons">
+							{%for option in ["08540", "08618", "08648", "08610", "Unknown"]%}
+							<label class="btn btn-outline-secondary" id ="toggle-button-zipcode-{{option}}">
+								<input type="radio" name="zip_code" id="btn-check-zipcode-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
+							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip_code" value={{zip}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label> -->
 							{%endfor%}
 						</div>
 					</center>
@@ -128,10 +156,15 @@
 						<center><p>Homeless</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
-							{%for zip in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="homeless" value={{zip}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
+						<div class="btn-group btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
+							{%for option in ["True", "False", "Unknown"]%}
+							<label class="btn btn-outline-secondary" id ="toggle-button-homeless-{{option}}">
+								<input type="radio" name="homeless" id="btn-check-homeless-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
+							
+							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="homeless" value={{zip}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label> -->
 							{%endfor%}
 						</div>
 					</center>
@@ -145,10 +178,30 @@
 						<center><p>Veteran</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{option}}" name="veteran" value={{option}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}">{{option}} </label>
+							{%if option == "True"%}
+							{%set active = 'active-button'%}
+							<label class="btn btn-outline-secondary active-button" id ="toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}" checked>
+								<input type="radio" name="veteran" id="btn-check-veteran-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
+							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{option}}" autocomplete="off" name="veteran" value={{option}} checked>
+							<label class="btn btn-secondary {{active}}" id = "toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}">{{option}} </label> -->
+							{% else %}
+							{%set active = 'inactive-button'%}
+							<label class="btn btn-outline-secondary inactive-button" id ="toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}">
+								<input type="radio" name="veteran" id="btn-check-veteran-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
+							<!-- <label class="btn btn-outline-secondary inactive">
+								<input type="radio" name="veteran" id="btn-check-veteran-{{option}}" autocomplete="off">
+								{{option}}
+							</label> -->
+							<!-- <input type="radio" class="mainButton" id="btn-check-veteran-{{option}}" autocomplete="off" name="veteran" value={{option}}>
+							<label class="btn btn-secondary {{active}}" id = "toggle-button-veteran-{{option}}">{{option}} </label> -->
+							{%endif%}
+							
 							{%endfor%}
 						</div>
 					</center>
@@ -159,10 +212,14 @@
 						<center><p>Disabled</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{option}}" name="disabled" value={{option}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-disabled-{{option}}" for="btn-check-disabled-{{option}}">{{option}} </label>
+							<label class="btn btn-outline-secondary" id ="toggle-button-disabled-{{option}}">
+								<input type="radio" name="disabled" id="btn-check-disabled-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
+							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{option}}" name="disabled" value={{option}}> -->
+							<!-- <label class="btn btn-secondary inactive-button" id = "toggle-button-disabled-{{option}}" for="btn-check-disabled-{{option}}">{{option}} </label> -->
 							{%endfor%}
 						</div>
 					</center>
@@ -173,10 +230,15 @@
 						<center><p>Guessed</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+						<div class="btn-group btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label>
+							<input type="radio" class="btn-check form-control patronInput mainButton" name="guessed" id="btn-check-guessed-{{option}}" value="{{option}}">
+							<label class="btn btn-outline-secondary" id ="toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}}</label>
+								
+								<!-- {{option}} -->
+							
+							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label> -->
 							{%endfor%}
 						</div>
 					</center>
@@ -221,11 +283,43 @@
 	
 </body>
 
-<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
-</script>
+
+
 
 <script>
 	'use strict';
+	$('label').click(function(e) {
+		e.preventDefault();
+
+		var radio = $(this).find('input[type=radio]');
+
+		if (radio.is(':checked')) {
+			e.stopImmediatePropagation();
+			$(this).removeClass("active");
+			// $(this).addClass("inactive");
+			radio.prop('checked', false);
+		} else {
+			radio.prop('checked', true);
+			$(this).addClass("active");
+			// $(this).removeClass("inactive");
+
+		}
+
+		// var checkbox = $(this).find('input[type=checkbox]');
+
+		// if (checkbox.is(':checked')) {
+		// 	e.stopImmediatePropagation();
+		// 	$(this).removeClass("active");
+		// 	$(this).addClass("inactive");
+		// 	checkbox.prop('checked', false);
+		// } else {
+		// 	checkbox.prop('checked', true);
+		// 	$(this).addClass("active");
+		// 	$(this).removeClass("inactive");
+
+		// }
+		});
+
 	function validateForm() {
 		
 		var x = document.forms["patronForm"]["guessed"].value;
@@ -263,20 +357,34 @@
 	$('document').ready(setup);
 </script>
 
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- <script type = "text/javascript" src = "/static/js/patrondatabuttons.js"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
 </html>
 
 <style>
-	.active-button {
+	/* .active-button {
 		background-color: #ff9f46;
+	}
+
+	input[type='radio']:after {
+		color: #ff9f46;
+
 	}
 
 	.inactive-button {
 		background-color: #bbb;
-	}
+	} */
 	
 	.special-container{
 		display: table;
 		height: 100%;
+	}
+
+	.active{
+		background-color: #ff9f46;
 	}
 
 	.vertical-center{

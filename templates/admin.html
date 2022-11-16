@@ -11,12 +11,7 @@ Sets up HTML page to input patron data
   </head>
   <body>
     {% include 'header.html' %}
-    <iframe
-      src="/tabledashboard"
-      width="100%"
-      height="600"
-      frameborder="0"
-    ></iframe>
+    <iframe src="/tableapp" width="100%" height="600" frameborder="0"></iframe>
     <!-- <div style="margin-top: 10px;"> -->
     <div class="container-fluid">
       <h2>
@@ -57,12 +52,7 @@ Sets up HTML page to input patron data
     <!-- this iframe controls which graph dash app gets loaded on to the page
         to load the pie one, change src to "/pieapp"
         to load the bar one, change src to "/barapp" -->
-    <iframe
-      src="/piedashboard"
-      width="100%"
-      height="700"
-      frameborder="0"
-    ></iframe>
+    <iframe src="/pieapp" width="100%" height="700" frameborder="0"></iframe>
 
     <a href="/register"> Register User </a>
     {% include 'adminfooter.html' %}
