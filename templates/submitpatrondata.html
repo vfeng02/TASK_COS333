@@ -5,6 +5,37 @@
 		{% include 'imports.html' %}
     </head>
     <body class="forceOpenSans">
+		<script>
+			function check()
+			{
+			 var check=document.getElementsByTagName('input');
+			 for(var i=0;i<check.length;i++)
+			 {
+			  if(check[i].type=='checkbox')
+			  {
+			   check[i].checked=true;
+			  }
+			 }
+			}
+			
+			function uncheck()
+			{
+			 var uncheck=document.getElementsByTagName('input');
+			 for(var i=0;i<uncheck.length;i++)
+			 {
+			  if(uncheck[i].type=='checkbox')
+			  {
+			   uncheck[i].checked=false;
+			  }
+			 }
+			}
+			</script>
+			<div id="wrapper">
+			<input type="button" value="Check All" onclick="check();">
+			<input type="button" value="Uncheck All" onclick="uncheck();">
+		
+			</div>
+			
     {% include 'header.html' %}
     <div class="container-fluid">
 		<div style="margin-top: 10px;">
@@ -16,21 +47,24 @@
 		</div>
 		<hr>
 		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get" style="margin-left: 5%; margin-right: 5%; width:90%;background-color: white;">
-			<div class="row">
+			<div class="row" id = "wrapper">
 				<div class="col-sm-3">
 					<div class="row">
 						<center><p>Race (Select All That Apply)</p></center>
 					</div>
-					<div class="row">
-						<center>
 							<div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-								{%for race in ['White','Black','Hispanic','Asian']%}
-								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="{{race}}" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
+								
+								{%for race in [' White ',' Black ',' Hispanic ',' Asian ']%}
+								{% if checkedrace == race %}
+								
+								<input type="checkbox" checked = "checked" onclick = "uncheck();"  id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}} 
+								{% else %}
+								<input type="checkbox"  class="patronInput" id="btn-check-{{race}}" name="{{race}}" value={{race}}>{{race}}
+								{% endif %}
+								
 								{%endfor%}
 							</div>
-						</center>
-					</div>
+					
 					<div class="row">
 						<center>
 							<text>Other: </text>
@@ -174,7 +208,7 @@
 					</div>
 					<center>
 						<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
-							{%for option in ["True", "False", "Unknown"]%}
+							{%for option in ["True", "False"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label>
 							{%endfor%}
@@ -226,6 +260,20 @@
 
 <script>
 	'use strict';
+	function check(tagName)
+	{
+		var check=document.getElementsByTagName(tagName);
+		if (!check[i].checked){
+			check[i].checked=true;
+		}
+	}
+	function uncheck(tagName)
+	{
+		var uncheck=document.getElementsByTagName(tagName);
+		if (uncheck[i].checked){
+			uncheck[i].checked=false;
+		}
+	}
 	function validateForm() {
 		
 		var x = document.forms["patronForm"]["guessed"].value;
@@ -254,6 +302,7 @@
 	}
 	function setup()
 	{
+		$("#checkboxid").removeAttr("checked");
 		$(window).on('load', getResults);
 		$('#dept').on('input', getResults);
 		$('#coursenum').on('input', getResults);

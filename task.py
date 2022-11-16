@@ -130,6 +130,7 @@ def submitpatrondata():
         
     language = request.args.get('language')
     age_range = request.args.get('age_range')
+    # problem because the names changed
     gender = request.args.get('gender')
     zip_code = request.args.get('zip_codes')
     homeless = request.args.get('homeless')
