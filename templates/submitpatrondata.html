@@ -232,10 +232,10 @@
 					<center>
 						<div class="btn-group btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" name="guessed" id="btn-check-guessed-{{option}}" value="{{option}}">
-							<label class="btn btn-outline-secondary" id ="toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}}</label>
-								
-								<!-- {{option}} -->
+							<label class="btn btn-outline-secondary" id ="toggle-button-guessed-{{option}}">
+								<input type="radio" name="guessed" id="btn-check-guessed-{{option}}" autocomplete="off">
+								{{option}}
+							</label>
 							
 							<!-- <input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label> -->
@@ -288,6 +288,13 @@
 
 <script>
 	'use strict';
+
+	// function deselect() {
+    //       $(".btn-check").click(function() {
+    //           $("#radiobtn1").prop("checked", true);
+    //         });
+    //     }
+
 	$('label').click(function(e) {
 		e.preventDefault();
 
@@ -303,7 +310,8 @@
 			$(this).addClass("active");
 			// $(this).removeClass("inactive");
 
-		}
+		}});
+	
 
 		// var checkbox = $(this).find('input[type=checkbox]');
 
@@ -318,7 +326,6 @@
 		// 	$(this).removeClass("inactive");
 
 		// }
-		});
 
 	function validateForm() {
 		
@@ -353,12 +360,14 @@
 		$('#coursenum').on('input', getResults);
 		$('#area').on('input', getResults);
 		$('#title').on('input', getResults);
+		
 	}
 	$('document').ready(setup);
+
 </script>
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- <script type = "text/javascript" src = "/static/js/patrondatabuttons.js"></script> -->
+// <!-- <script type = "text/javascript" src = "/static/js/patrondatabuttons.js"></script> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
