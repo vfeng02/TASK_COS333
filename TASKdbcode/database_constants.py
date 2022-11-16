@@ -50,12 +50,57 @@ GENDER_OPTIONS = ["Male", "Female", "Non-Binary", "TransMale",
                   "TransFemale", "Other", "Unknown"]
 
 genders = sorted(GENDER_OPTIONS)
+
 # These are not all the zip_code options
 # Zip codes primarily come from Mercer County and Heightstown
 # but they could be anything
 ZIP_CODE_OPTIONS = ["08540", "08618", "08648", "08610", "Unknown"]
 
 zip_codes = sorted(ZIP_CODE_OPTIONS)
+
+# Dict keys are meal sites
+# and dict values are the city/town/township of the meal site
+MEAL_SITE_LOCATIONS = {"First Baptist Church":"Trenton",\
+    "First Presbyterian Church of Hightstown":"Hightstown",\
+    "First United Methodist Church of Hightstown":"Hightstown",\
+    "Holy Apostles Episcopal Church":"Trenton" ,\
+    "Medallion Care Behavioral Health":"Trenton",\
+    "Princeton United Methodist Church":"Princeton",\
+    "Trenton Area Soup Kitchen":"Trenton",\
+    "Rescue Mission":"Trenton",\
+    "Trinity Episcopal Cathedral":"Trenton",\
+    "Trenton Circus Squad":"Trenton",\
+    "Harvest Intercontinental Ministries United":"Trenton",\
+    "St James AME Church":"Hightstown",\
+    "Bible Way Cathedral of Deliverance":"Trenton",\
+    "Redding Circle Senior Center":"Princeton",\
+    "Mercer Behavioral Health":"Ewing",\
+    "Turning Point United Methodist Church":"Trenton",\
+    "Princeton Family YMCA":"Princeton",\
+    "Homefront":"Lawrenceville",\
+    "St Lukes Church":"Ewing",\
+    "Morrisville United Methodist Church":"Morrisville",\
+    "Cartet Arms":"Trenton",\
+    "Masjidul Taowa":"Trenton",\
+    "Architects Housing":"Trenton",\
+    "Louis Josephson Apartments":"Trenton",\
+    "James J. Abbot Apartments": "Trenton",\
+    "J. Conner French Towers": "Trenton",\
+    "Luther Towers":"Trenton",\
+    "Cathedral Square":"Trenton",\
+    "North 25 Apartments":"Trenton",\
+    "Kingsbury Towers":"Trenton",\
+    "Pelletier Homes":"Trenton",\
+    "Independence Gardens":"Princeton",\
+    "City of Trenton Hotels":"Trenton"}
+
+# Dict keys are a city/town/township
+# and dict values are the list of corresponding zip codes
+ZIP_CODES = {"Trenton": ["08608", "08609", "08610", "08611", "08618", "08629", "08638", "08648"],
+             "Highstown": ["08520"],
+             "Princeton": ["08540", "08542", "08544"],
+             "Ewing":["08560", "08534", "08618", "08628", "08638"],
+             "Morrisville": ["15370", "19067"]}
 
 HOMELESS_OPTIONS = ["True", "False", "Unknown"]
 
