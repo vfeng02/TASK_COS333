@@ -15,6 +15,7 @@ from TASKdbcode import database_constants
 from TASKdbcode import graphdashboard_helpers as helpers
 from dash import dcc
 from dash import html
+from dash_iconify import DashIconify as di
 import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input, State
 import plotly.graph_objects as go
@@ -33,9 +34,11 @@ def init_bardashboard(server):
     bar_app.layout = html.Div(
         children=[
             html.Div(children=[
-                html.H4(
-                "Select Meal Sites (Clear Selections to Show All Sites)"),
-                html.H5("Selected sites will each have their own bar(s) on the graph"),
+                html.Div([
+                        html.H4("Select Meal Sites", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="mshelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Select the meal sites whose data you want to be included in the bar graph. Each meal site will get its own bar (or set of bars) on the graph. Clear your selection to automatically select all meal sites.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600})]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
@@ -44,14 +47,22 @@ def init_bardashboard(server):
                              value=["First Baptist Church",
                                  "Trenton Area Soup Kitchen"]
                              ),
-                html.H4("Select a Demographic Category"),
+                html.Div([
+                        html.H4("Select a Demographic Category", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="dchelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran will create True, False, and Unknown sections on the bar graph.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "dchelp", style = {"width": 600})]),
                 dcc.Dropdown(id='demographic',
                              options= [{"label": option.replace("_", " ").title(), "value": option}
                                        for option in database_constants.DEMOGRAPHIC_OPTIONS],
                              clearable=True,
                              value='gender'
                              ),
-                html.H4("Select Filters"),
+                html.Div([
+                        html.H4("Select Filters", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="fhelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("The bar graph will only include data from diners who meet the criteria of all your selected filters.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "fhelp", style = {"width": 600})]),
                 # the options for race look weird bc they're long
                 dbc.Row(id="filter_options", children=[]),
             ], className='menu-l'

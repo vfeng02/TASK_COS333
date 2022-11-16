@@ -15,6 +15,7 @@ from TASKdbcode import database_constants
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
+from dash_iconify import DashIconify as di
 from dash.dependencies import Output, Input, State
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -33,9 +34,11 @@ def init_piedashboard(server):
     pie_app.layout = html.Div(
         children=[
             html.Div(children=[
-                html.H4(
-                    "Select Meal Sites (Clear Selections to Select All Sites)"),
-                html.H5("Data from selected sites will be grouped together into a single pie chart"),
+                html.Div([
+                        html.H4("Select Meal Sites", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="mshelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Select the meal sites whose data you want to be included in the pie chart. Data from your selected meal sites will be grouped together into one single pie chart. Clear your selection to automatically select all meal sites.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600})]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
@@ -43,15 +46,22 @@ def init_piedashboard(server):
                              multi=True,
                              value=["First Baptist Church"]
                              ),
-                html.H4("Select a Demographic Category"),
+                html.Div([
+                        html.H4("Select a Demographic Category", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="dchelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran will create slices for True, False, and Unknown on the pie chart.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "dchelp", style = {"width": 600})]),
                 dcc.Dropdown(id='demographic',
                              options= [{"label": option.replace("_", " ").title(), "value": option}
                                        for option in database_constants.DEMOGRAPHIC_OPTIONS],
                              clearable=True,
                              value='gender'
-                             )         
-                , html.H4("Select Filters"),
-                # the options for race look weird bc they're long
+                             ),         
+                html.Div([
+                        html.H4("Select Filters", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="fhelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("The pie chart will only include data from diners who meet the criteria of all your selected filters.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "fhelp", style = {"width": 600})]),
                 dbc.Row(id="filter_options", children=[]),
 
             ], className='menu-l'
