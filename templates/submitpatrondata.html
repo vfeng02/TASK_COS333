@@ -78,7 +78,7 @@ Sets up HTML page to input patron data
                             <!-- <text>Race (Select All That Apply):</text> -->
                             <div class="btn-group btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
                                 {%for race in ['White/Caucasian','Black','Hispanic','Asian']%}
-                                <input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
+                                <input type="checkbox" class="patronInput mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
                                 <label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}}</label>
                                 {%endfor%}
                                 <div>
