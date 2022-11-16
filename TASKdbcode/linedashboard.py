@@ -15,6 +15,7 @@ from TASKdbcode import demographic_db
 from TASKdbcode import database_constants
 from dash import dcc
 from dash import html
+from dash_iconify import DashIconify as di
 import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input, State
 import plotly.graph_objects as go
@@ -23,15 +24,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 from TASKdbcode import graphdashboard_helpers as helpers
 
-# this is my idea for the line graph menu, definitely not final
+GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 
 def init_linedashboard(server):
     line_app = dash.Dash(
         server=server,
         routes_pathname_prefix="/lineapp/",
-        external_stylesheets=[dbc.themes.BOOTSTRAP])
+        external_stylesheets=[dbc.themes.BOOTSTRAP, GOOGLE_FONTS])
 
-    df = demographic_db.get_patrons()
     demographic_options = []
     for option in database_constants.DEMOGRAPHIC_OPTIONS:
         demographic_options.append(
@@ -40,17 +40,23 @@ def init_linedashboard(server):
     line_app.layout = html.Div(
         children=[
             html.Div(children=[
-                html.H4("Select a Date Range"),
+                html.Div([
+                        html.H4("Select Date Range", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="drhelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("A line graph will be constructed with the data from the dates in the range you select. Includes start date and end date.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600})]),
                 dcc.DatePickerRange(id='range',
                                     min_date_allowed=datetime.datetime(1995, 8, 5),
                                     max_date_allowed=datetime.datetime(2022, 12, 31),
                                     start_date=datetime.datetime(2022, 10, 1),
                                     end_date=datetime.datetime(2022, 11, 13),
                              clearable=True,
-                             
                              ),
-                html.H4(
-                    "Select Meal Sites (Clear Selections to Select All Sites)"),
+                html.Div([
+                        html.H4("Select Meal Sites", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="mshelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Select the meal sites whose data you want to be included in the line graph. Clear your selection to automatically select all meal sites.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600})]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
@@ -58,14 +64,23 @@ def init_linedashboard(server):
                              multi=True,
                              value=["First Baptist Church"]
                              ),
-                html.H4("Group Together or Separate Meal Sites?"),
-                html.H5("If Group is selected, data for selected meal sites will be grouped together into one line on the graph"),
-                html.H5("If Separate is selected, each selected meal site will get its own line on the graph"),
-                dcc.RadioItems(id = 'site_grouping',
-                               options = ['Group', 'Separate'],
+                html.Div([
+                        html.H4("Group/Separate Meal Sites", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="gshelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("If Group is selected, data from your selected meal sites will be grouped together into one single line on the graph.", style = {"textAlign": "left"}),
+                                     html.P("If Separate is selected, each of your selected meal sites will get its own line on the graph.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "gshelp", style = {"width": 600})]),
+                dbc.RadioItems(id = 'site_grouping',
+                               options=[
+                               {"label": "Group", "value": "Group"},
+                               {"label": "Separate", "value": "Separate"}],
                                value = 'Group',
                                inline=True),
-                html.H4("Select Filters"),
+                html.Div([
+                        html.H4("Select Filters", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="fhelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("The line graph will only include data from diners who meet the criteria of all your selected filters.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "fhelp", style = {"width": 600})]),
                 dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}))
 
             ], className='menu-l'
