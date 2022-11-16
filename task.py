@@ -130,13 +130,16 @@ def submitpatrondata():
     racecsv = ",".join(races)
         
     language = request.args.get('language')
+    print('language',language)
     age_range = request.args.get('age_range')
+    # problem because the names changed
     gender = request.args.get('gender')
     zip_code = request.args.get('zip_codes')
     homeless = request.args.get('homeless')
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
     guessed = request.args.get('guessed')
+    print('guess',guessed)
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
@@ -219,7 +222,7 @@ def deletelast():
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
-
+    print(last['meal_site'])
     html_code = render_template('submitpatrondata.html',
         mealsite = meal_site,
         ampm=get_ampm(),
@@ -233,7 +236,15 @@ def getlast():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        racecheck = ""
+        lastrace = last['race'],
+        lastlanguage = last['language'],
+        lastage = last['age_range'],
+        lastgender = last['gender'],
+        lastzip = last['zip_code'],
+        lasthomeless = last['homeless'],
+        lastveteran = last['veteran'],
+        lastdisabled = last['disabled'],
+        lastguess = last['guessed']
         )
     response = make_response(html_code)
     return response

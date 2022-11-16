@@ -91,7 +91,7 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
-            print(entry)
+            print(input_dict)
             query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
             row = query.one()
             row.num_entries += 1
