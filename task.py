@@ -15,7 +15,7 @@ from flask import render_template, make_response
 # sys.path.insert(0, 'TASKfrontend/templates')
 from TASKdbcode import database_constants
 from TASKdbcode import demographic_db
-from TASKdbcode import dashboard
+from TASKdbcode import tabledashboard
 from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
 from TASKdbcode import linedashboard
@@ -56,7 +56,7 @@ def check_my_users(user):
 
 app = Flask(__name__, template_folder='templates')
 with app.app_context():
-        app = dashboard.init_dashboard(app)
+        app = tabledashboard.init_tabledashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
