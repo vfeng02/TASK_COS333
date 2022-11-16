@@ -1,37 +1,21 @@
-/* .menuButton {
-    font-size: 18px;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.submitReqButton {
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    color: white;
-} */
-
 .dark-blue {
     background: #145078;
+    position: relative;
+    top: 700%;
     /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #33A7B5, #145078);
+    /* background: -webkit-linear-gradient(to right, #145078, #145078);  */
     /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #33A7B5, #145078);
+    /* background: linear-gradient(to right, #145078, #145078); */
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     color: white;
+  }
 
-}
+  .orange {
+    background: #ff911f;
+    position: relative;
+    top: 700%;
+    color: white;
+  }
 
 .enter-button {
     border: 3px solid #d9dad9;

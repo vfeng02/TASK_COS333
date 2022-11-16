@@ -99,8 +99,9 @@ def selectmealsite():
 
     response = make_response(html_code)
     return response
+
  #-----------------------------------------------------------------------
-@app.route('/help', methods=['GET'])
+@app.route('/about', methods=['GET'])
 @login_required(basic=True)
 def selectmealsit1e():
 
