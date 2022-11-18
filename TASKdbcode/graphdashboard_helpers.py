@@ -20,6 +20,25 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
+#-----------------------------------------------------------------------
+DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS = ["Race", "Language", "Age Range",\
+                       "Gender", "Zip Code", "Homelessness", "Veteran Status",\
+                       "Disability Status", "Guessed Status", "None"]
+
+DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES = ["race", "language", "age_range",\
+                       "gender", "zip_code", "homeless", "veteran",\
+                       "disabled", "guessed", ""]
+
+
+LANGUAGE_DROPDOWN_OPTIONS = [*database_constants.LANGUAGE_OPTIONS, "Any"]
+
+AGE_RANGE_DROPDOWN_OPTIONS = [*database_constants.AGE_RANGE_OPTIONS, "Any"]
+
+AGE_RANGE_DROPDOWN_OPTIONS = [*database_constants.AGE_RANGE_OPTIONS, "Any Age Range"]
+AGE_RANGE_DROPDOWN_OPTIONS = [*database_constants.AGE_RANGE_OPTIONS, "Any Age Range"]
+AGE_RANGE_DROPDOWN_OPTIONS = [*database_constants.AGE_RANGE_OPTIONS, "Any Age Range"]
+AGE_RANGE_DROPDOWN_OPTIONS = [*database_constants.AGE_RANGE_OPTIONS, "Any Age Range"]
+
 
 #-----------------------------------------------------------------------
 def selected_fields_helper(callback_context):
@@ -39,14 +58,18 @@ def filter_options_helper(selected_demographic, filter_dict):
     
     filters = []
     
-    for demographic_option in database_constants.DEMOGRAPHIC_OPTIONS:
+    for demographic_option, demographic_category in zip(database_constants.DEMOGRAPHIC_OPTIONS, database_constants.DEMOGRAPHIC_CATEGORIES):
         if demographic_option != selected_demographic:
             options_string = demographic_option.upper() + "_OPTIONS"
             # American Indian/Alaska Native
             # and Native Hawaiian/Pacific Islander
             # are too tall to fit in the default dropdown option height
             if demographic_option == "race":
+                options_string = "RACE_DROPDOWN_OPTIONS"
                 height = 80
+            elif demographic_option == "zip_code":
+                options_string = "ZIP_CODE_DROPDOWN_OPTIONS"
+                height = 35
             else:
                 height = 35
             if demographic_option in filter_dict.keys():
@@ -57,9 +80,9 @@ def filter_options_helper(selected_demographic, filter_dict):
                                     database_constants, options_string)],
                                 clearable=True,
                                 optionHeight=height,
+                                multi=True,
                                 value=filter_dict[demographic_option],
-                                placeholder=demographic_option.replace(
-                                    "_", " ").title() + "..."
+                                placeholder="Any " + demographic_category
                                 ))
                     )
             else:
@@ -69,11 +92,15 @@ def filter_options_helper(selected_demographic, filter_dict):
                              options=[{'value': o, 'label': o} for o in getattr(
                                  database_constants, options_string)],
                              clearable=True,
+                             multi=True,
                              value='',
                              optionHeight=height,
-                             placeholder=demographic_option.replace(
-                                 "_", " ").title() + "..."
+                             placeholder="Any " + demographic_category
                              ))
                     )
     return filters
 #-----------------------------------------------------------------------
+
+def construct_title(selected_demographic, filter_dict, graph_type):
+    pass
+    
