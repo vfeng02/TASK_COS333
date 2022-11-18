@@ -9,8 +9,11 @@
 """Instantiate a Dash app."""
 import dash
 from dash import Dash, dash_table, dcc, html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
+from dash_iconify import DashIconify as di
 import pandas
+import xlsxwriter
 from TASKdbcode import demographic_db
 
 PAGE_SIZE = 100
@@ -26,16 +29,26 @@ operators = [['ge ', '>='],
 def init_tabledashboard(server):
     table_app = dash.Dash(
         server=server,
-        routes_pathname_prefix="/tableapp/")
+        routes_pathname_prefix="/tableapp/",
+        external_stylesheets=[dbc.themes.BOOTSTRAP])
     # Load DataFrame
-    df = demographic_db.get_patrons()
+    # df = demographic_db.get_patrons()
+    # icon="material-symbols:download-rounded" style="color: #194f77;"
 
     # Create Layout
     table_app.layout = html.Div([
-        dcc.Store(id='num_total_entries', data=len(df.index)),
-        html.Div(id='num_entries_display', style={
-                 'font-family': 'Courier New'}, children=[]),
-        dash_table.DataTable(
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(html.Div(id='num_entries_display', children=[])),
+                dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
+                                   id="btn_xlsx", style = {"background-color":"#194f77"}), style = {"textAlign":"right"})
+        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px"}, align = "center"),
+            ], fluid = True),
+        # dcc.Store(id='num_total_entries', data=len(df.index)),
+        dcc.Download(id="download-dataframe-xlsx"),
+        dbc.Container([
+            dash_table.DataTable(
             id='table-filtering',
             columns=[
                 {"name": "entry timestamp", "id": "entry_timestamp", "type": "datetime"},
@@ -92,6 +105,7 @@ def init_tabledashboard(server):
             sort_mode='multi',
             sort_by=[],
         )
+        ], fluid = True)
     ])
 
     init_callbacks(table_app)
@@ -130,6 +144,16 @@ def split_filter_part(filter_part):
 
 
 def init_callbacks(table_app):
+
+    @table_app.callback(
+    Output("download-dataframe-xlsx", "data"),
+    [Input("btn_xlsx", "n_clicks"),
+    State('table-filtering', 'filter_query')],
+    prevent_initial_call=True)
+    def download(n_clicks, filter):
+        print("callback")
+        df = demographic_db.get_patrons()
+        return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
 
     @table_app.callback(
         Output('table-filtering', 'data'),
@@ -184,8 +208,7 @@ def init_callbacks(table_app):
         #     total_site_entries+=demographic_db.get_num_entries(site)
         # percent_site_data = (num_entries / total_site_entries)
 
-        display = [
-            html.H4(f"Number of Entries Currently in Table: {num_entries}")]
+        display = [f"Number of Entries Currently in Table: {num_entries}"]
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
 
         # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
