@@ -112,10 +112,6 @@ def init_callbacks(pie_app):
         selected_fields = helpers.selected_fields_helper(dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
-        
-        # The control flow of these if/else statements is logical,
-        # but a little complicated
-        # Maybe there is a cleaner way of arranging these chunks?
 
         # overall, would be great if the title of the charts were clearer
         # kinda hard to understand what exactly you're looking at atm lol
@@ -135,72 +131,42 @@ def init_callbacks(pie_app):
         # there should be something less ugly than just a blank space
         
         if selected_demographic:
+
             selected_fields.append(selected_demographic)
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                # filters get parsed weirdly
-                # print(filter_dict)
-                selected_sites_df = demographic_db.get_patrons(
+                
+            diner_data_df = demographic_db.get_patrons(
                         filter_dict=filter_dict, select_fields=selected_fields)
-                num_entries = len(selected_sites_df.index)
-                percent_labels = [f"{option}: {value/num_entries:.2%}"\
+            num_entries = len(diner_data_df.index)
+            percent_labels = [f"{option}: {value/num_entries:.2%}"\
                                  for option, value in zip(
-                                 selected_sites_df[selected_demographic]\
+                                 diner_data_df[selected_demographic]\
                                  .value_counts().index.tolist(),\
-                                 list(selected_sites_df[selected_demographic].value_counts()))]
-                pie_chart=go.Figure(data=[go.Pie(labels=percent_labels,
-                                                 values=list(selected_sites_df[selected_demographic].value_counts()),
+                                 list(diner_data_df[selected_demographic].value_counts()))]
+            pie_chart=go.Figure(data=[go.Pie(labels=percent_labels,
+                                                 values=list(diner_data_df[selected_demographic].value_counts()),
                                                  texttemplate="%{label}<br>(%{value} Entries)")])
-                pie_chart.update_layout(title=
-                f"Distribution of {selected_demographic.title()} of Diners with Selected Filters at Selected Sites")
-                pie_chart.update_traces(textposition='inside')
-                pie_chart.update_layout(uniformtext_minsize=9, uniformtext_mode='hide')
-                return pie_chart
-
-            else:
-                all_site_df = demographic_db.get_patrons(filter_dict = filter_dict, select_fields=selected_fields)
-                num_entries = demographic_db.get_total_entries()
-                percent_labels = [f"{option}: {value/num_entries:.2%}"\
-                                 for option, value in zip(
-                                 all_site_df[selected_demographic]\
-                                 .value_counts().index.tolist(),\
-                                 list(all_site_df[selected_demographic].value_counts()))]
-                all_pie_chart=go.Figure(data=[go.Pie(labels=percent_labels,
-                                                 values=list(all_site_df[selected_demographic].value_counts()),
-                                                 texttemplate="%{label}<br>(%{value} Entries)")])
-                all_pie_chart.update_layout(title=
-                f"Distribution of {selected_demographic.title()} of Diners with Selected Filters at All Sites")
-                return all_pie_chart
+            pie_chart_title = helpers.construct_title(filter_dict, graph_type = "pie", selected_demographic=selected_demographic)
+            pie_chart.update_layout(title=pie_chart_title)
+            pie_chart.update_traces(textposition='inside')
+            pie_chart.update_layout(uniformtext_minsize=9, uniformtext_mode='hide')
+            return pie_chart
 
         else:
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
-                num_entries = demographic_db.get_num_entries(selected_sites)
-                num_other_entries = num_entries - selected_sites_data
-                selected_sites_data = pandas.Series([selected_sites_data],["Diners with Selected Filters"])
-                other_count = pandas.Series([num_other_entries], ["Other"])
-                selected_sites_data = pandas.concat([selected_sites_data, other_count])
-                percent_labels = [f"{option}: {value/num_entries:.2%}" for option, value in zip(selected_sites_data.index, selected_sites_data.values)]
-                exp_pie_chart = go.Figure(data = [go.Pie(labels = percent_labels, values = selected_sites_data.values, texttemplate = "%{label}<br>(%{value} Entries)", pull = [0.2,0])])
-                exp_pie_chart.update_layout(title = "Percentage of Diners with Selected Filters at Selected Meal Site")                    
-                return exp_pie_chart
 
-            else:
-                num_entries = demographic_db.get_total_entries()
-                all_site_data = demographic_db.get_patrons(
-                                filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
-
-                num_other_entries = num_entries - all_site_data
-                all_site_data = pandas.Series([all_site_data],["Diners with Selected Filters"])
-                other_count = pandas.Series([num_other_entries], ["Other"])
-                all_site_data = pandas.concat([all_site_data, other_count])
-                percent_labels = [f"{option}: {value/num_entries:.2%}" for option, value in zip(all_site_data.index, all_site_data.values)]
-                all_exp_pie_chart = go.Figure(data = [go.Pie(labels = percent_labels, values = all_site_data.values, texttemplate = "%{label}<br>(%{value} Entries)", pull = [0.2,0])])
-                all_exp_pie_chart.update_layout(title = "Percentage of Diners with Selected Filters Across All Meal Sites")
-                return all_exp_pie_chart
-                
-                
-        
+            diner_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
+            num_entries = demographic_db.get_num_entries(selected_sites)
+            num_other_entries = num_entries - diner_data
+            diner_data = pandas.Series([diner_data],["Diners with Selected Filters"])
+            other_count = pandas.Series([num_other_entries], ["Other"])
+            diner_data = pandas.concat([diner_data, other_count])
+            percent_labels = [f"{option}: {value/num_entries:.2%}" for option, value in zip(diner_data.index, diner_data.values)]
+            exp_pie_chart = go.Figure(data = [go.Pie(labels = percent_labels, values = diner_data.values, texttemplate = "%{label}<br>(%{value} Entries)", pull = [0.2,0])])
+            exp_pie_chart_title = helpers.construct_title(filter_dict, graph_type = "pie", selected_demographic=selected_demographic)
+            exp_pie_chart.update_layout(title = exp_pie_chart_title)                    
+            return exp_pie_chart
