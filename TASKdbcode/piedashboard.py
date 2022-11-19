@@ -77,7 +77,7 @@ def init_piedashboard(server):
                                       for label, value in zip(database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS,
                                                               database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES)],
                              clearable=False,
-                             value='gender'
+                             value='race'
                              ),
 
             ], className='menu-l'
@@ -85,7 +85,6 @@ def init_piedashboard(server):
             dcc.Graph(id='pie_chart',
                       config={'displayModeBar': True,
                               'displaylogo': False},
-                      className='card',
                       style={'width': '100vw', 'height': '100vh'}
                       )
         ]
@@ -185,10 +184,33 @@ def init_callbacks(pie_app):
 #-----------------------------------------------------------------------
             if selected_demographic == "race":
                 pie_chart = go.Figure()
+
                 pie_chart_title = helpers.construct_title(
                     filter_dict, graph_type="pie", selected_demographic=selected_demographic)
                 diner_data_df = demographic_db.get_patrons(
                     filter_dict=filter_dict, select_fields=selected_fields)
+                num_entries = len(diner_data_df.index)
+
+                percent_labels = [f"{option}: {value/num_entries:.2%}"
+                                  for option, value in zip(
+                                      diner_data_df[selected_demographic]
+                                      .value_counts().index.tolist(),
+                                      list(diner_data_df[selected_demographic].value_counts()))]
+                for index, label in enumerate(percent_labels):
+                    new_label = label
+                    if "Am" in label:
+                        new_label = new_label.replace("American Indian/Alaska Native", "AI/AN")
+                        percent_labels[index] = new_label
+                    if "Ha" in label:
+                        new_label = new_label.replace("Native Hawaiian/Pacific Islander", "NHOPI")
+                        percent_labels[index] = new_label
+                
+                pie_chart.add_trace(go.Pie(labels=percent_labels,
+                                                 values=list(
+                                                     diner_data_df[selected_demographic].value_counts()),
+                                                 texttemplate="%{label}<br>(%{value} Entries)",
+                                                 rotation=80,sort=False, visible = False))
+
                 race_counts = diner_data_df["race"].value_counts()
                 race_counts = race_counts.to_frame()
                 race_counts.rename(
@@ -207,7 +229,7 @@ def init_callbacks(pie_app):
                         counts.append(
                             list(race_counts.loc[race_counts['race'] == race, 'count'])[0])
                 counts.append(multi_count)
-                num_entries = len(diner_data_df.index)
+
                 percent_labels = [f"{option}: {value/num_entries:.2%}"
                                   for option, value in zip(
                                       race_labels,
@@ -225,29 +247,8 @@ def init_callbacks(pie_app):
 
                 pie_chart.add_trace(go.Pie(
                     labels=percent_labels, values=counts, texttemplate="%{label}<br>(%{value} Entries)",
-                    rotation=80))
+                    rotation=80, sort=False, visible = True))
 
-                percent_labels = [f"{option}: {value/num_entries:.2%}"
-                                  for option, value in zip(
-                                      diner_data_df[selected_demographic]
-                                      .value_counts().index.tolist(),
-                                      list(diner_data_df[selected_demographic].value_counts()))]
-                
-                for index, label in enumerate(percent_labels):
-                    new_label = label
-                    if "Am" in label:
-                        new_label = new_label.replace("American Indian/Alaska Native", "AI/AN")
-                        percent_labels[index] = new_label
-
-                    if "Ha" in label:
-                        new_label = new_label.replace("Native Hawaiian/Pacific Islander", "NHOPI")
-                        percent_labels[index] = new_label
-                
-                pie_chart.add_trace(go.Pie(labels=percent_labels,
-                                                 values=list(
-                                                     diner_data_df[selected_demographic].value_counts()),
-                                                 texttemplate="%{label}<br>(%{value} Entries)",
-                                                 rotation=80))
                 pie_chart.update_layout(
                     legend = {"xanchor":"left",
                               "x":1,
@@ -257,28 +258,26 @@ def init_callbacks(pie_app):
                 pie_chart.update_layout(
                     updatemenus=[
                         dict(
-                            type="buttons",
+                            type="dropdown",
                             direction="down",
-                            active=1,
-                            x = .01,
-                            y = 0.90,
+                            active=0,
+                            showactive = True,
+                            x = 0.75,
+                            y = 0.99,
                             xanchor="left",
                             yanchor="top",
                             buttons=list([
                                 dict(label="Group Multiracial",
                                      method="restyle",
-                                     args=[{"visible": [True, False]},]),
+                                     args=[{"visible": [False, True]},]),
                                 dict(label="Split Multiracial",
                                      method="restyle",
-                                     args=[{"visible": [False, True]},]),
+                                     args=[{"visible": [True, False]},]),
                             ]),
                         )
                     ],
-                    title = pie_chart_title,
-                    # margin = dict(t=35, b=35, l=35, r=35),
-                    autosize = False,
-                    width = 1200,
-                    height = 1200)
+                    title = pie_chart_title)
+                    # margin = {"t":5,"b":5,"l":5,"r":5})
                 
                 return pie_chart
 #-----------------------------------------------------------------------
