@@ -37,35 +37,39 @@ def init_bardashboard(server):
                 html.Div([
                         html.H4("Select Meal Sites", style={'display': 'inline-block', 'margin-right': '5px'}), 
                         di(icon = "material-symbols:help-outline-rounded", id="mshelp", color = "194f77", inline = True, height = 20),
-                        dbc.Tooltip([html.P("Select the meal sites whose data you want to be included in the bar graph. Each meal site will get its own bar (or set of bars) on the graph. Clear your selection to automatically select all meal sites.",
-                                            style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600})]),
+                        dbc.Tooltip([html.P("Select the meal sites whose entries you want to be included in the bar graph. Each meal site will get a bar, or set of bars, on the graph. Clear your selection to automatically select any/all meal sites.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600}),
+                        html.H5("Compile data from diners at...")]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church",
-                                 "Trenton Area Soup Kitchen"]
-                             ),
+                             value=["First Baptist Church"],
+                             placeholder = "All Meal Sites",
+                             ),   
                 html.Div([
-                        html.H4("Select a Demographic Category", style={'display': 'inline-block', 'margin-right': '5px'}), 
-                        di(icon = "material-symbols:help-outline-rounded", id="dchelp", color = "194f77", inline = True, height = 20),
-                        dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran will create True, False, and Unknown sections on the bar graph.",
-                                            style = {"textAlign": "left", "marginBottom": 0})], target = "dchelp", style = {"width": 600})]),
-                dcc.Dropdown(id='demographic',
-                             options= [{"label": option.replace("_", " ").title(), "value": option}
-                                       for option in database_constants.DEMOGRAPHIC_OPTIONS],
-                             clearable=True,
-                             value='gender'
-                             ),
-                html.Div([
-                        html.H4("Select Filters", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        html.H4("Select Filters on Diners", style={'display': 'inline-block', 'margin-right': '5px'}), 
                         di(icon = "material-symbols:help-outline-rounded", id="fhelp", color = "194f77", inline = True, height = 20),
-                        dbc.Tooltip([html.P("The bar graph will only include data from diners who meet the criteria of all your selected filters.",
+                        dbc.Tooltip([html.P("The bar graph will only include data from diners who meet the criteria of all your selected filters. Clear a filter selection to automatically include any/all options of that category.",
                                             style = {"textAlign": "left", "marginBottom": 0})], target = "fhelp", style = {"width": 600})]),
-                # the options for race look weird bc they're long
+                html.H5("Make a graph of diners who are..."),
                 dbc.Row(id="filter_options", children=[]),
-            ], className='menu-l'
+                html.Div([
+                        html.H4("Select Demographic Category to Group Bars", style={'display': 'inline-block', 'margin-right': '5px'}), 
+                        di(icon = "material-symbols:help-outline-rounded", id="dchelp", color = "194f77", inline = True, height = 20),
+                        dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran Status will create a group of bars for Veteran, Not a Veteran, and Unknown on the bar graph.",
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "dchelp", style = {"width": 600}),
+                        html.H5("Break down diners by...")]),
+                dcc.Dropdown(id='demographic',
+                             options= [{"label": label, "value": value}
+                                       for label, value in zip(database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS,
+                                                               database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES)],
+                             clearable=False,
+                             value='gender'
+                             ),      
+
+            ],className='menu-l'
             ),
             dcc.Graph(id='bar_graph',
                       config={'displayModeBar': True,
