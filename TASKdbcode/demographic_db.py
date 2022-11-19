@@ -12,6 +12,7 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import functions
+from TASKdbcode import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
@@ -145,6 +146,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
 
     filter_dict = {key:value for (key, value) in\
                    filter_dict.items() if value}
+    # print(filter_dict)
 
     select_fields = [getattr(MealSite, field) for\
         field in select_fields]
@@ -164,7 +166,10 @@ def get_patrons(filter_dict = {}, select_fields = []):
                 if type(value) is list:
                     filter_spec = {"or": []}
                     for item in value:
-                        filter_spec["or"].append({"field": key, "op" : "==", "value": item})
+                        if item == "Multiracial":
+                            filter_spec["or"].append({"field": key, "op" : "ilike", "value": "%,%"})
+                        else:
+                            filter_spec["or"].append({"field": key, "op" : "==", "value": item})
                 elif type(value) is dict:
                     filter_spec = {"and": []}
                     filter_spec["and"].append({"field": "entry_timestamp", "op": ">=", "value": value["start_date"]})

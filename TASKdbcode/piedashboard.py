@@ -91,6 +91,10 @@ def init_piedashboard(server):
     )
 
     init_callbacks(pie_app)
+    # pie_app.enable_dev_tools(
+    # dev_tools_ui=True,
+    # dev_tools_serve_dev_bundles=True,)
+    
 
     return pie_app.server
 
@@ -122,6 +126,8 @@ def init_callbacks(pie_app):
             dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
+        # if filter_dict.get("race"):
+        #     print(filter_dict["race"])
 
         # overall, would be great if the title of the charts were clearer
         # kinda hard to understand what exactly you're looking at atm lol
@@ -218,8 +224,7 @@ def init_callbacks(pie_app):
                 race_counts["race"] = race_counts.index
                 counts = []
                 multi_count = 0
-                race_labels = [race for race in race_counts["race"].to_list(
-                ) if race in database_constants.RACE_OPTIONS]
+                race_labels = [race for race in race_counts["race"].to_list() if race in database_constants.RACE_OPTIONS]
                 race_labels.append("Multiracial")
                 for race in race_counts["race"]:
                     if race not in database_constants.RACE_OPTIONS:
