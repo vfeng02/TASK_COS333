@@ -120,19 +120,17 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             title+="<br>Across all Meal Sites"
 
     if graph_type == "bar":
-        title = "Number of "
         
         if filter_dict:
             filter_string = construct_filter_string(filter_dict)
             title += filter_string
         
-        title+="Diners "
+        title+="Diner Entries "
         
         if selected_demographic:
             title += f"by {category_dict[selected_demographic]} and "
 
-        if meal_sites:
-            title+="by Meal Site"
+        title+="by Meal Site"
 
     return title
 
@@ -141,6 +139,13 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
 
 def construct_filter_string(filter_dict):
     status_options = database_constants.STATUS_OPTION_MAPPING
+    
+    filter_dict = {key:value for (key, value) in\
+                   filter_dict.items() if value}
+
+    if filter_dict.get("meal_site"):
+        del filter_dict["meal_site"]
+
     filter_text_list = []
     filter_text_dict = {key:[] for (key, value) in filter_dict.items()}
     

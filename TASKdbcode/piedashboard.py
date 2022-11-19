@@ -22,7 +22,7 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 from TASKdbcode import graphdashboard_helpers as helpers
-
+import textwrap
 
 def init_piedashboard(server):
     pie_app = dash.Dash(
@@ -101,6 +101,7 @@ def init_callbacks(pie_app):
         filters = helpers.filter_options_helper(selected_demographic, filter_dict)
         return filters
 
+
     @pie_app.callback(
             Output('pie_chart', 'figure'),
             [Input('site_options', 'value'),
@@ -128,6 +129,8 @@ def init_callbacks(pie_app):
         # There is also an issue where the chart completely disappears
         # if you select a demographic category and filters,
         # and no diner fits all those filters,
+        # or if you select no demographic category,
+        # with no filters
         # there should be something less ugly than just a blank space
         
         if selected_demographic:
@@ -148,7 +151,7 @@ def init_callbacks(pie_app):
             pie_chart=go.Figure(data=[go.Pie(labels=percent_labels,
                                                  values=list(diner_data_df[selected_demographic].value_counts()),
                                                  texttemplate="%{label}<br>(%{value} Entries)")])
-            pie_chart_title = helpers.construct_title(filter_dict, graph_type = "pie", selected_demographic=selected_demographic)
+            pie_chart_title = helpers.construct_title(filter_dict, graph_type="pie", selected_demographic=selected_demographic)
             pie_chart.update_layout(title=pie_chart_title)
             pie_chart.update_traces(textposition='inside')
             pie_chart.update_layout(uniformtext_minsize=9, uniformtext_mode='hide')
@@ -158,15 +161,19 @@ def init_callbacks(pie_app):
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
+                num_entries = demographic_db.get_num_entries(selected_sites)
+            else:
+                num_entries = demographic_db.get_total_entries()
 
             diner_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
-            num_entries = demographic_db.get_num_entries(selected_sites)
             num_other_entries = num_entries - diner_data
-            diner_data = pandas.Series([diner_data],["Diners with Selected Filters"])
+            filtered_slice_title = helpers.construct_filter_string(filter_dict=filter_dict).strip()
+            filtered_slice_title = "<br>".join(textwrap.wrap(filtered_slice_title, width=50))
+            diner_data = pandas.Series([diner_data],[filtered_slice_title])
             other_count = pandas.Series([num_other_entries], ["Other"])
             diner_data = pandas.concat([diner_data, other_count])
             percent_labels = [f"{option}: {value/num_entries:.2%}" for option, value in zip(diner_data.index, diner_data.values)]
-            exp_pie_chart = go.Figure(data = [go.Pie(labels = percent_labels, values = diner_data.values, texttemplate = "%{label}<br>(%{value} Entries)", pull = [0.2,0])])
+            exp_pie_chart = go.Figure(data = [go.Pie(labels = percent_labels, values = diner_data.values, texttemplate = "%{label}<br>(%{value} Entries)", pull = [0.2,0], rotation = 295)])
             exp_pie_chart_title = helpers.construct_title(filter_dict, graph_type = "pie", selected_demographic=selected_demographic)
             exp_pie_chart.update_layout(title = exp_pie_chart_title)                    
             return exp_pie_chart

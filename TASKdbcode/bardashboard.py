@@ -126,42 +126,34 @@ def init_callbacks(bar_app):
         # maybe change display when no diners are found, it's not as bad as pie charts,
         # but still not great, some sort of "Not Found" message might be good
         if selected_demographic:
+            
             selected_fields.append(selected_demographic)
+            
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                selected_sites_df = demographic_db.get_patrons(
+    
+            diner_data_df = demographic_db.get_patrons(
                         filter_dict=filter_dict, select_fields=selected_fields)
-                histogram = px.histogram(selected_sites_df, x=selected_demographic,
-                color='meal_site', barmode='group', title=f"Comparison of {selected_demographic} of Diners at Selected Meal Sites")
-                return histogram
-            else:
-                all_site_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                all_histogram = px.histogram(all_site_data, x=selected_demographic,
-                color='meal_site', barmode='group',
-                title = f"Comparison of {selected_demographic.title()} of Diners at All Meal Sites")
-                return all_histogram
+            histogram_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
+            histogram = px.histogram(diner_data_df, x=selected_demographic,
+            color='meal_site', barmode='group', title=histogram_title, text_auto=True)
+            histogram.update_layout(yaxis_title = "number of entries")
+            return histogram
 
-        elif selected_filters:
+        else:
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
-                selected_sites_data.rename("count", inplace=True)
-                bar_graph = px.bar(selected_sites_data, x = selected_sites_data.index,\
-                                    y = "count", title = "Comparison of Diners With Selected Filters At Selected Meal Sites", text_auto = True,
-                                    color=selected_sites_data.index)
-                bar_graph.update_layout(showlegend=False)
-                return bar_graph
                 
-            else:
-                all_site_data = demographic_db.get_patrons(
-                                filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
-                all_site_data.rename("count", inplace=True)
-                all_bar_graph = px.bar(all_site_data, x = all_site_data.index,\
-                                    y = "count", title = "Comparison of Diners With Selected Filters Across All Meal Sites", text_auto = True,
-                                    color = all_site_data.index)
-                all_bar_graph.update_layout(showlegend=False)
-                return all_bar_graph
+            selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
+            selected_sites_data.rename("number of entries", inplace=True)
+            bar_graph_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
+            bar_graph = px.bar(selected_sites_data, x = selected_sites_data.index,\
+                                    y = "number of entries", title = bar_graph_title, text_auto = True,
+                                    color=selected_sites_data.index)
+            bar_graph.update_layout(showlegend=False)
+            return bar_graph
+
 
 
 
