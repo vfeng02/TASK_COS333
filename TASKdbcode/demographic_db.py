@@ -168,6 +168,8 @@ def get_patrons(filter_dict = {}, select_fields = []):
                     for item in value:
                         if item == "Multiracial":
                             filter_spec["or"].append({"field": key, "op" : "ilike", "value": "%,%"})
+                        elif item == "Other" and key == "zip_code":
+                            filter_spec["or"].append({"field": key, "op" : "not_in", "value": database_constants.ZIP_CODE_DROPDOWN_OPTIONS})
                         else:
                             filter_spec["or"].append({"field": key, "op" : "==", "value": item})
                 elif type(value) is dict:
