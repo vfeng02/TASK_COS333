@@ -23,13 +23,15 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 
+CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
 
 def init_bardashboard(server):
     bar_app = dash.Dash(
+        __name__,
         server=server,
         routes_pathname_prefix="/barapp/",
         # using the default bootstrap style sheet, could be changed
-        external_stylesheets=[dbc.themes.BOOTSTRAP])
+        external_stylesheets=[CUSTOM_BOOTSTRAP])
 
     bar_app.layout = html.Div(
         children=[
@@ -39,13 +41,13 @@ def init_bardashboard(server):
                         di(icon = "material-symbols:help-outline-rounded", id="mshelp", color = "194f77", inline = True, height = 20),
                         dbc.Tooltip([html.P("Select the meal sites whose entries you want to be included in the bar graph. Each meal site will get a bar, or set of bars, on the graph. Clear your selection to automatically select any/all meal sites.",
                                             style = {"textAlign": "left", "marginBottom": 0})], target = "mshelp", style = {"width": 600}),
-                        html.H5("Compile data from diners at...")]),
+                        html.H5("Compare data from diners at...")]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                  for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church"],
+                             value=["First Baptist Church", "Trenton Area Soup Kitchen"],
                              placeholder = "All Meal Sites",
                              ),   
                 html.Div([
@@ -66,7 +68,7 @@ def init_bardashboard(server):
                                        for label, value in zip(database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS,
                                                                database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES)],
                              clearable=False,
-                             value='gender'
+                             value='race'
                              ),      
 
             ],className='menu-l'
@@ -83,9 +85,6 @@ def init_bardashboard(server):
 
 
     init_callbacks(bar_app)
-    bar_app.enable_dev_tools(
-    dev_tools_ui=True,
-    dev_tools_serve_dev_bundles=True,)
 
     return bar_app.server
 
@@ -101,6 +100,7 @@ def init_callbacks(bar_app):
         selected_fields = helpers.selected_fields_helper(dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
         filters = helpers.filter_options_helper(selected_demographic, filter_dict)
+        print(dbc.themes.BOOTSTRAP)
         return filters
 
 
@@ -132,9 +132,88 @@ def init_callbacks(bar_app):
         if selected_demographic:
             
             selected_fields.append(selected_demographic)
-            
+                        
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
+#-----------------------------------------------------------------------
+            if selected_demographic == "race":
+                bar_graph = go.Figure()
+
+                bar_graph_title = helpers.construct_title(
+                    filter_dict, graph_type="bar", selected_demographic=selected_demographic)
+                diner_data_df = demographic_db.get_patrons(
+                    filter_dict=filter_dict, select_fields=selected_fields)
+
+                diner_data_df.replace(to_replace='American Indian/Alaska Native', value='AI/AN', regex=True, inplace = True)
+                diner_data_df.replace(to_replace='Native Hawaiian/Pacific Islander', value='NHOPI', regex=True, inplace = True)
+                
+                diff_races = list(diner_data_df["race"].unique())
+                multi_races = [race for race in diff_races if "," in race]
+                multi_races.sort()
+
+                histogram = px.histogram(diner_data_df, x=selected_demographic,
+                color='meal_site', barmode='group', text_auto=True)
+                histogram.update_layout(yaxis_title = "number of entries")
+                histogram.update_xaxes(categoryorder="array", categoryarray = ["White", "Black", "Hispanic", "Asian", "AI/AN", "NHOPI", "Unknown", *multi_races])
+                show_sep = []
+                # print(histogram.data)
+                for trace in histogram.data:
+                    trace.visible = False
+                    bar_graph.add_trace(trace)
+                    show_sep.append(True)
+                # return histogram
+                
+                diner_data_df.loc[diner_data_df["race"].str.contains(","), "race"] = "Multiracial"
+                
+                g_histogram = px.histogram(diner_data_df, x=selected_demographic,
+                color='meal_site', barmode='group', text_auto=True)
+                g_histogram.update_layout(yaxis_title = "number of entries")
+                g_histogram.update_xaxes(categoryorder="array", categoryarray = ["White", "Black", "Hispanic", "Asian", "AI/AN", "NHOPI", "Unknown", "Multiracial"])
+                show_group = []
+                for trace in list(g_histogram.data):
+                    trace.visible = True
+                    bar_graph.add_trace(trace)
+                    show_group.append(True)
+                bar_graph.update_xaxes(categoryorder = 'array',categoryarray = ["White", "Black", "Hispanic", "Asian", "AI/AN", "NHOPI", "Unknown"])
+
+                bar_graph.update_layout(
+                    updatemenus=[
+                        dict(
+                            type="dropdown",
+                            direction="down",
+                            active=0,
+                            showactive = True,
+                            x = 0.75,
+                            y = 0.99,
+                            xanchor="left",
+                            yanchor="top",
+                            buttons=list([
+                                dict(label="Group Multiracial",
+                                     method="restyle",
+                                     args=[{"visible":[not b for b in show_sep] + show_group},]),
+                                dict(label="Split Multiracial",
+                                     method="restyle",
+                                     args=[{"visible": show_sep + [not b for b in show_group]},]),
+                            ]),
+                        )
+                    ],
+                    title = bar_graph_title,
+                    yaxis_title = "number of entries",
+                    xaxis_title = "race")
+                
+                return bar_graph
+#-----------------------------------------------------------------------
+            
+            
+            
+            
+
+            
+            # if selected_demographic == "race":
+            #     diner_data_df = demographic_db.get_patrons(
+            #             filter_dict=filter_dict, select_fields=selected_fields)
+                
+            #     pass
     
             diner_data_df = demographic_db.get_patrons(
                         filter_dict=filter_dict, select_fields=selected_fields)
