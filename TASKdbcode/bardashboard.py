@@ -184,7 +184,7 @@ def init_callbacks(bar_app):
                             active=0,
                             showactive = True,
                             x = 0.75,
-                            y = 0.99,
+                            y = 1.14,
                             xanchor="left",
                             yanchor="top",
                             buttons=list([
