@@ -43,8 +43,12 @@ def selected_fields_helper(callback_context):
 def filter_options_helper(selected_demographic, filter_dict):
 
     filters = []
+    dem_row = []
+    status_row1 = []
+    status_row2 = []
+    demographic_categories = database_constants.DEMOGRAPHIC_CATEGORIES
 
-    for demographic_option, demographic_category in zip(database_constants.DEMOGRAPHIC_OPTIONS, database_constants.DEMOGRAPHIC_CATEGORIES):
+    for demographic_option in database_constants.DEMOGRAPHIC_OPTIONS:
         if demographic_option != selected_demographic:
             options_string = demographic_option.upper() + "_OPTIONS"
             # American Indian/Alaska Native
@@ -59,31 +63,87 @@ def filter_options_helper(selected_demographic, filter_dict):
             else:
                 height = 35
             if demographic_option in filter_dict.keys():
-                filters.append(
-                    dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
-                                             'name': demographic_option},
-                                         options=[{'value': o, 'label': o} for o in getattr(
-                                             database_constants, options_string)],
-                                         clearable=True,
-                                         optionHeight=height,
-                                         multi=True,
-                                         value=filter_dict[demographic_option],
-                                         placeholder="Any " + demographic_category
-                                         ))
-                )
+                if demographic_option in list(database_constants.STATUS_OPTION_MAPPING.keys()):
+                    if demographic_option in ("homeless", "veteran"):
+                        status_row1.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                                clearable=True,
+                                                optionHeight=height,
+                                                multi=True,
+                                                value=filter_dict[demographic_option],
+                                                placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+                    else:
+                        status_row2.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                                clearable=True,
+                                                optionHeight=height,
+                                                multi=True,
+                                                value=filter_dict[demographic_option],
+                                                placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+                else:
+                        dem_row.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                                clearable=True,
+                                                optionHeight=height,
+                                                multi=True,
+                                                value=filter_dict[demographic_option],
+                                                placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+                    
+                        
             else:
-                filters.append(
-                    dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
-                                             'name': demographic_option},
-                                         options=[{'value': o, 'label': o} for o in getattr(
-                                             database_constants, options_string)],
-                            clearable=True,
-                            multi=True,
-                            value='',
-                            optionHeight=height,
-                            placeholder="Any " + demographic_category
-                                         ))
-                )
+                if demographic_option in list(database_constants.STATUS_OPTION_MAPPING.keys()):
+                    if demographic_option in ("homeless", "veteran"):
+                        status_row1.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                    clearable=True,
+                                    multi=True,
+                                    value='',
+                                    optionHeight=height,
+                                    placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+                    else:
+                        status_row2.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                    clearable=True,
+                                    multi=True,
+                                    value='',
+                                    optionHeight=height,
+                                    placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+                else:
+                        dem_row.append(
+                            dbc.Col(dcc.Dropdown(id={'type': 'graph_filter',
+                                                    'name': demographic_option},
+                                                options=[{'value': o, 'label': o} for o in getattr(
+                                                    database_constants, options_string)],
+                                    clearable=True,
+                                    multi=True,
+                                    value='',
+                                    optionHeight=height,
+                                    placeholder="Any " + demographic_categories[demographic_option]
+                                                )))
+    dem_row = dbc.Row(dem_row, className = "g-0")
+    status_row1 = dbc.Row(status_row1, className = "g-0")
+    status_row2 = dbc.Row(status_row2, className = "g-0")
+    filters = [dem_row, status_row1, status_row2]         
     return filters
 # -----------------------------------------------------------------------
 
@@ -131,6 +191,16 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             title += f"by {category_dict[selected_demographic]} and "
 
         title+="by Meal Site"
+
+    if graph_type == "bar":
+        if filter_dict:
+            filter_string = construct_filter_string(filter_dict)
+            title += filter_string
+
+        title+="Diner Entries by Meal Service Date"
+        if selected_demographic == "Separate":
+            title+= " and by Meal Site"
+            
 
     return title
 
