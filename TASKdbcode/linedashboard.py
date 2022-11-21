@@ -67,7 +67,7 @@ def init_linedashboard(server):
                        id="mshelp", color="white", inline=True, height=20),
                     dbc.Tooltip([html.P("Select the meal sites whose entries you want to be included in the line graph. Clear your selection to automatically select any/all meal sites.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="mshelp", style={"width": 600}),
-                    html.H5("Compare data from diners at...", style = {"color":"white"})]),
+                    html.H5("Compile or Compare data from diners at...", style = {"color":"white"})]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
                                       for o in database_constants.MEAL_SITE_OPTIONS],
