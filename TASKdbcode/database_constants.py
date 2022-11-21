@@ -19,6 +19,24 @@ DEMOGRAPHIC_OPTIONS = ["race", "language", "age_range",\
                        "gender", "zip_code", "homeless", "veteran",\
                        "disabled", "guessed"]
 
+DEMOGRAPHIC_CATEGORIES = {"race":"Race",
+                          "language":"Language",
+                          "age_range":"Age Range",
+                          "gender":"Gender",
+                          "zip_code":"Zip Code",
+                          "homeless":"Homeless Status",
+                          "veteran":"Veteran Status",
+                          "disabled":"Disability Status",
+                          "guessed":"Guessed Entry Status"}
+
+DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS = ["Race", "Language", "Age Range",\
+                       "Gender", "Zip Code", "Homeless Status", "Veteran Status",\
+                       "Disability Status", "Guessed Entry Status", "None"]
+
+DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES = ["race", "language", "age_range",\
+                       "gender", "zip_code", "homeless", "veteran",\
+                       "disabled", "guessed", ""]
+
 # Check all that apply
 # Maybe display White as White/Caucasian
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
@@ -26,6 +44,12 @@ RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
         "Unknown"]
 
 races = sorted(RACE_OPTIONS)
+
+# This is for the graph apps don't worrky about ut
+RACE_DROPDOWN_OPTIONS = ["White", "Black", "Hispanic", "Asian","American Indian/Alaska Native",\
+    "Native Hawaiian/Pacific Islander", "Multiracial", "Unknown"]
+
+
 
 # Primary language (not every language a person speaks)
 LANGUAGE_OPTIONS = ["English", "Spanish", "ASL", "Arabic", "Bengali",
@@ -103,6 +127,12 @@ ZIP_CODES = {"Trenton": ["08608", "08609", "08610", "08611", "08618", "08629", "
              "Ewing":["08560", "08534", "08618", "08628", "08638"],
              "Morrisville": ["15370", "19067"]}
 
+# This is just for the graph apps don't worry about it
+ZIP_CODE_DROPDOWN_OPTIONS = ["08608", "08609", "08610", "08611", "08618", "08629", "08638", "08648",
+                      "08520","08540", "08542", "08544","08560", "08534", "08618", "08628", "08638",
+                      "15370", "19067", "Other", "Unknown"]
+
+
 HOMELESS_OPTIONS = ["True", "False", "Unknown"]
 
 VETERAN_OPTIONS = ["True", "False", "Unknown"]
@@ -110,6 +140,11 @@ VETERAN_OPTIONS = ["True", "False", "Unknown"]
 DISABLED_OPTIONS = ["True", "False", "Unknown"]
 
 GUESSED_OPTIONS = ["True", "False"]
+
+STATUS_OPTION_MAPPING = {"homeless":{"True":"Homeless", "False":"Not Homeless", "Unknown":"Unknown if Homeless"},
+                         "veteran":{"True":"Veteran", "False":"Not a Veteran", "Unknown":"Unknown if Veteran"},
+                         "disabled":{"True":"Disabled", "False":"Non-disabled", "Unknown":"Unknown if Disabled"},
+                         "guessed":{"True":"Entry Data was Guessed by Representative", "False":"Entry Data was Given by Diner"}}
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\

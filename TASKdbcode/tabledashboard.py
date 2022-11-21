@@ -25,14 +25,15 @@ operators = [['ge ', '>='],
              ['eq ', '='],
              ['contains'],
              ['datestartswith']]
+CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
 
 def init_tabledashboard(server):
     table_app = dash.Dash(
+        __name__,
         server=server,
         routes_pathname_prefix="/tableapp/",
-        external_stylesheets=[dbc.themes.BOOTSTRAP])
-    # Load DataFrame
-    # df = demographic_db.get_patrons()
+        external_stylesheets=[CUSTOM_BOOTSTRAP])
+
     # icon="material-symbols:download-rounded" style="color: #194f77;"
 
     # Create Layout
@@ -42,7 +43,7 @@ def init_tabledashboard(server):
                 dbc.Col(html.Div(id='num_entries_display', children=[])),
                 dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
-                                   id="btn_xlsx", style = {"background-color":"#194f77"}), style = {"textAlign":"right"})
+                                   id="btn_xlsx",), style = {"textAlign":"right"})
         ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px"}, align = "center"),
             ], fluid = True),
         # dcc.Store(id='num_total_entries', data=len(df.index)),
