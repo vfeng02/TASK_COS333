@@ -260,7 +260,8 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             title += filter_string
 
         if timestamp_filter:
-            title+=f"Diner Entries<br>between {timestamp_filter[0]} and {timestamp_filter[1]} "
+            print(timestamp_filter)
+            title+=f"Diner Entries<br>between {timestamp_filter['start_date']} and {timestamp_filter['end_date']} "
         else:
             title+="Diner Entries All-Time "
 
