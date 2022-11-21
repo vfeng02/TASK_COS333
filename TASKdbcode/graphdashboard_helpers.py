@@ -251,12 +251,16 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         title+="by Meal Site"
 
     if graph_type == "line":
-        if filter_dict:
-            filter_string = construct_filter_string(filter_dict)
+        timestamp_filter = filter_dict.get("entry_timestamp")
+        filter_dict_no_time = filter_dict
+        if timestamp_filter:
+            del filter_dict_no_time["entry_timestamp"]
+        if filter_dict_no_time:
+            filter_string = construct_filter_string(filter_dict_no_time)
             title += filter_string
 
-        if filter_dict.get("entry_timestamp"):
-            title+=f"Diner Entries<br>between {filter_dict['entry_timestamp'][0]} and {filter_dict['entry_timestamp'][0]} "
+        if timestamp_filter:
+            title+=f"Diner Entries<br>between {timestamp_filter[0]} and {timestamp_filter[1]} "
         else:
             title+="Diner Entries All-Time "
 
