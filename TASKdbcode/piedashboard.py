@@ -42,10 +42,12 @@ def init_piedashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.Div(children=[
+            # html.H3("Create Pie Chart", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.Div([
                 html.Div([
+                    html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                     html.H4("Select Meal Sites", style={
-                            'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
+                            'display': 'inline-block', 'margin-right': '5px','color': 'white'}),
                     di(icon="material-symbols:help-outline-rounded",
                        id="mshelp", color="white", inline=True, height=20),
                     dbc.Tooltip([html.P("Select the meal sites whose entries you want to be included in the pie chart. Data from your selected meal sites will be grouped together into one single pie chart. Clear your selection to automatically select any/all meal sites.",
@@ -57,8 +59,9 @@ def init_piedashboard(server):
                              clearable=True,
                              multi=True,
                              value=["First Baptist Church"],
-                             placeholder="All Meal Sites",
+                             placeholder="All Meal Sites"
                              ),
+                html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
                     html.H4("Select Filters on Diners", style={
                             'display': 'inline-block', 'margin-right': '5px'}),
@@ -69,8 +72,9 @@ def init_piedashboard(server):
                 ], style={'color': 'white'}),
                 html.H5("Make a chart of diners who are...",style={'color': 'white'}),
                 dbc.Row(id="filter_options", children=[]),
+                html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
-                    html.H4("Select Demographic Category to Show Distribution", style={
+                    html.H4("Select Category for Distribution", style={
                             'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
                     di(icon="material-symbols:help-outline-rounded",
                        id="dchelp", color="white", inline=True, height=20),
@@ -84,6 +88,7 @@ def init_piedashboard(server):
                              clearable=False,
                              value='race'
                              ),
+                html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
 
             ], className='menu-l'
             )], width = 4),
