@@ -54,7 +54,7 @@ def init_linedashboard(server):
                                             style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600})]),
                 dcc.DatePickerRange(id='range',
                                     min_date_allowed=datetime.datetime(2022, 10, 1),
-                                    start_date=datetime.datetime(2022, 10, 1),
+                                    start_date=datetime.date(2022, 10, 1),
                                     end_date=datetime.date.today(),
                                     clearable=True,
                                     minimum_nights=0
