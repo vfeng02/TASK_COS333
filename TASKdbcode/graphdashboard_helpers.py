@@ -255,9 +255,15 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             filter_string = construct_filter_string(filter_dict)
             title += filter_string
 
-        title+="Diner Entries by Meal Service Date"
-        if selected_demographic == "Separate":
-            title+= " and by Meal Site"
+    if filter_dict.get("entry_timestamp"):
+        title+=f"Diner Entries<br>between {filter_dict['entry_timestamp'][0]} and {filter_dict['entry_timestamp'][0]} "
+    else:
+        title+="Diner Entries All-Time "
+
+    title+="by Meal Service Date"
+
+    if selected_demographic == "Split":
+        title+= " and by Meal Site"
             
 
     return title
@@ -273,6 +279,10 @@ def construct_filter_string(filter_dict):
 
     if filter_dict.get("meal_site"):
         del filter_dict["meal_site"]
+        
+    if filter_dict.get("entry_timestamp"):
+        del filter_dict["entry_timestamp"]
+
 
     filter_text_list = []
     filter_text_dict = {key:[] for (key, value) in filter_dict.items()}
@@ -301,6 +311,9 @@ def construct_filter_string(filter_dict):
             filter_text_list[:-1]) + ', and ' + filter_text_list[-1] + " "
     else:
         filter_string = filter_text_list[0] + " "
+        
+    
+    
 
     return filter_string
 # -----------------------------------------------------------------------
