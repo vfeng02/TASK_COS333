@@ -38,7 +38,7 @@ def init_bardashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            # html.H3("Create bar graph", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Create bar graph", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Div([
                     html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
@@ -117,7 +117,7 @@ def init_callbacks(bar_app):
     def update_filter_options(selected_demographic, selected_filters):
         selected_fields = helpers.selected_fields_helper(dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
-        filters = helpers.filter_options_helper(selected_demographic, filter_dict)
+        filters = helpers.old_filter_options_helper(selected_demographic, filter_dict)
         print(dbc.themes.BOOTSTRAP)
         return filters
 
