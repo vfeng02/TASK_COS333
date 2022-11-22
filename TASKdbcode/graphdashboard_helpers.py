@@ -26,6 +26,7 @@ import textwrap
 
 # -----------------------------------------------------------------------
 def selected_fields_helper(callback_context):
+    # print(list(callback_context.keys()))
 
     for key in list(callback_context.keys()):
         if "name" not in key:
@@ -34,6 +35,7 @@ def selected_fields_helper(callback_context):
     selected_fields = [eval(field.strip(".value"))
                        for field in list(callback_context)]
     selected_fields = [field["name"] for field in selected_fields]
+    print(selected_fields)
 
     return selected_fields
 

@@ -29,6 +29,8 @@ DEMOGRAPHIC_CATEGORIES = {"race":"Race",
                           "disabled":"Disability Status",
                           "guessed":"Guessed Entry Status"}
 
+DEMOGRAPHIC_CATEGORIES_SWAPPED = dict([(value, key) for key, value in DEMOGRAPHIC_CATEGORIES.items()])
+
 DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS = ["Race", "Language", "Age Range",\
                        "Gender", "Zip Code", "Homeless Status", "Veteran Status",\
                        "Disability Status", "Guessed Entry Status", "None"]
