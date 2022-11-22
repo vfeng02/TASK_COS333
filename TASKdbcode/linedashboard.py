@@ -44,14 +44,15 @@ def init_linedashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            # html.H3("Create line graph", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Create Line Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                  html.Div([
                         html.H4("Select Date Range", style={'display': 'inline-block', 'margin-right': '5px', 'color':'white'}), 
                         di(icon = "material-symbols:help-outline-rounded", id="drhelp", color = "white", inline = True, height = 20),
                         dbc.Tooltip([html.P("A line graph will be constructed with the data from the dates in the range you select. Includes start date and end date.",
-                                            style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600})]),
+                                            style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600}),
+                        html.H5("View data between the dates of...", style = {"color":"white"})]),
                 dcc.DatePickerRange(id='range',
                                     min_date_allowed=datetime.datetime(2022, 10, 1),
                                     start_date=datetime.date(2022, 10, 1),
@@ -98,7 +99,7 @@ def init_linedashboard(server):
                     dbc.Tooltip([html.P("The line graph will only include data from diners who meet the criteria of all your selected filters. Clear a filter selection to automatically include any/all options of that category.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}),
                 ], style={'color': 'white'}),
-                html.H5("Make a chart of diners who are...",style={'color': 'white'}),
+                html.H5("Make a graph of diners who are...",style={'color': 'white'}),
                 dbc.Row(id="filter_options", children=helpers.old_filter_options_helper(None, {})),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
 

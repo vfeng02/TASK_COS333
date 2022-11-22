@@ -42,7 +42,7 @@ def init_piedashboard(server):
             dbc.Container([
                 dbc.Row([
                     dbc.Col([
-                        # html.H3("Create Pie Chart", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
+                        html.H3("Create Pie Chart", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
                         html.Div([
                             html.Div([
                                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',

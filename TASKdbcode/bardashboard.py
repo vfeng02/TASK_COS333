@@ -38,7 +38,7 @@ def init_bardashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.H3("Create bar graph", style = {'color':'#ffc91f', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Create Bar Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Div([
                     html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
@@ -66,7 +66,7 @@ def init_bardashboard(server):
                     dbc.Tooltip([html.P("The bar graph will only include data from diners who meet the criteria of all your selected filters. Clear a filter selection to automatically include any/all options of that category.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}),
                 ], style={'color': 'white'}),
-                html.H5("Make a chart of diners who are...",style={'color': 'white'}),
+                html.H5("Make a graph of diners who are...",style={'color': 'white'}),
                 dbc.Row(id="filter_options", children=[]),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
