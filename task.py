@@ -66,6 +66,7 @@ with app.app_context():
 
 #-----------------------------------------------------------------------
 
+
 def get_ampm():
     if time.strftime('%p') == "AM":
         return 'morning'
@@ -75,6 +76,10 @@ def get_current_time():
     return time.asctime(time.localtime())
 
  #-----------------------------------------------------------------------
+@app.route('/login', methods=['GET'])
+def login(): 
+    return render_template("login.html")
+
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
