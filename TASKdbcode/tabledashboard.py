@@ -42,12 +42,18 @@ def init_tabledashboard(server):
             dbc.Row([
                 dbc.Col(html.Div(id='num_entries_display', children=[])),
                 dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
-                                   id="btn_xlsx",), style = {"textAlign":"right"})
-        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px"}, align = "center"),
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download Current Data To Excel"],
+                                   id="btn_xlsxc",), style = {"textAlign":"right"})
+        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':"5px", 'marginLeft':"5px"}, align = "center"),
+            dbc.Row([
+                dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
+                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
+                                   id="btn_xlsxa",), style = {"textAlign":"right"})
+        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':"5px", 'marginLeft':"5px"}, align = "center"),
             ], fluid = True),
         # dcc.Store(id='num_total_entries', data=len(df.index)),
-        dcc.Download(id="download-dataframe-xlsx"),
+        dcc.Download(id="download-dataframe-xlsxc"),
+        dcc.Download(id="download-dataframe-xlsxa"),
         dbc.Container([
             dash_table.DataTable(
             id='table-filtering',
@@ -147,12 +153,20 @@ def split_filter_part(filter_part):
 def init_callbacks(table_app):
 
     @table_app.callback(
-    Output("download-dataframe-xlsx", "data"),
-    [Input("btn_xlsx", "n_clicks"),
+    Output("download-dataframe-xlsxa", "data"),
+    [Input("btn_xlsxa", "n_clicks"),
     State('table-filtering', 'filter_query')],
     prevent_initial_call=True)
-    def download(n_clicks, filter):
-        print("callback")
+    def download_all(n_clicks, filter):
+        df = demographic_db.get_patrons()
+        return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
+
+    @table_app.callback(
+    Output("download-dataframe-xlsxc", "data"),
+    [Input("btn_xlsxc", "n_clicks"),
+    State('table-filtering', 'filter_query')],
+    prevent_initial_call=True)
+    def download_current(n_clicks, filter):
         df = demographic_db.get_patrons()
         return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
 

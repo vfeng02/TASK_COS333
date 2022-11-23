@@ -133,20 +133,17 @@ def init_piedashboard(server):
                                           'height': '100%', 'width': '100%'}
     )
     # ISSUES:
-    # If you select a lot of things, then the div and the iframe will dynamically increase in size,
-    # however, if you do that and then the dropdown options on the Category Selection extends past the bottom border,
-    # the whole thing shifts down and the top bits get cut off
-    # maybe the solution is a dropdown that opens up instead of down?
-    # Also, once it's big, there's no way to make it small again, maybe some sort of refresh message
+    # Once graph is big, there's no way to make it small again,
+    # maybe some sort of refresh message?
 
-    # also, also, title construction needs line breaks, unsure if that will decrease graph size
+    # also, also, title construction needs line breaks,
+    # unsure if that will decrease graph size?
     # title construction breaks when you select no filters
 
     # tab menu should extend all the way across the screen
 
-    # Specifically for pie chart, autosizing is too small,
-    # but 1000 is a little too big,
-    # maybe there's some sort of min size for the graph?
+    # change colors to be readable in black and white and less ugly
+
 
     init_callbacks(pie_app)
     # pie_app.enable_dev_tools(
@@ -195,7 +192,7 @@ def init_callbacks(pie_app):
             dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
         filters = helpers.filter_options_helper(
-            selected_demographic, filter_dict)
+            selected_demographic, filter_dict, "pie")
 
         if selected_demographic:
             button_label = database_constants.DEMOGRAPHIC_CATEGORIES[selected_demographic]
@@ -243,49 +240,10 @@ def init_callbacks(pie_app):
             dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
+
         if not any(filter_dict.values()) and selected_demographic == "":
-            none_selected_message = go.Figure()
-            none_selected_message.update_layout(
-                xaxis={"visible": False},
-                yaxis={"visible": False},
-                annotations=[
-                    {
-                        "text": "Please select filters and/or category.",
-                                "xref": "paper",
-                                "yref": "paper",
-                                "showarrow": False,
-                                "font": {
-                                    "size": 28,
-                                    "family": "Nunito",
-                                    "color": "#6b6b6b"
-                                }
-                    }
-                ]
-            )
+            none_selected_message = helpers.graph_message("Please select filters and/or category.")
             return none_selected_message
-
-        # print(selected_fields)
-        # if filter_dict.get("race"):
-        #     print(filter_dict["race"])
-
-        # overall, would be great if the title of the charts were clearer
-        # kinda hard to understand what exactly you're looking at atm lol
-
-        # to do for pie charts:
-        # change colors to be readable in black and white and less ugly
-
-        # fix scrolling and iframe, there's like 4 overlapping scrollbars
-        # and it looks hideous lol, may need to mess with the iframe
-        # size and page layout
-        # ideally, the chart section doesn't have its own scrollbar
-        # and it just scrolls with the rest of the page
-
-        # There is also an issue where the chart completely disappears
-        # if you select a demographic category and filters,
-        # and no diner fits all those filters,
-        # or if you select no demographic category,
-        # with no filters
-        # there should be something less ugly than just a blank space
 
         if selected_demographic != "":
 
@@ -335,24 +293,7 @@ def init_callbacks(pie_app):
                 num_entries = len(diner_data_df.index)
 
                 if num_entries == 0:
-                    none_found_message = go.Figure()
-                    none_found_message.update_layout(
-                        xaxis={"visible": False},
-                        yaxis={"visible": False},
-                        annotations=[
-                            {
-                                "text": "No data found.",
-                                        "xref": "paper",
-                                        "yref": "paper",
-                                        "showarrow": False,
-                                        "font": {
-                                            "size": 28,
-                                            "family": "Nunito",
-                                            "color": "#6b6b6b"
-                                        }
-                            }
-                        ]
-                    )
+                    none_found_message = helpers.graph_message("No entries found.")
                     return none_found_message
 
                 pie_chart_title = helpers.construct_title(
@@ -447,8 +388,8 @@ def init_callbacks(pie_app):
                             ]),
                         )
                     ],
-                    title=pie_chart_title,
-                    height=1000)
+                    title=pie_chart_title)
+                    # ,height=1000)
                 # margin = {"t":5,"b":5,"l":5,"r":5})
 
                 return pie_chart
@@ -460,24 +401,7 @@ def init_callbacks(pie_app):
             num_entries = len(diner_data_df.index)
 
             if num_entries == 0:
-                none_found_message = go.Figure()
-                none_found_message.update_layout(
-                    xaxis={"visible": False},
-                    yaxis={"visible": False},
-                    annotations=[
-                        {
-                            "text": "No data found.",
-                                    "xref": "paper",
-                                    "yref": "paper",
-                                    "showarrow": False,
-                                    "font": {
-                                        "size": 28,
-                                        "family": "Nunito",
-                                        "color": "#6b6b6b"
-                                    }
-                        }
-                    ]
-                )
+                none_found_message = helpers.graph_message("No entries found.")
                 return none_found_message
             
             percent_labels = [f"{option}: {value/num_entries:.2%}"
