@@ -21,10 +21,11 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 import textwrap
-# -----------------------------------------------------------------------
+import datetime
+#-----------------------------------------------------------------------
 
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 def selected_fields_helper(callback_context):
     # print(list(callback_context.keys()))
 
@@ -39,10 +40,10 @@ def selected_fields_helper(callback_context):
 
     return selected_fields
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 
-def filter_options_helper(selected_demographic, filter_dict):
+def filter_options_helper(selected_demographic, filter_dict, graph_type):
 
     filters = []
     dem_row1 = []
@@ -202,8 +203,15 @@ def filter_options_helper(selected_demographic, filter_dict):
     if dem_row1.children:
         filters = [dem_row1, dem_row2, dem_row3, status_row1, status_row2]   
     else:
-        filters = [dem_row2, dem_row3, status_row1, status_row2]   
-              
+        filters = [dem_row2, dem_row3, status_row1, status_row2]
+    if graph_type != "line":
+        time_row = dbc.Row(dcc.DatePickerRange(id='range',
+                           min_date_allowed=datetime.datetime(2022, 10, 1),
+                           start_date_placeholder_text='From Any Date',
+                           end_date_placeholder_text='To Any Date',
+                           clearable=True,
+                           minimum_nights=0), className = "gx-1", style = {"margin-bottom": "5px"})
+        filters = [time_row, *filters]
     return filters
 #-----------------------------------------------------------------------
 
@@ -338,7 +346,28 @@ def construct_site_string(meal_sites):
     return site_string
 
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+
+def graph_message(message_text):
+    message = go.Figure()
+    message.update_layout(
+                        xaxis={"visible": False},
+                        yaxis={"visible": False},
+                        annotations=[
+                            {
+                                "text": message_text,
+                                        "xref": "paper",
+                                        "yref": "paper",
+                                        "showarrow": False,
+                                        "font": {
+                                            "size": 28,
+                                            "family": "Nunito",
+                                            "color": "#6b6b6b"
+                                        }
+                            }
+                        ]
+                    )
+    return message
 
 
 def old_filter_options_helper(selected_demographic, filter_dict):

@@ -68,6 +68,7 @@ class EntryCount(Base):
     num_entries = Column(Integer())
 
 Base.registry.configure()
+
 #-----------------------------------------------------------------------
 
 def add_patron(input_dict):
@@ -141,6 +142,7 @@ def delete_last_patron(meal_site):
         sys.exit(1)
 
 
+#-----------------------------------------------------------------------
 
 def get_patrons(filter_dict = {}, select_fields = []):
 
@@ -253,6 +255,66 @@ def get_total_entries():
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+#-----------------------------------------------------------------------
+
+# input a dict like {"username":username,
+#                    "email":email
+#                    "password":password.
+#                    "role": role}
+# role is either administrator or representative
+def add_user(input_dict):
+    
+    if input_dict["role"] not in ["administrator", "representative"]:
+        return
+        # maybe do some other checks here for a "valid" username/email/password
+
+    # print(input_dict)
+
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            # demographics = {}
+            # for demographic in demographic_options:
+            #     demographics[demographic] = args_dict[demographic]
+            user = User(username = input_dict["username"],
+                          email = input_dict["email"],
+                          role = input_dict["role"])
+            user.set_password(input_dict["password"])
+            session.add(user)
+
+            session.commit()
+
+        engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+#-----------------------------------------------------------------------
+
+def display_users():
+    
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+
+                query = session.query(User)
+                table = query.all()
+                for row in table:
+                    print("\nuser")
+                    print('-------------------------------------------')
+                    print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nemail:{row.email}")
+                    print('-------------------------------------------')
+        engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+
+#-----------------------------------------------------------------------
     
 
     
