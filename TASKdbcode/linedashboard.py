@@ -100,7 +100,7 @@ def init_linedashboard(server):
                                         style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}),
                 ], style={'color': 'white'}),
                 html.H5("Make a graph of diners who are...",style={'color': 'white'}),
-                dbc.Row(id="filter_options", children=helpers.old_filter_options_helper(None, {})),
+                dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "line")),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
 
             ], className='menu-l'

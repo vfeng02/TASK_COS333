@@ -35,20 +35,27 @@ def init_tabledashboard(server):
         external_stylesheets=[CUSTOM_BOOTSTRAP])
 
     # icon="material-symbols:download-rounded" style="color: #194f77;"
+    total_entries = demographic_db.get_total_entries()
 
     # Create Layout
     table_app.layout = html.Div([
         dbc.Container([
-            dbc.Row([
-                dbc.Col(html.Div(id='num_entries_display', children=[])),
-                dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
-                                   id="btn_xlsx",), style = {"textAlign":"right"})
-        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px"}, align = "center"),
-            ], fluid = True),
-        # dcc.Store(id='num_total_entries', data=len(df.index)),
-        dcc.Download(id="download-dataframe-xlsx"),
-        dbc.Container([
+        dbc.Row([
+            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#FDF9CD'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
+            dbc.Col(html.Div(className="vr", style={"height": "100%", 'borderRight': '1px solid #ff911f','borderLeft': '1px #ff911f',"opacity": "unset"}), className = "g-0"),
+            dbc.Col([
+                dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download Current Data To Excel"],
+                                   id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
+                dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
+                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
+                                   id="btn_xlsxa", style = {"background-color": "#0085Ca"})))
+        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':'5px', 'marginLeft':"5px"}, align = "center")]),
+
+        dcc.Store(id='num_total_entries', data=total_entries),
+        dcc.Download(id="download-dataframe-xlsxc"),
+        dcc.Download(id="download-dataframe-xlsxa"),
+        dbc.Row([
             dash_table.DataTable(
             id='table-filtering',
             columns=[
@@ -65,6 +72,9 @@ def init_tabledashboard(server):
                 {"name": "guessed", "id": "guessed", "type": "text"}    
             ],
             css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
+            style_table = {
+                'width':'100%'
+            },
             style_cell={'textAlign': 'left',
                         'height': 'auto'},
             style_cell_conditional=[
@@ -106,8 +116,9 @@ def init_tabledashboard(server):
             sort_mode='multi',
             sort_by=[],
         )
-        ], fluid = True)
-    ])
+        ], className = "g-0")], fluid = True, style = {'padding':'0px'})], style = {'height':'100%', 'width':'100%',
+                                                                                    'backgroundColor':'#145078'}
+        )
 
     init_callbacks(table_app)
 
@@ -147,23 +158,32 @@ def split_filter_part(filter_part):
 def init_callbacks(table_app):
 
     @table_app.callback(
-    Output("download-dataframe-xlsx", "data"),
-    [Input("btn_xlsx", "n_clicks"),
+    Output("download-dataframe-xlsxa", "data"),
+    [Input("btn_xlsxa", "n_clicks"),
     State('table-filtering', 'filter_query')],
     prevent_initial_call=True)
-    def download(n_clicks, filter):
-        print("callback")
+    def download_all(n_clicks, filter):
+        df = demographic_db.get_patrons()
+        return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
+
+    @table_app.callback(
+    Output("download-dataframe-xlsxc", "data"),
+    [Input("btn_xlsxc", "n_clicks"),
+    State('table-filtering', 'filter_query')],
+    prevent_initial_call=True)
+    def download_current(n_clicks, filter):
         df = demographic_db.get_patrons()
         return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
 
     @table_app.callback(
         Output('table-filtering', 'data'),
         Output('num_entries_display', 'children'),
-        Input('table-filtering', "page_current"),
+        [Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
         Input('table-filtering', 'sort_by'),
-        Input('table-filtering', "filter_query"))
-    def update_table(page_current, page_size, sort_by, filter):
+        Input('table-filtering', "filter_query")],
+        State('num_total_entries', 'data'))
+    def update_table(page_current, page_size, sort_by, filter, num_total):
         # print(filter)
         filtering_expressions = filter.split(' && ')
         filter_dicts = []
@@ -209,7 +229,7 @@ def init_callbacks(table_app):
         #     total_site_entries+=demographic_db.get_num_entries(site)
         # percent_site_data = (num_entries / total_site_entries)
 
-        display = [f"Number of Entries Currently in Table: {num_entries}"]
+        display = html.H3(f"Currently Showing: {num_entries} / {num_total} Entries", style = {'margin-top':'5px', 'margin-left':'5px'})
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
 
         # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):

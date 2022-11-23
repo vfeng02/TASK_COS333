@@ -77,13 +77,37 @@ def init_bardashboard(server):
                     dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the bar graph.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="dchelp", style={"width": 600}),
                     html.H5("Break down diners by...",style={'color': 'white'})]),
-                dcc.Dropdown(id='demographic',
-                             options=[{"label": label, "value": value}
-                                      for label, value in zip(database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_LABELS,
-                                                              database_constants.DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES)],
-                             clearable=False,
-                             value='race'
-                             ),
+                    dbc.DropdownMenu(
+                                [
+                                    dbc.DropdownMenuItem(
+                                        "Race", id="mrace"),
+                                    dbc.DropdownMenuItem(
+                                        "Language", id="mlanguage"),
+                                    dbc.DropdownMenuItem(
+                                        "Age Range", id="mage_range"),
+                                    dbc.DropdownMenuItem(
+                                        "Gender", id="mgender"),
+                                    dbc.DropdownMenuItem(
+                                        "Zip Code", id="mzip_code"),
+                                    dbc.DropdownMenuItem(divider=True),
+                                    dbc.DropdownMenuItem(
+                                        "Homeless Status", id="mhomeless"),
+                                    dbc.DropdownMenuItem(
+                                        "Veteran Status", id="mveteran"),
+                                    dbc.DropdownMenuItem(
+                                        "Disabled Status", id="mdisabled"),
+                                    dbc.DropdownMenuItem(
+                                        "Guessed Entry Status", id="mguessed"),
+                                    dbc.DropdownMenuItem(divider=True),
+                                    dbc.DropdownMenuItem(
+                                        "None", id="mnone"),
+                                ],
+                                label="None",
+                                className="mb-3",
+                                id='iddropdownmenu',
+                                direction="up",
+                                color="#0085Ca"
+                            ),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
 
             ], className='menu-l'
@@ -111,38 +135,93 @@ def init_callbacks(bar_app):
 
     @bar_app.callback(
         Output('filter_options', 'children'),
-        Input('demographic', 'value'),
+        Output('iddropdownmenu', 'label'),
+        [Input("mrace", "n_clicks"),
+         Input("mlanguage", "n_clicks"),
+         Input("mage_range", "n_clicks"),
+         Input("mgender", "n_clicks"),
+         Input("mzip_code", "n_clicks"),
+         Input("mhomeless", "n_clicks"),
+         Input("mveteran", "n_clicks"),
+         Input("mdisabled", "n_clicks"),
+         Input("mguessed", "n_clicks"),
+         Input("mnone", "n_clicks")],
         State({'type': 'graph_filter', 'name': dash.ALL}, 'value')
     )
-    def update_filter_options(selected_demographic, selected_filters):
-        selected_fields = helpers.selected_fields_helper(dash.callback_context.states)
+    def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, selected_filters):
+
+        ctx = dash.callback_context
+        # print(selected_filters)
+        # print(buttons)
+        # print(buttons[0])
+
+        if not ctx.triggered:
+            button_label = "None"
+            selected_demographic = ""
+        else:
+            button_label = ctx.triggered[0]["prop_id"].split(".")[0]
+            selected_demographic = button_label.strip("m")
+
+        if selected_demographic == "none":
+            selected_demographic = ""
+            button_label = "None"
+
+        selected_fields = helpers.selected_fields_helper(
+            dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
-        filters = helpers.old_filter_options_helper(selected_demographic, filter_dict)
-        print(dbc.themes.BOOTSTRAP)
-        return filters
+        filters = helpers.filter_options_helper(
+            selected_demographic, filter_dict, "bar")
+
+        if selected_demographic:
+            button_label = database_constants.DEMOGRAPHIC_CATEGORIES[selected_demographic]
+        # print("\n" + button_label + "\n")
+
+        return filters, button_label
 
 
     @bar_app.callback(
             Output('bar_graph', 'figure'),
             [Input('site_options', 'value'),
-            Input('demographic', 'value'),
-            Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
-
+            Input("mrace", "n_clicks"),
+            Input("mlanguage", "n_clicks"),
+            Input("mage_range", "n_clicks"),
+            Input("mgender", "n_clicks"),
+            Input("mzip_code", "n_clicks"),
+            Input("mhomeless", "n_clicks"),
+            Input("mveteran", "n_clicks"),
+            Input("mdisabled", "n_clicks"),
+            Input("mguessed", "n_clicks"),
+            Input("mnone", "n_clicks"),
+            Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')],
+            State('iddropdownmenu', 'label')
     )
-    def update_bar_graph(selected_sites, selected_demographic, selected_filters):
+
+    def update_bar_graph(selected_sites, r, l, a, gr, z, h, v, d, gs, n, selected_filters, mlabel):
+
+        if dash.callback_context.triggered_id in ("mrace", "mlanguage", "mage_range", "mgender",
+                                                  "mzip_code", "mhomeless", "mveteran", "mdisabled",
+                                                  "mguessed", "mnone"):
+            button_id = dash.callback_context.triggered_id
+        elif mlabel == "None":
+            button_id = "none"
+        else:
+            button_id = database_constants.DEMOGRAPHIC_CATEGORIES_SWAPPED[mlabel]
+
+        # print("\n")
+        # print(button_id)
+        # print("\n")
+
+        if button_id == "mnone" or button_id == "none":
+            selected_demographic = ""
+        else:
+            selected_demographic = button_id.strip("m")
+
         
         selected_fields = helpers.selected_fields_helper(dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
         selected_fields.append("entry_timestamp")
         selected_fields.append("meal_site")
-        
-        # The control flow of these if/else statements is logical,
-        # but a little complicated
-        # Maybe there is a cleaner way of arranging these chunks?
 
-        # overall, would be great if the title of the graphs were clearer
-        # kinda hard to understand what exactly you're looking at atm lol
-        
         # to do for bar graphs:
         # colors repeat sometimes and it may be hard to read, need to change colors
         # maybe change display when no diners are found, it's not as bad as pie charts,
@@ -157,10 +236,18 @@ def init_callbacks(bar_app):
             if selected_demographic == "race":
                 bar_graph = go.Figure()
 
-                bar_graph_title = helpers.construct_title(
-                    filter_dict, graph_type="bar", selected_demographic=selected_demographic)
                 diner_data_df = demographic_db.get_patrons(
                     filter_dict=filter_dict, select_fields=selected_fields)
+
+
+                if len(diner_data_df.index) == 0:
+                    none_found_message = helpers.graph_message("No entries found.")
+                    return none_found_message
+
+                bar_graph_title = helpers.construct_title(
+                    filter_dict, graph_type="bar", selected_demographic=selected_demographic)
+
+
 
                 diner_data_df.replace(to_replace='American Indian/Alaska Native', value='AI/AN', regex=True, inplace = True)
                 diner_data_df.replace(to_replace='Native Hawaiian/Pacific Islander', value='NHOPI', regex=True, inplace = True)
@@ -221,20 +308,14 @@ def init_callbacks(bar_app):
                 
                 return bar_graph
 #-----------------------------------------------------------------------
-            
-            
-            
-            
-
-            
-            # if selected_demographic == "race":
-            #     diner_data_df = demographic_db.get_patrons(
-            #             filter_dict=filter_dict, select_fields=selected_fields)
-                
-            #     pass
     
             diner_data_df = demographic_db.get_patrons(
                         filter_dict=filter_dict, select_fields=selected_fields)
+
+            if len(diner_data_df.index) == 0:
+                    none_found_message = helpers.graph_message("No entries found.")
+                    return none_found_message
+
             histogram_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
             histogram = px.histogram(diner_data_df, x=selected_demographic,
             color='meal_site', barmode='group', title=histogram_title, text_auto=True)
@@ -246,12 +327,18 @@ def init_callbacks(bar_app):
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
                 
-            selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields).groupby("meal_site")["entry_timestamp"].count()
-            selected_sites_data.rename("number of entries", inplace=True)
+            diner_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
+
+            if len(diner_data.index) == 0:
+                    none_found_message = helpers.graph_message("No entries found.")
+                    return none_found_message
+
+            diner_data = diner_data.groupby("meal_site")["entry_timestamp"].count()
+            diner_data.rename("number of entries", inplace=True)
             bar_graph_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
-            bar_graph = px.bar(selected_sites_data, x = selected_sites_data.index,\
+            bar_graph = px.bar(diner_data, x = diner_data.index,\
                                     y = "number of entries", title = bar_graph_title, text_auto = True,
-                                    color=selected_sites_data.index)
+                                    color=diner_data.index)
             bar_graph.update_layout(showlegend=False)
             return bar_graph
 
