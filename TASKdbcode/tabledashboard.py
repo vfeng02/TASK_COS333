@@ -42,14 +42,14 @@ def init_tabledashboard(server):
         dbc.Container([
         dbc.Row([
             dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#FDF9CD'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
-            dbc.Col(html.Div(className="vr", style={"height": "100%", 'borderRight': '2px solid #ff911f','borderLeft': '1px #ff911f',"opacity": "unset"}), className = "g-0"),
+            dbc.Col(html.Div(className="vr", style={"height": "100%", 'borderRight': '1px solid #ff911f','borderLeft': '1px #ff911f',"opacity": "unset"}), className = "g-0"),
             dbc.Col([
-                dbc.Row(dbc.Button([di(icon = "material-symbols:download-rounded",
+                dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download Current Data To Excel"],
-                                   id="btn_xlsxc", style = {"background-color": "#0085Ca"})),
-                dbc.Row(dbc.Button([di(icon = "material-symbols:download-rounded",
+                                   id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
+                dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
-                                   id="btn_xlsxa", style = {"background-color": "#0085Ca"}), style = {"textAlign":"right"})
+                                   id="btn_xlsxa", style = {"background-color": "#0085Ca"})))
         ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':'5px', 'marginLeft':"5px"}, align = "center")]),
 
         dcc.Store(id='num_total_entries', data=total_entries),
