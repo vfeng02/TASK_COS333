@@ -111,7 +111,7 @@ def selectmealsit1e():
  #-----------------------------------------------------------------------
 
 @app.route('/submitpatrondata', methods=['GET'])
-#@login_required(basic=True)
+@login_required(basic=True)
 def submitpatrondata():
     # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
@@ -150,6 +150,8 @@ def submitpatrondata():
     # print(patron_data)
 
     # print(any(patron_data.values()))
+
+    zip_codes_by_mealsite = database_constants.ZIP_CODES[database_constants.MEAL_SITE_LOCATIONS[mealsite]]
     
     if (any(patron_data.values())):
             patron_data["meal_site"] = mealsite
@@ -163,7 +165,7 @@ def submitpatrondata():
         races = database_constants.races,
         ages = database_constants.ages,
         genders = database_constants.genders,
-        zip_codes = database_constants.ZIP_CODE_OPTIONS,
+        zip_codes = zip_codes_by_mealsite,
         homeless_options = database_constants.HOMELESS_OPTIONS,
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
@@ -181,14 +183,14 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-# @login_required(must=[be_admin])
+@login_required(must=[be_admin])
 def admindisplaydata():
     return render_template(
         "admin.html"
     )
 
 @app.route('/register', methods=['GET'])
-#@login_required(must=[be_admin])
+@login_required(must=[be_admin])
 def register(): 
 
     return render_template(

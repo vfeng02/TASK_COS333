@@ -1,7 +1,5 @@
 .dark-blue {
     background: #145078;
-    position: relative;
-    top: 700%;
     /* fallback for old browsers */
     /* background: -webkit-linear-gradient(to right, #145078, #145078);  */
     /* Chrome 10-25, Safari 5.1-6 */
@@ -12,8 +10,6 @@
 
   .orange {
     background: #ff911f;
-    position: relative;
-    top: 700%;
     color: white;
   }
 
