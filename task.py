@@ -204,7 +204,6 @@ def register():
     if password != repeat_password: 
         print("Password do not match.")
     account_details = {"username": email, "email": email, "password": password, "role": account_type}
-    print(account_details)
     demographic_db.add_user(account_details)
 
     return render_template(
