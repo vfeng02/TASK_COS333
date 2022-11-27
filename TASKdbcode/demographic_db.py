@@ -316,8 +316,46 @@ def display_users():
 
 #-----------------------------------------------------------------------
     
+def check_my_users(user):
+    """Check if user exists and its credentials.
+    Take a look at encrypt_app.py and encrypt_cli.py
+     to see how to encrypt passwords
+    """
 
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+                query = session.query(User).filter(User.username == user["username"])
+                if not query: return False
+                for row in query:
+                    if check_password_hash(row.password_hash, user["password"]): 
+                        return True
+        engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
     
+
+def be_admin(username):
+    """Validator to check if user has admin role"""
+    try:
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+                query = session.query(User).filter(User.username == username)
+                if not query: return False
+                for row in query:
+                    if row.role != 'admin': 
+                        return "User does not have admin role"
+        engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
+    
+
 
 # class Trenton_Area_Soup_Kitchen(MealSite):
 #     __tablename__ = "trenton_area_soup_kitchen"
