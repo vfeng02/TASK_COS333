@@ -9,7 +9,7 @@
 from TASKdbcode import demographic_db
 
 def main():
-    # demographic_db.add_user({"username": "thewaitress",
+    # demographic_db.add_user({"username": "thewaitress2",
     #                          "password": "Waitress' password",
     #                          "email": "waitress@fx.com",
     #                          "role": "representative"})

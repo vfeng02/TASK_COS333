@@ -194,9 +194,18 @@ def admindisplaydata():
         "admin.html"
     )
 
-@app.route('/register', methods=['GET'])
+@app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[be_admin])
 def register(): 
+    email = request.args.get('email')
+    password = request.args.get('password')
+    account_type = request.args.get('AccountType')
+    repeat_password = request.args.get('repeatPassword')
+    if password != repeat_password: 
+        print("Password do not match.")
+    account_details = {"username": email, "email": email, "password": password, "role": account_type}
+    print(account_details)
+    demographic_db.add_user(account_details)
 
     return render_template(
         "register.html"
