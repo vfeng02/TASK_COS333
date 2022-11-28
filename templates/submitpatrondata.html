@@ -47,7 +47,7 @@
 			</center>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
+		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" method="get"background-color: white;">
 			<div class="row" id = "wrapper">
 				<div class="col-sm-3">
 					<div class="row">
@@ -55,31 +55,33 @@
 					</div>
 							<div role="group" id="race-btns" data-toggle="buttons">
 								
-								{%for race in ['White','Black','Hispanic','Asian']%}
-								<!-- {% set i = False %} -->
-								{% for item in lastrace %}
-								{% if item== race %}
-								<input type="checkbox"  class="patronInput mainButton" checked = "checked"  id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
-								<!-- {set i = True %} -->
-								{% else %}
-								{% endif %}
-								{% endfor %}
-								<!-- {if i == False %} -->
-								<input type="checkbox"  class="patronInput mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
-								
+								{%for race in ['White','Black','Hispanic','Unknown']%}
+								{% if race == Unknown %}
+								<button class="btn btn-secondary mainButton active-button raceButtons" id="btn-check-{{race}}" name="btn-{{race}}" value={{race}}>
+								<label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> </button>
+								{%else%}
+								<button class="btn btn-secondary mainButton inactive-button raceButtons" id="btn-check-{{race}}" name="btn-{{race}}" value={{race}}>
+								<label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> </button>
+								{%endif%}
+								<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 								{%endfor%}
 							</div>
 					
 					<div class="row">
 						<center>
 							<text>Other: </text>
-							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
+							<select name="otherraces" id = "other-race-btns">  
+								{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+								<option class="raceButtons" value="{{race}}">{{race}}</option>
 								{% endfor %}
 							</select>
+							<input type="hidden" id="race-input-for-submission" name="race">
+						</center>
+					</div>
+					<div class = "row">
+						<center>
+							<input id='clear-all' class="form-control btn-check mainButton" type="button" value="Clear Selection">
+							<!-- <label>Clear Selection</label> -->
 						</center>
 					</div>
 				</div>
@@ -264,65 +266,13 @@
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
 </script>
-
-<script>
-	'use strict';
-	function check(tagName)
-	{
-		var check=document.getElementsByTagName(tagName);
-		if (!check[i].checked){
-			check[i].checked=true;
-		}
-	}
-	function uncheck(tagName)
-	{
-		var uncheck=document.getElementsByTagName(tagName);
-		if (uncheck[i].checked){
-			uncheck[i].checked=false;
-		}
-	}
-	function validateForm() {
-		
-		var x = document.forms["patronForm"]["guessed"].value;
-		console.log(x)
-		if (x == '') {
-		alert("Please select True or False for Guess.");
-			return false;
-		}
-		return true;
-	}
-	function handleResponse(response)
-	{
-		$('#error').html(response);
-	}
-	let request = null;
-	function getResults()
-	{
-		
-		request = $.ajax(
-			{
-				type: 'GET',
-				url:url,
-				success: handleResponse
-			}
-		);
-	}
-	function setup()
-	{
-		$("#checkboxid").removeAttr("checked");
-		$(window).on('load', getResults);
-		$('#dept').on('input', getResults);
-		$('#coursenum').on('input', getResults);
-		$('#area').on('input', getResults);
-		$('#title').on('input', getResults);
-	}
-	$('document').ready(setup);
+<script type="text/javascript" src = "/static/js/submitdatabuttons.js">
 </script>
 
 </html>
 
 <style>
-	.active-button {
+	.active-button, .btn-check:checked {
 		background-color: #ff9f46;
 	}
 
