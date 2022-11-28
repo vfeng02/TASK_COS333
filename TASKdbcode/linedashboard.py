@@ -25,7 +25,7 @@ import plotly.graph_objects as go
 from TASKdbcode import graphdashboard_helpers as helpers
 
 GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
-CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
+CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_linedashboard(server):
     line_app = dash.Dash(

@@ -7572,7 +7572,7 @@ fieldset:disabled .btn {
     width: 3px;
     min-height: 1em;
     background-color: var(--bs-orange);
-    opacity: .25
+    opacity: 1
 }
 
 .align-baseline {

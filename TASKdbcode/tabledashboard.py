@@ -7,6 +7,7 @@
 # -----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
+import math
 import dash
 from dash import Dash, dash_table, dcc, html
 from dash.dependencies import Input, Output, State
@@ -25,7 +26,8 @@ operators = [['ge ', '>='],
              ['eq ', '='],
              ['contains'],
              ['datestartswith']]
-CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
+
+CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_tabledashboard(server):
     table_app = dash.Dash(
@@ -41,16 +43,21 @@ def init_tabledashboard(server):
     table_app.layout = html.Div([
         dbc.Container([
         dbc.Row([
-            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#ffc88f'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
-            dbc.Col(html.Div(className="vr", style={"height":"60%","opacity": "unset"}), className = "g-0"),
+            dbc.Col(
+                html.H3("View Raw Data", style = {'color':'#ffc88f', 'margin-top':'5px', 'margin-left':'5px'}), 
+                width = 3, style = {'margin-left':'7px','margin-right':'0px'}),
+            dbc.Col(
+                html.Div(className="vr", style={"margin-right": "0px",'height':'60px'}), width = 1, align = "center"),
+            dbc.Col(
+                html.Div(id='num_entries_display', children=[], style = {'color':'white'}), width = 4),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current ", style = {"color":"#ffd3a5"}), html.Span("Entry Data Excel")],
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current ", style = {"color":"#ffa74c"}), html.Span("Entry Data Excel")],
                                    id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All ", style = {"color":"#ffd3a5"}), html.Span("Entry Data Excel")],
+                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All "), html.Span("Entry Data Excel")],
                                    id="btn_xlsxa", style = {"background-color": "#0085Ca"})))
-        ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':'5px', 'marginLeft':"5px"}, align = "center")]),
+        ], style={'margin-bottom':"5px", 'margin-top':'5px', 'margin-left':"5px"}, align = "center")]),
 
         dcc.Store(id='num_total_entries', data=total_entries),
         dcc.Download(id="download-dataframe-xlsxc"),
@@ -72,8 +79,8 @@ def init_tabledashboard(server):
                 {"name": "guessed", "id": "guessed", "type": "text"}    
             ],
             css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
-            style_table = {
-                'width':'100%'
+            style_table = {'overflowY': 'auto',
+                'height':'80vh', 'width':'100%'
             },
             style_cell={'textAlign': 'left',
                         'height': 'auto'},
@@ -106,6 +113,7 @@ def init_tabledashboard(server):
             },
             # style_as_list_view = True,
             page_current=0,
+            page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
 
@@ -116,8 +124,8 @@ def init_tabledashboard(server):
             sort_mode='multi',
             sort_by=[],
         )
-        ], className = "g-0")], fluid = True, style = {'padding':'0px'})], style = {'height':'100%', 'width':'100%',
-                                                                                    'backgroundColor':'#145078'}
+        ], className = "g-0")], fluid = True, style = {'padding':'0px'})], style = {'display':'block', 'background-color': '#145078',
+                                                                                    'height': '100vh', 'width': '100%', 'overflow':'scroll'}
         )
 
     init_callbacks(table_app)
@@ -259,7 +267,7 @@ def init_callbacks(table_app):
         #     total_site_entries+=demographic_db.get_num_entries(site)
         # percent_site_data = (num_entries / total_site_entries)
 
-        display = html.H3(f"Currently Showing: {num_entries} / {num_total} Entries", style = {'margin-top':'5px', 'margin-left':'5px'})
+        display = html.H4(["Currently Showing:", html.Br(), f"{num_entries} / {num_total} Entries"], style = {'margin-top': '5px'})
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
 
         # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):

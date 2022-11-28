@@ -24,7 +24,7 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 
-CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
+CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_bardashboard(server):
     bar_app = dash.Dash(

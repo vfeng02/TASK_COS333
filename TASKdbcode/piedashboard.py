@@ -25,8 +25,7 @@ import plotly.graph_objects as go
 from TASKdbcode import graphdashboard_helpers as helpers
 import textwrap
 
-CUSTOM_BOOTSTRAP = 'assets/bootstrap.min.css'
-IFRAME_RESIZER = 'assets/iframeSizer.contentWindow.min.js'
+CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 
 def init_piedashboard(server):
