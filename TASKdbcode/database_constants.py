@@ -47,7 +47,7 @@ RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
 
 races = sorted(RACE_OPTIONS)
 
-# This is for the graph apps don't worrky about ut
+# This is for the graph apps don't worry about it
 RACE_DROPDOWN_OPTIONS = ["White", "Black", "Hispanic", "Asian","American Indian/Alaska Native",\
     "Native Hawaiian/Pacific Islander", "Multiracial", "Unknown"]
 
@@ -144,9 +144,9 @@ DISABLED_OPTIONS = ["True", "False", "Unknown"]
 GUESSED_OPTIONS = ["True", "False"]
 
 STATUS_OPTION_MAPPING = {"homeless":{"True":"Homeless", "False":"Not Homeless", "Unknown":"Unknown if Homeless"},
-                         "veteran":{"True":"Veteran", "False":"Not a Veteran", "Unknown":"Unknown if Veteran"},
-                         "disabled":{"True":"Disabled", "False":"Non-disabled", "Unknown":"Unknown if Disabled"},
-                         "guessed":{"True":"Entry Data was Guessed by Representative", "False":"Entry Data was Given by Diner"}}
+                         "veteran":{"True":"Veteran", "False":"Not Veteran", "Unknown":"Unknown if Veteran"},
+                         "disabled":{"True":"Disabled", "False":"Not Disabled", "Unknown":"Unknown if Disabled"},
+                         "guessed":{"True":"Data Completely Guessed", "False":"Data Given by Diner"}}
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\
