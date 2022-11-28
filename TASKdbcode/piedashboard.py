@@ -121,17 +121,18 @@ def init_piedashboard(server):
                                     'borderBottom': '2px #ff911f', "opacity": "unset"}),
 
                         ], className='menu-l'
-                        )], width=4),
+                        )], style = {'height':'100%'}, width=4),
                     dbc.Col([
                         dcc.Graph(id='pie_chart',
                                   className='card',
                                   config={'displayModeBar': True,
                                           'displaylogo': False},
                                   style={'width': '100%', 'height': '100%',
-                                         'display': 'block'}
+                                         'display': 'block'},
+                                  responsive=True
                                   )], width=8),
                 ])], fluid=True)], style={'display':'block', 'background-color': '#145078',
-                                          'height': '100vh', 'width': '100%'}
+                                          'min-height':'100%', 'height':'100vh', 'width': '100%', 'overflow':'scroll'}
     )
     # ISSUES:
     # Once graph is big, there's no way to make it small again,
