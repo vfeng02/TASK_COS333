@@ -49,28 +49,29 @@
 		<hr>
 		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
 			<div class="row" id = "wrapper">
-				<div class="col-sm-3">
+				<div class="col-sm-4">
+					<center>
 					<div class="row">
 						<center><h4>Race (Select All That Apply)</h4></center>
 					</div>
-							<div role="group" id="race-btns" data-toggle="buttons">
-								
-								{%for race in ['White','Black','Hispanic','Asian']%}
-								<!-- {% set i = False %} -->
-								{% for item in lastrace %}
-								{% if item== race %}
-								<input type="checkbox"  class="patronInput btn-check mainButton"  id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn active-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
-								<!-- {set i = True %} -->
-								{% else %}
-								{% endif %}
-								{% endfor %}
-								<!-- {if i == False %} -->
-								<input type="checkbox"  class="patronInput btn-check mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
-								
-								{%endfor%}
-							</div>
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
+							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
+							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
+							{%for race in ['White','Black','Hispanic','Unknown']%}
+							{% if race == 'Unknown' %}
+							<input type="checkbox" class="btn-check" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+							<!-- <label class="btn btn-secondary active"> 
+								<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
+							</label> -->
+							{%else%}
+							<input type="checkbox" class="btn-check" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+							{%endif%}
+							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
+							{%endfor%}
+						</div>
+						
 					
 					<div class="row">
 						<center>
@@ -82,17 +83,18 @@
 							</select>
 						</center>
 					</div>
+				</center>
 				</div>
 				
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="row">
 						<center><h4>Age Range</h4></center>
 					</div>
 					<div class="row">
 						<center>
-							<div class= "btn-block" role="group" id="age-btns" data-toggle="buttons">
+							<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
 								{% autoescape true %}
-								{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66']%}
+								{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66','Unknown']%}
 								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{age}}" name="age_range" value={{age}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-check-{{age}}">{{age}} </label>
 								{%endfor%}
@@ -101,14 +103,31 @@
 						</center>
 					</div>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-4">
+					<div class="row">
+						<center><p>Zip Code</p></center>
+					</div>
+					<center>
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="zip-btns" data-toggle="buttons">
+							{%for zip in zip_codes%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip_codes" value={{zip}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
+							{%endfor%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-Unknown" name="zip_codes" value="Unknown">
+							<label class="btn btn-secondary inactive-button" id = "toggle-button-Unknown" for="btn-check-Unknown">Unknown </label>
+						</div>
+					</center>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
 					<div class="row">
 						<center><h5>Language</h5></center>
 					</div>
 					<div class="row">
 						<center>
-							<div class="btn-group btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
-								{%for lang in ['English','Spanish']%}
+							<div class="btn-group-vertical btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
+								{%for lang in ['English','Spanish', 'Unknown']%}
 								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{lang}}" name="language" value={{lang}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{lang}}" for="btn-check-{{lang}}">{{lang}} </label>
 								{%endfor%}
@@ -126,18 +145,18 @@
 						</center>
 					</div>
 				</div>
-			</div>
-			<div class="row">
 				<div class="col-sm-4">
 					<div class="row">
 						<center><p>Gender</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
 						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-male" name="gender" value="Male">
 						<label class="btn btn-secondary inactive-button" id = "toggle-button-male" for="btn-check-male">Male</label>
 						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-female" name="gender" value="Female">
 						<label class="btn btn-secondary inactive-button" id = "toggle-button-female" for="btn-check-female">Female</label>
+						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-Unknown" name="gender" value="Unknown">
+						<label class="btn btn-secondary inactive-button" id = "toggle-button-Unknown" for="btn-check-Unknown">Unknown</label>
 						</div>
 					</center>
 					<div class="row">
@@ -145,33 +164,20 @@
 						
 						<text>Other: </text>
 						<select name="othergenders" id = "othergenders"> 
-						{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other', 'Unknown'] %}
+						{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other'] %}
 						<option value="{{gender}}">{{gender}}</option>
 						{% endfor %}
 						</select>
 					</center>
 					</div>
 				</div>
-				<div class="col-sm-4">
-					<div class="row">
-						<center><p>Zip Code</p></center>
-					</div>
-					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="zip-btns" data-toggle="buttons">
-							{%for zip in zip_codes%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-{{zip}}" name="zip_codes" value={{zip}}>
-							<label class="btn btn-secondary inactive-button" id = "toggle-button-{{zip}}" for="btn-check-{{zip}}">{{zip}} </label>
-							{%endfor%}
-						</div>
-					</center>
-					</div>
 				
 				<div class="col-sm-4">
 					<div class="row">
 						<center><p>Homeless</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
 							{%for zip in ["True", "False", "Unknown"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-zip-{{zip}}" name="homeless" value={{zip}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-zip-{{zip}}" for="btn-check-zip-{{zip}}">{{zip}} </label>
@@ -186,7 +192,7 @@
 						<center><p>Veteran</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-veteran-{{option}}" name="veteran" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-veteran-{{option}}" for="btn-check-veteran-{{option}}">{{option}} </label>
@@ -200,7 +206,7 @@
 						<center><p>Disabled</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
 							{%for option in ["True", "False", "Unknown"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-disabled-{{option}}" name="disabled" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-disabled-{{option}}" for="btn-check-disabled-{{option}}">{{option}} </label>
@@ -214,7 +220,7 @@
 						<center><p>Guessed</p></center>
 					</div>
 					<center>
-						<div class="btn-group btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
+						<div class="btn-group-vertical btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
 							{%for option in ["True", "False"]%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-button-guessed-{{option}}" for="btn-check-guessed-{{option}}">{{option}} </label>
@@ -229,7 +235,7 @@
 					
 		<div class="row" style="justify-content:center">
 			<tr>
-				<div class="col-sm-3" style="width:58.5%; align-content:center;">
+				<div class="col-sm-4" style="width:58.5%; align-content:center;">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
@@ -322,7 +328,11 @@
 </html>
 
 <style>
-	.active-button {
+	/* .btn-secondary.active {
+		background-color: #ff9f46;
+	} */
+
+	.btn-secondary.checked, .btn-check:checked+.btn-secondary {
 		background-color: #ff9f46;
 	}
 
