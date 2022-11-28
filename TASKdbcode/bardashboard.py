@@ -39,7 +39,7 @@ def init_bardashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.H3("Create Bar Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Graph by Meal Site", style = {'color':'#ffc88f', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Div([
                     html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
@@ -320,8 +320,8 @@ def init_callbacks(bar_app):
                             direction="down",
                             active=0,
                             showactive = True,
-                            x = 0.75,
-                            y = 1.10,
+                            x = 0.60,
+                            y = .99,
                             xanchor="left",
                             yanchor="top",
                             buttons=list([

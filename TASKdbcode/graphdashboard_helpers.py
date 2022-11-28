@@ -276,6 +276,9 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             title += filter_string
         
         title+="Diner Entries "
+
+        if filter_dict.get("entry_timestamp"):
+            title+=f"between {filter_dict['entry_timestamp']['start_date']} and {filter_dict['entry_timestamp']['end_date']} "
         
         if selected_demographic:
             title += f"by {category_dict[selected_demographic]} and "

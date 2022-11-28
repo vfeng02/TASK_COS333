@@ -41,7 +41,7 @@ def init_tabledashboard(server):
     table_app.layout = html.Div([
         dbc.Container([
         dbc.Row([
-            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#FDF9CD'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
+            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#ffc88f'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
             dbc.Col(html.Div(className="vr", style={"height":"60%","opacity": "unset"}), className = "g-0"),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",

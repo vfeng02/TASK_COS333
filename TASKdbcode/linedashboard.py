@@ -44,7 +44,7 @@ def init_linedashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.H3("Create Line Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Graph by Date", style = {'color':'#ffc88f', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                  html.Div([
