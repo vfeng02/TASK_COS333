@@ -45,10 +45,10 @@ def init_tabledashboard(server):
             dbc.Col(html.Div(className="vr", style={"height":"60%","opacity": "unset"}), className = "g-0"),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download Current Data To Excel"],
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current ", style = {"color":"#ffd3a5"}), html.Span("Entry Data Excel")],
                                    id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download All Data To Excel"],
+                                       id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All ", style = {"color":"#ffd3a5"}), html.Span("Entry Data Excel")],
                                    id="btn_xlsxa", style = {"background-color": "#0085Ca"})))
         ], style={'font-family': 'Open Sans, sans-serif', 'marginBottom':"5px", 'marginTop':'5px', 'marginLeft':"5px"}, align = "center")]),
 

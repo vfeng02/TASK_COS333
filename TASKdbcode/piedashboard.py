@@ -130,18 +130,12 @@ def init_piedashboard(server):
                                   style={'width': '100%', 'height': '100%',
                                          'display': 'block'}
                                   )], width=8),
-                ])], fluid=True)], style={'backgroundColor': '#194f77',
-                                          'height': '100%', 'width': '100%'}
+                ])], fluid=True)], style={'display':'block', 'background-color': '#145078',
+                                          'height': '100vh', 'width': '100%'}
     )
     # ISSUES:
     # Once graph is big, there's no way to make it small again,
     # maybe some sort of refresh message?
-
-    # also, also, title construction needs line breaks,
-    # unsure if that will decrease graph size?
-    # title construction breaks when you select no filters
-
-    # tab menu should extend all the way across the screen
 
     # change colors to be readable in black and white and less ugly
 

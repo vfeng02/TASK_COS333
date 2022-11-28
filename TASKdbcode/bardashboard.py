@@ -121,8 +121,8 @@ def init_bardashboard(server):
                       style={'width': '100%', 'height': '100%',
                              'display':'block'}
                       )], width = 8),
-        ])], fluid = True)],style = {'backgroundColor':'#194f77',
-                                   'height':'100%', 'width':'100%'}
+        ])], fluid = True)],style = {'display':'block', 'background-color': '#145078',
+                                   'height':'100vh', 'width':'100%'}
     )
 
 

@@ -54,9 +54,11 @@ def init_linedashboard(server):
                                             style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600}),
                         html.H5("View data between the dates of...", style = {"color":"white"})]),
                 dcc.DatePickerRange(id='range',
-                                    min_date_allowed=datetime.datetime(2022, 10, 1),
-                                    start_date=datetime.date(2022, 10, 1),
+                                    min_date_allowed=datetime.datetime(2021, 10, 1),
+                                    start_date=datetime.date(2021, 10, 1),
                                     end_date=datetime.date.today(),
+                                    start_date_placeholder_text = "Earliest Date",
+                                    end_date_placeholder_text = "Latest Date",
                                     clearable=True,
                                     minimum_nights=0
                              ),
@@ -74,7 +76,7 @@ def init_linedashboard(server):
                                       for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church", "Trenton Area Soup Kitchen"],
+                             value=["Trenton Area Soup Kitchen"],
                              placeholder="All Meal Sites"
                              ),
                 html.Div([
@@ -113,8 +115,8 @@ def init_linedashboard(server):
                       style={'width': '100%', 'height': '100%',
                              'display':'block'}
                       )], width = 8),
-        ])], fluid = True)],style = {'backgroundColor':'#194f77',
-                                   'height':'100%', 'width':'100%'}
+        ])], fluid = True)],style = {'display':'block', 'background-color': '#145078',
+                                   'height':'100vh', 'width':'100%'}
     )
 
     init_callbacks(line_app)
@@ -136,59 +138,62 @@ def init_callbacks(line_app):
         selected_fields = helpers.selected_fields_helper(dash.callback_context.inputs)
         
         filter_dict = dict(zip(selected_fields, selected_filters))
-        filter_dict["entry_timestamp"] = {"start_date": time_range_start, "end_date": time_range_end}
+        time_filter = {}
+        if time_range_start:
+            time_filter["start_date"] = time_range_start
+        else:
+            time_filter["start_date"] = datetime.date(2022, 10, 1)
+
+        if time_range_end:
+            time_filter["end_date"] = time_range_end
+        else:
+            time_filter["end_date"] = datetime.date.max
+
+        if time_range_start or time_range_end:
+            filter_dict["entry_timestamp"] = time_filter
+
         selected_fields.append("entry_timestamp")
         selected_fields.append("meal_site")
-        line_graph_title = helpers.construct_title(filter_dict=filter_dict, graph_type="line", selected_demographic=selected_grouping)
         
         if selected_grouping == "Group":
         
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                selected_sites_data = selected_sites_data.sort_values(by=["entry_timestamp"])
-                line_graph = go.Figure(data = [go.Scatter(x = selected_sites_data["entry_timestamp"].dt.date.unique(), y=list(selected_sites_data.groupby(selected_sites_data["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers")])
-                line_graph.update_layout(title=line_graph_title,
+            diner_data_df = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
+            if len(diner_data_df.index) == 0:
+                    none_found_message = helpers.graph_message("No entries found.")
+                    return none_found_message
+            diner_data_df = diner_data_df.sort_values(by=["entry_timestamp"])
+            if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].tail(1).item().date()
+            line_graph_title = helpers.construct_title(filter_dict=filter_dict, graph_type="line", selected_demographic=selected_grouping)
+            line_graph = go.Figure(data = [go.Scatter(x = diner_data_df["entry_timestamp"].dt.date.unique(), y=list(diner_data_df.groupby(diner_data_df["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers")])
+            line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
                                          yaxis_title = "number of entries")
-                return line_graph
+            return line_graph
 
-            else:
-                all_sites_data =demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                all_sites_data = all_sites_data.sort_values(by=["entry_timestamp"])
-                all_line_graph = go.Figure(data = [go.Scatter(x = all_sites_data["entry_timestamp"].dt.date.unique(), y=list(all_sites_data.groupby(all_sites_data["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers")])
-                all_line_graph.update_layout(title=line_graph_title,
-                                         xaxis_title = "dates",
-                                         yaxis_title = "number of entries")
-                return all_line_graph
         else:
+
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
-                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                selected_sites_data = selected_sites_data.sort_values(by=["entry_timestamp"])
-                # split df into df by meal site, add trace for each meal site
-                sites_dict = {elem: pandas.DataFrame() for elem in selected_sites_data["meal_site"].unique()}
-                line_graph = go.Figure()
-                for key in sites_dict.keys():
-                    sites_dict[key] = selected_sites_data[:][selected_sites_data.meal_site == key]
-                    line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
-                line_graph.update_layout(title=line_graph_title,
+            diner_data_df = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
+            if len(diner_data_df.index) == 0:
+                    none_found_message = helpers.graph_message("No entries found.")
+                    return none_found_message
+            diner_data_df = diner_data_df.sort_values(by=["entry_timestamp"])
+            if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].tail(1).item().date()
+            # split df into df by meal site, add trace for each meal site
+            sites_dict = {elem: pandas.DataFrame() for elem in diner_data_df["meal_site"].unique()}
+            line_graph = go.Figure()
+            line_graph_title = helpers.construct_title(filter_dict=filter_dict, graph_type="line", selected_demographic=selected_grouping)
+            for key in sites_dict.keys():
+                sites_dict[key] = diner_data_df[:][diner_data_df.meal_site == key]
+                line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
+            line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
                                          yaxis_title = "number of entries",
                                          )
-                return line_graph
-
-            else:
-                selected_sites_data = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)
-                selected_sites_data = selected_sites_data.sort_values(by=["entry_timestamp"])
-                # split df into df by meal site, add trace for each meal site
-                sites_dict = {elem: pandas.DataFrame() for elem in selected_sites_data["meal_site"].unique()}
-                all_line_graph = go.Figure()
-                for key in sites_dict.keys():
-                    sites_dict[key] = selected_sites_data[:][selected_sites_data.meal_site == key]
-                    all_line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
-                all_line_graph.update_layout(title=line_graph_title,
-                                         xaxis_title = "dates",
-                                         yaxis_title = "number of entries")
-                return all_line_graph
+            return line_graph
             
