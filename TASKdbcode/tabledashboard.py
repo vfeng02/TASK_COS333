@@ -41,8 +41,8 @@ def init_tabledashboard(server):
     table_app.layout = html.Div([
         dbc.Container([
         dbc.Row([
-            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#FDF9CD'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
-            dbc.Col(html.Div(className="vr", style={"height": "100%", 'borderRight': '1px solid #ff911f','borderLeft': '1px #ff911f',"opacity": "unset"}), className = "g-0"),
+            dbc.Col(html.Div(id='num_entries_display', children=[], style = {'color':'#ffc88f'}), width = 5, style = {'margin-left':'7px','margin-right':'0px'}),
+            dbc.Col(html.Div(className="vr", style={"height":"60%","opacity": "unset"}), className = "g-0"),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}),"Download Current Data To Excel"],
@@ -159,12 +159,11 @@ def init_callbacks(table_app):
 
     @table_app.callback(
     Output("download-dataframe-xlsxa", "data"),
-    [Input("btn_xlsxa", "n_clicks"),
-    State('table-filtering', 'filter_query')],
+    [Input("btn_xlsxa", "n_clicks")],
     prevent_initial_call=True)
-    def download_all(n_clicks, filter):
+    def download_all(n_clicks):
         df = demographic_db.get_patrons()
-        return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
+        return dcc.send_data_frame(df.to_excel, "alltaskdata.xlsx", sheet_name="TASK_data_all")
 
     @table_app.callback(
     Output("download-dataframe-xlsxc", "data"),
@@ -172,8 +171,39 @@ def init_callbacks(table_app):
     State('table-filtering', 'filter_query')],
     prevent_initial_call=True)
     def download_current(n_clicks, filter):
-        df = demographic_db.get_patrons()
-        return dcc.send_data_frame(df.to_excel, "taskdata.xlsx", sheet_name="TASK_data")
+        filtering_expressions = filter.split(' && ')
+        filter_dicts = []
+        time_filter = {}
+
+        for filter_part in filtering_expressions:
+
+            filter_dict = split_filter_part(filter_part)
+
+            if filter_dict:
+                if filter_dict["op"] == "contains":
+                    filter_dict["op"] = "ilike"
+                    if type(filter_dict["value"]) is list:
+                        for index, subvalue in enumerate(filter_dict["value"]):
+                            filter_dict["value"][index] = "%" + \
+                                subvalue + "%"
+                    else:
+                        filter_dict["value"] = "%" + \
+                                filter_dict["value"] + "%"
+                        
+                if filter_dict["op"] == "=":
+                    filter_dict["op"] = "=="
+
+                if filter_dict["op"] == "datestartswith":
+                    time_filter = filter_dict
+                else:
+                    filter_dicts.append(filter_dict)
+        
+        df = demographic_db.filter_dms(filter_dicts)
+    
+        if time_filter:
+            df = df.loc[df["entry_timestamp"].astype(str).str.startswith(time_filter["value"])]
+
+        return dcc.send_data_frame(df.to_excel, "taskdatacurrent.xlsx", sheet_name="TASK_data_current")
 
     @table_app.callback(
         Output('table-filtering', 'data'),

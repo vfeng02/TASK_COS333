@@ -19,6 +19,10 @@ from TASKdbcode import tabledashboard
 from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
 from TASKdbcode import linedashboard
+import sqlalchemy
+import sys
+from werkzeug.security import generate_password_hash,\
+    check_password_hash
 
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
@@ -34,24 +38,6 @@ my_users = {
     "steven": {"password": "wilson", "roles": "admin"},
 }
 
-def be_admin(username):
-    """Validator to check if user has admin role"""
-    user_data = my_users.get(username)
-    if 'admin' not in user_data.get('roles'):
-        return "User does not have admin role"
-
-def check_my_users(user):
-    """Check if user exists and its credentials.
-    Take a look at encrypt_app.py and encrypt_cli.py
-     to see how to encrypt passwords
-    """
-    user_data = my_users.get(user["username"])
-    if not user_data:
-        return False  # <--- invalid credentials
-    elif user_data.get("password") == user["password"]:
-        return True  # <--- user is logged in!
-
-    return False  # <--- invalid credentials
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
@@ -61,7 +47,7 @@ with app.app_context():
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
 
-        SimpleLogin(app, login_checker=check_my_users)
+        SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
 #-----------------------------------------------------------------------
@@ -188,15 +174,23 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[be_admin])
+@login_required(must=[demographic_db.be_admin])
 def admindisplaydata():
     return render_template(
         "admin.html"
     )
 
-@app.route('/register', methods=['GET'])
-@login_required(must=[be_admin])
+@app.route('/register', methods=['GET', 'POST'])
+@login_required(must=[demographic_db.be_admin])
 def register(): 
+    email = request.args.get('email')
+    password = request.args.get('password')
+    account_type = request.args.get('AccountType')
+    repeat_password = request.args.get('repeatPassword')
+    if password != repeat_password: 
+        print("Passwords do not match")
+    account_details = {"username": email, "email": email, "password": password, "role": account_type}
+    demographic_db.add_user(account_details)
 
     return render_template(
         "register.html"

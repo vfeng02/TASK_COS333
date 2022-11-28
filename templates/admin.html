@@ -12,13 +12,13 @@ Sets up HTML page to input patron data
   {% include 'imports.html' %}
 </head>
 
-<body class="forceOpenSans" style = "width: 100%; height: 100%; overflow:auto">
-  {% include 'header.html' %}
-  <iframe src="/tableapp" width="100%" height="600" frameborder="0"></iframe>
+<body class="forceOpenSans" style = "width: 100%; height: 100%;  background-color: #0a283c; overflow:auto;">
+  {% include 'admin_header.html' %}
+  <!-- <iframe src="/tableapp" width="100%" height="600" frameborder="0"></iframe> -->
   <!-- <div style="margin-top: 10px;"> -->
   <div class="container-fluid">
-    <h2>
-      Demographic Graphs
+    <h2 style = "color: white">
+      <br>TASK Meal Site Demographics<br><br>
       <!-- <div class="help-tip">
         <p>
           This is the inline help tip! It can contain all kinds of HTML. Style
@@ -28,22 +28,28 @@ Sets up HTML page to input patron data
     </h2>
   </div>
   <div class="container-fluid" style = "height: 100%; width: 100%;">
-    <h4>Select Graph Type</h4>
     <div class="tab" style = "height: 100%; width: 100%;">
-      <button class="tablinks" onclick="getGraph(event, 'pie')" id="defaultOpen">
-        Pie Chart
+      <button class="tablinks" onclick="getGraph(event, 'table')" id="defaultOpen">
+        View Raw Data
+      </button>
+      <button class="tablinks" onclick="getGraph(event, 'pie')">
+        Graph by Demographic
       </button>
       <button class="tablinks" onclick="getGraph(event, 'bar')">
-        Bar Graph
+        Graph by Meal Site
       </button>
       <button class="tablinks" onclick="getGraph(event, 'line')">
-        Line Graph
+        Graph by Date
       </button>
     </div>
 
     <!-- Tab content -->
+    <div id="table" class="tabcontent" style = "display: block; min-width: 100%; padding: 0;">
+      <iframe src="/tableapp" style = "display: block; position: absolute; min-height: 100%; min-width: 100%;" frameborder="0"></iframe>
+    </div>
+
     <div id="pie" class="tabcontent" style = "display: block; min-width: 100%; padding: 0;">
-      <iframe scrolling = "no" src="/pieapp" style = "display: block; position: absolute; min-height: 100%; min-width: 100%;" frameborder="0"></iframe>
+      <iframe src="/pieapp" style = "display: block; position: absolute; min-height: 100%; min-width: 100%;" frameborder="0"></iframe>
     </div>
 
     <div id="bar" class="tabcontent">

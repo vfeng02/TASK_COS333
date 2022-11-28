@@ -8,6 +8,7 @@
 # -----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
+import datetime
 import dash
 import pandas
 from TASKdbcode import demographic_db
@@ -42,7 +43,7 @@ def init_piedashboard(server):
             dbc.Container([
                 dbc.Row([
                     dbc.Col([
-                        html.H3("Create Pie Chart", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
+                        html.H3("Graph by Demographic", style = {'color':'#ffc88f', 'margin-top':'5px', 'font-weight':'bold'}),
                         html.Div([
                             html.Div([
                                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',
@@ -59,7 +60,7 @@ def init_piedashboard(server):
                                                   for o in database_constants.MEAL_SITE_OPTIONS],
                                          clearable=True,
                                          multi=True,
-                                         value=["First Baptist Church"],
+                                         value=["Trenton Area Soup Kitchen"],
                                          placeholder="All Meal Sites"
                                          ),
                             html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',
@@ -74,7 +75,7 @@ def init_piedashboard(server):
                             ], style={'color': 'white'}),
                             html.H5("Make a chart of diners who are...", style={
                                     'color': 'white'}),
-                            dbc.Row(id="filter_options", children=[]),
+                            dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "pie")),
                             html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',
                                     'borderBottom': '2px #ff911f', "opacity": "unset"}),
                             html.Div([
@@ -168,9 +169,11 @@ def init_callbacks(pie_app):
          Input("mdisabled", "n_clicks"),
          Input("mguessed", "n_clicks"),
          Input("mnone", "n_clicks")],
-        State({'type': 'graph_filter', 'name': dash.ALL}, 'value')
+         [State('range', 'start_date'),
+         State('range', 'end_date'),
+         State({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
     )
-    def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, selected_filters):
+    def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters):
 
         ctx = dash.callback_context
         # print(selected_filters)
@@ -191,6 +194,19 @@ def init_callbacks(pie_app):
         selected_fields = helpers.selected_fields_helper(
             dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
+        time_filter = {}
+        if time_range_start:
+            time_filter["start_date"] = time_range_start
+        else:
+            time_filter["start_date"] = None
+            
+
+        if time_range_end:
+            time_filter["end_date"] = time_range_end
+        else:
+            time_filter["end_date"] = None
+
+        filter_dict["entry_timestamp"] = time_filter
         filters = helpers.filter_options_helper(
             selected_demographic, filter_dict, "pie")
 
@@ -213,10 +229,12 @@ def init_callbacks(pie_app):
          Input("mdisabled", "n_clicks"),
          Input("mguessed", "n_clicks"),
          Input("mnone", "n_clicks"),
-         Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')],
+         Input('range', 'start_date'),
+         Input('range', 'end_date')],
+         Input({'type': 'graph_filter', 'name': dash.ALL}, 'value'),
         State('iddropdownmenu', 'label')
     )
-    def update_pie_chart(selected_sites, r, l, a, gr, z, h, v, d, gs, n, selected_filters, mlabel):
+    def update_pie_chart(selected_sites, r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters, mlabel):
 
         if dash.callback_context.triggered_id in ("mrace", "mlanguage", "mage_range", "mgender",
                                                   "mzip_code", "mhomeless", "mveteran", "mdisabled",
@@ -239,11 +257,32 @@ def init_callbacks(pie_app):
         selected_fields = helpers.selected_fields_helper(
             dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
+
+            
+        print("\n")
+        print(filter_dict)
+        print("\n")
         selected_fields.append("entry_timestamp")
+
+        time_filter = {}
+        if time_range_start:
+            time_filter["start_date"] = time_range_start
+        else:
+            time_filter["start_date"] = datetime.date(2022, 10, 1)
+
+        if time_range_end:
+            time_filter["end_date"] = time_range_end
+        else:
+            time_filter["end_date"] = datetime.date.max
+
+        if time_range_start or time_range_end:
+            filter_dict["entry_timestamp"] = time_filter
 
         if not any(filter_dict.values()) and selected_demographic == "":
             none_selected_message = helpers.graph_message("Please select filters and/or category.")
             return none_selected_message
+
+
 
         if selected_demographic != "":
 
@@ -284,7 +323,7 @@ def init_callbacks(pie_app):
                 # print(f"{len(race_type)}\n")
                 # sunburst_chart = go.Figure(data = [go.Sunburst(labels = races, parents = race_type, values=counts, branchvalues="total")])
                 # return sunburst_chart
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
             if selected_demographic == "race":
                 pie_chart = go.Figure()
 
@@ -295,6 +334,10 @@ def init_callbacks(pie_app):
                 if num_entries == 0:
                     none_found_message = helpers.graph_message("No entries found.")
                     return none_found_message
+
+
+                if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].head(1).item().date()
 
                 pie_chart_title = helpers.construct_title(
                     filter_dict, graph_type="pie", selected_demographic=selected_demographic)
@@ -393,7 +436,7 @@ def init_callbacks(pie_app):
                 # margin = {"t":5,"b":5,"l":5,"r":5})
 
                 return pie_chart
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
             diner_data_df = demographic_db.get_patrons(
                 filter_dict=filter_dict, select_fields=selected_fields)
@@ -403,17 +446,28 @@ def init_callbacks(pie_app):
             if num_entries == 0:
                 none_found_message = helpers.graph_message("No entries found.")
                 return none_found_message
+
+            if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data['entry_timestamp'].head(1).item().date()
             
-            percent_labels = [f"{option}: {value/num_entries:.2%}"
+            if selected_demographic in list(database_constants.STATUS_OPTION_MAPPING.keys()):
+                percent_labels = [f"{option} ({database_constants.STATUS_OPTION_MAPPING[selected_demographic][option]}): {value/num_entries:.2%}"
+                              for option, value in zip(
+                                  diner_data_df[selected_demographic]
+                                  .value_counts().index.tolist(),
+                                  list(diner_data_df[selected_demographic].value_counts()))]
+            else:
+                percent_labels = [f"{option}: {value/num_entries:.2%}"
                               for option, value in zip(
                                   diner_data_df[selected_demographic]
                                   .value_counts().index.tolist(),
                                   list(diner_data_df[selected_demographic].value_counts()))]
 
             pie_chart = go.Figure(data=[go.Pie(labels=percent_labels,
-                                               values=list(
-                                                   diner_data_df[selected_demographic].value_counts()),
-                                               texttemplate="%{label}<br>(%{value} Entries)")])
+                                                values=list(
+                                                    diner_data_df[selected_demographic].value_counts()),
+                                                texttemplate="%{label}<br>(%{value} Entries)")])
+
             pie_chart_title = helpers.construct_title(
                 filter_dict, graph_type="pie", selected_demographic=selected_demographic)
             pie_chart.update_layout(title=pie_chart_title)
@@ -430,13 +484,22 @@ def init_callbacks(pie_app):
             else:
                 num_entries = demographic_db.get_total_entries()
 
+
             diner_data = demographic_db.get_patrons(
-                filter_dict=filter_dict, select_fields=selected_fields)["entry_timestamp"].count()
+                filter_dict=filter_dict, select_fields=selected_fields)
+
+            if len(diner_data.index) == 0:
+                none_found_message = helpers.graph_message("No entries found.")
+                return none_found_message
+            
+            if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data['entry_timestamp'].head(1).item().date()
+
+            diner_data = diner_data["entry_timestamp"].count()
+
             num_other_entries = num_entries - diner_data
-            filtered_slice_title = helpers.construct_filter_string(
-                filter_dict=filter_dict).strip()
-            filtered_slice_title = "<br>".join(
-                textwrap.wrap(filtered_slice_title, width=50))
+            filtered_slice_title = helpers.construct_slice_title(
+                filter_dict=filter_dict)
             diner_data = pandas.Series(
                 [diner_data], [filtered_slice_title])
             other_count = pandas.Series([num_other_entries], ["Other"])

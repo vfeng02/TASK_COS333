@@ -16,7 +16,7 @@
     --bs-purple: #6f42c1;
     --bs-pink: #d63384;
     --bs-red: #dc3545;
-    --bs-orange: #fd7e14;
+    --bs-orange: #ff911f;
     --bs-yellow: #ffc107;
     --bs-green: #198754;
     --bs-teal: #20c997;
@@ -88,6 +88,24 @@ body {
     background-color: var(--bs-body-bg);
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent
+}
+
+.DateInput_input {
+    font-size: 1rem;
+    padding: 5px
+}
+
+.DateRangePickerInput_arrow_svg {
+    width: 20px;
+    height: 20px;
+}
+
+.DateInput_input__focused {
+    border-bottom: 2px solid #0085Ca;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-right: 33px solid var(--bs-blue);
 }
 
 .Select--multi .Select-value {
@@ -7540,11 +7558,11 @@ fieldset:disabled .btn {
 }
 
 .vr {
-    display: inline-block;
+    margin: 1rem 0;
     align-self: stretch;
-    width: 1px;
+    width: 3px;
     min-height: 1em;
-    background-color: currentColor;
+    background-color: var(--bs-orange);
     opacity: .25
 }
 

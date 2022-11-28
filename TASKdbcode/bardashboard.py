@@ -8,6 +8,7 @@
 #-----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
+import datetime
 import dash
 import pandas
 from TASKdbcode import demographic_db
@@ -38,7 +39,7 @@ def init_bardashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.H3("Create Bar Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Graph by Meal Site", style = {'color':'#ffc88f', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Div([
                     html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
@@ -54,7 +55,7 @@ def init_bardashboard(server):
                                       for o in database_constants.MEAL_SITE_OPTIONS],
                              clearable=True,
                              multi=True,
-                             value=["First Baptist Church", "Trenton Area Soup Kitchen"],
+                             value=["Trenton Area Soup Kitchen"],
                              placeholder="All Meal Sites"
                              ),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
@@ -67,7 +68,7 @@ def init_bardashboard(server):
                                         style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}),
                 ], style={'color': 'white'}),
                 html.H5("Make a graph of diners who are...",style={'color': 'white'}),
-                dbc.Row(id="filter_options", children=[]),
+                dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "bar")),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
                     html.H4("Select Category for Bar Grouping", style={
@@ -134,7 +135,7 @@ def init_bardashboard(server):
 def init_callbacks(bar_app):
 
     @bar_app.callback(
-        Output('filter_options', 'children'),
+       Output('filter_options', 'children'),
         Output('iddropdownmenu', 'label'),
         [Input("mrace", "n_clicks"),
          Input("mlanguage", "n_clicks"),
@@ -146,9 +147,11 @@ def init_callbacks(bar_app):
          Input("mdisabled", "n_clicks"),
          Input("mguessed", "n_clicks"),
          Input("mnone", "n_clicks")],
-        State({'type': 'graph_filter', 'name': dash.ALL}, 'value')
+         [State('range', 'start_date'),
+         State('range', 'end_date'),
+         State({'type': 'graph_filter', 'name': dash.ALL}, 'value')]
     )
-    def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, selected_filters):
+    def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters):
 
         ctx = dash.callback_context
         # print(selected_filters)
@@ -169,8 +172,21 @@ def init_callbacks(bar_app):
         selected_fields = helpers.selected_fields_helper(
             dash.callback_context.states)
         filter_dict = dict(zip(selected_fields, selected_filters))
+        time_filter = {}
+        if time_range_start:
+            time_filter["start_date"] = time_range_start
+        else:
+            time_filter["start_date"] = None
+            
+
+        if time_range_end:
+            time_filter["end_date"] = time_range_end
+        else:
+            time_filter["end_date"] = None
+
+        filter_dict["entry_timestamp"] = time_filter
         filters = helpers.filter_options_helper(
-            selected_demographic, filter_dict, "bar")
+            selected_demographic, filter_dict, "pie")
 
         if selected_demographic:
             button_label = database_constants.DEMOGRAPHIC_CATEGORIES[selected_demographic]
@@ -180,23 +196,25 @@ def init_callbacks(bar_app):
 
 
     @bar_app.callback(
-            Output('bar_graph', 'figure'),
-            [Input('site_options', 'value'),
-            Input("mrace", "n_clicks"),
-            Input("mlanguage", "n_clicks"),
-            Input("mage_range", "n_clicks"),
-            Input("mgender", "n_clicks"),
-            Input("mzip_code", "n_clicks"),
-            Input("mhomeless", "n_clicks"),
-            Input("mveteran", "n_clicks"),
-            Input("mdisabled", "n_clicks"),
-            Input("mguessed", "n_clicks"),
-            Input("mnone", "n_clicks"),
-            Input({'type': 'graph_filter', 'name': dash.ALL}, 'value')],
-            State('iddropdownmenu', 'label')
+        Output('bar_graph', 'figure'),
+        [Input('site_options', 'value'),
+         Input("mrace", "n_clicks"),
+         Input("mlanguage", "n_clicks"),
+         Input("mage_range", "n_clicks"),
+         Input("mgender", "n_clicks"),
+         Input("mzip_code", "n_clicks"),
+         Input("mhomeless", "n_clicks"),
+         Input("mveteran", "n_clicks"),
+         Input("mdisabled", "n_clicks"),
+         Input("mguessed", "n_clicks"),
+         Input("mnone", "n_clicks"),
+         Input('range', 'start_date'),
+         Input('range', 'end_date')],
+         Input({'type': 'graph_filter', 'name': dash.ALL}, 'value'),
+        State('iddropdownmenu', 'label')
     )
 
-    def update_bar_graph(selected_sites, r, l, a, gr, z, h, v, d, gs, n, selected_filters, mlabel):
+    def update_bar_graph(selected_sites, r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters, mlabel):
 
         if dash.callback_context.triggered_id in ("mrace", "mlanguage", "mage_range", "mgender",
                                                   "mzip_code", "mhomeless", "mveteran", "mdisabled",
@@ -222,9 +240,22 @@ def init_callbacks(bar_app):
         selected_fields.append("entry_timestamp")
         selected_fields.append("meal_site")
 
+        time_filter = {}
+        if time_range_start:
+            time_filter["start_date"] = time_range_start
+        else:
+            time_filter["start_date"] = datetime.date(2022, 10, 1)
+
+        if time_range_end:
+            time_filter["end_date"] = time_range_end
+        else:
+            time_filter["end_date"] = datetime.date.max
+
+        if time_range_start or time_range_end:
+            filter_dict["entry_timestamp"] = time_filter
+
         # to do for bar graphs:
         # colors repeat sometimes and it may be hard to read, need to change colors
-        # maybe change display when no diners are found, it's not as bad as pie charts,
         # but still not great, some sort of "Not Found" message might be good
         if selected_demographic:
             
@@ -244,10 +275,11 @@ def init_callbacks(bar_app):
                     none_found_message = helpers.graph_message("No entries found.")
                     return none_found_message
 
+                if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].head(1).item().date()
+
                 bar_graph_title = helpers.construct_title(
                     filter_dict, graph_type="bar", selected_demographic=selected_demographic)
-
-
 
                 diner_data_df.replace(to_replace='American Indian/Alaska Native', value='AI/AN', regex=True, inplace = True)
                 diner_data_df.replace(to_replace='Native Hawaiian/Pacific Islander', value='NHOPI', regex=True, inplace = True)
@@ -288,8 +320,8 @@ def init_callbacks(bar_app):
                             direction="down",
                             active=0,
                             showactive = True,
-                            x = 0.75,
-                            y = 1.10,
+                            x = 0.60,
+                            y = .99,
                             xanchor="left",
                             yanchor="top",
                             buttons=list([
@@ -316,6 +348,9 @@ def init_callbacks(bar_app):
                     none_found_message = helpers.graph_message("No entries found.")
                     return none_found_message
 
+            if time_range_start and not time_range_end:
+                filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].head(1).item().date()
+
             histogram_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
             histogram = px.histogram(diner_data_df, x=selected_demographic,
             color='meal_site', barmode='group', title=histogram_title, text_auto=True)
@@ -333,6 +368,9 @@ def init_callbacks(bar_app):
                     none_found_message = helpers.graph_message("No entries found.")
                     return none_found_message
 
+            if time_range_start and not time_range_end:
+                    filter_dict['entry_timestamp']['end_date'] = diner_data['entry_timestamp'].head(1).item().date()
+
             diner_data = diner_data.groupby("meal_site")["entry_timestamp"].count()
             diner_data.rename("number of entries", inplace=True)
             bar_graph_title = helpers.construct_title(filter_dict, graph_type="bar", selected_demographic=selected_demographic)
@@ -341,13 +379,3 @@ def init_callbacks(bar_app):
                                     color=diner_data.index)
             bar_graph.update_layout(showlegend=False)
             return bar_graph
-
-
-
-
-
-            
-            
-
-
-

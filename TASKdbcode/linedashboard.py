@@ -44,7 +44,7 @@ def init_linedashboard(server):
             dbc.Container([
             dbc.Row([
             dbc.Col([
-            html.H3("Create Line Graph", style = {'color':'#FDF9CD', 'margin-top':'5px', 'font-weight':'bold'}),
+            html.H3("Graph by Date", style = {'color':'#ffc88f', 'margin-top':'5px', 'font-weight':'bold'}),
             html.Div([
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                  html.Div([
@@ -150,7 +150,7 @@ def init_callbacks(line_app):
                 line_graph = go.Figure(data = [go.Scatter(x = selected_sites_data["entry_timestamp"].dt.date.unique(), y=list(selected_sites_data.groupby(selected_sites_data["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers")])
                 line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
-                                         yaxis_title = "count")
+                                         yaxis_title = "number of entries")
                 return line_graph
 
             else:
@@ -159,7 +159,7 @@ def init_callbacks(line_app):
                 all_line_graph = go.Figure(data = [go.Scatter(x = all_sites_data["entry_timestamp"].dt.date.unique(), y=list(all_sites_data.groupby(all_sites_data["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers")])
                 all_line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
-                                         yaxis_title = "count")
+                                         yaxis_title = "number of entries")
                 return all_line_graph
         else:
             if selected_sites:
@@ -174,7 +174,7 @@ def init_callbacks(line_app):
                     line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
                 line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
-                                         yaxis_title = "count",
+                                         yaxis_title = "number of entries",
                                          )
                 return line_graph
 
@@ -189,6 +189,6 @@ def init_callbacks(line_app):
                     all_line_graph.add_trace(go.Scatter(x = sites_dict[key]["entry_timestamp"].dt.date.unique(), y=list(sites_dict[key].groupby(sites_dict[key]["entry_timestamp"].dt.date)["entry_timestamp"].count()), mode = "lines+markers", name = key))
                 all_line_graph.update_layout(title=line_graph_title,
                                          xaxis_title = "dates",
-                                         yaxis_title = "count")
+                                         yaxis_title = "number of entries")
                 return all_line_graph
             

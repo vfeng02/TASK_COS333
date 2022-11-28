@@ -1,12 +1,12 @@
 
 #!/usr/bin/env python
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 # graphdashboard_helpers.py
 # Author: Andres Blanco Bonilla
 # Helper functions for graphing related dash apps, to reduce repeated
 # code.
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 import dash
 import pandas
@@ -22,10 +22,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import textwrap
 import datetime
-#-----------------------------------------------------------------------
-
 
 #-----------------------------------------------------------------------
+
 def selected_fields_helper(callback_context):
     # print(list(callback_context.keys()))
 
@@ -41,7 +40,6 @@ def selected_fields_helper(callback_context):
     return selected_fields
 
 #-----------------------------------------------------------------------
-
 
 def filter_options_helper(selected_demographic, filter_dict, graph_type):
 
@@ -205,10 +203,20 @@ def filter_options_helper(selected_demographic, filter_dict, graph_type):
     else:
         filters = [dem_row2, dem_row3, status_row1, status_row2]
     if graph_type != "line":
+        start_date = None
+        end_date = None
+        if filter_dict.get("entry_timestamp"):
+            if filter_dict["entry_timestamp"]["start_date"]:
+                start_date = filter_dict["entry_timestamp"]["start_date"]
+            if filter_dict["entry_timestamp"]["end_date"]:
+                end_date = filter_dict["entry_timestamp"]["end_date"]
+        
         time_row = dbc.Row(dcc.DatePickerRange(id='range',
                            min_date_allowed=datetime.datetime(2022, 10, 1),
                            start_date_placeholder_text='From Any Date',
                            end_date_placeholder_text='To Any Date',
+                           start_date=start_date,
+                           end_date=end_date,
                            clearable=True,
                            minimum_nights=0), className = "gx-1", style = {"margin-bottom": "5px"})
         filters = [time_row, *filters]
@@ -227,25 +235,39 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         del filter_dict["meal_site"]
 
     if graph_type == "pie":
-        title += "Percentage "
-        if selected_demographic:
-            title += f"distribution of <b>{category_dict[selected_demographic]}</b> among Diners "
-        else:
-            title += "of Diners "
 
         if filter_dict:
-            title += "who are "
             filter_string = construct_filter_string(filter_dict)
             title += filter_string
+        
+        title+="Diner Entries "
+        
+        if filter_dict.get("entry_timestamp"):
+            title+=f"between {filter_dict['entry_timestamp']['start_date']} and {filter_dict['entry_timestamp']['end_date']} "
 
-        title = "<br>".join(textwrap.wrap(title, width= 100))
+        if selected_demographic:
+            title += f"by {category_dict[selected_demographic]}"
 
-        if meal_sites:
-            title+="<br>At "
-            site_string = construct_site_string(meal_sites)
-            title+=site_string
-        else:
-            title+="<br>Across all Meal Sites"
+        # title += "Percentage "
+        # if selected_demographic:
+        #     title += f"distribution of <b>{category_dict[selected_demographic]}</b> among Diners "
+        # else:
+        #     title += "of Diners "
+
+        # if filter_dict:
+        #     title += "who are "
+        #     filter_string = construct_filter_string(filter_dict)
+        #     title += filter_string
+
+        # title = "<br>".join(textwrap.wrap(title, width= 100))
+
+        # if meal_sites:
+        #     title+="<br>At "
+        #     site_string = construct_site_string(meal_sites)
+        #     title+=site_string
+        # else:
+        #     title+="<br>Across all Meal Sites"
+        
 
     if graph_type == "bar":
         
@@ -254,9 +276,12 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
             title += filter_string
         
         title+="Diner Entries "
+
+        if filter_dict.get("entry_timestamp"):
+            title+=f"between {filter_dict['entry_timestamp']['start_date']} and {filter_dict['entry_timestamp']['end_date']} "
         
         if selected_demographic:
-            title += f"by {category_dict[selected_demographic]}<br>and "
+            title += f"by {category_dict[selected_demographic]} and "
 
         title+="by Meal Site"
 
@@ -271,7 +296,7 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
 
         if timestamp_filter:
             print(timestamp_filter)
-            title+=f"Diner Entries<br>between {timestamp_filter['start_date']} and {timestamp_filter['end_date']} "
+            title+=f"Diner Entries between {timestamp_filter['start_date']} and {timestamp_filter['end_date']} "
         else:
             title+="Diner Entries All-Time "
 
@@ -280,11 +305,10 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         if selected_demographic == "Split":
             title+= " and by Meal Site"
             
-
+    title = "<br>".join(textwrap.wrap(title, width=100))
     return title
 
 # -----------------------------------------------------------------------
-
 
 def construct_filter_string(filter_dict):
     status_options = database_constants.STATUS_OPTION_MAPPING
@@ -305,11 +329,20 @@ def construct_filter_string(filter_dict):
     for key, value_list in filter_dict.items():
         for value in value_list:
             if key == "language":
-                filter_text_dict[key].append(f"{value.title()}-speaking")
+                if value == "ASL":
+                    filter_text_dict[key].append(f"{value}-speaking")
+                else:
+                    filter_text_dict[key].append(f"{value.title()}-speaking")
             elif key == "age_range":
                 filter_text_dict[key].append(f"{value} years old")
             elif key == "zip_code":
-                filter_text_dict[key].append(f"living at Zip Code {value}")
+                if value == "Unknown":
+                    filter_text_dict[key].append(f"living at Unknown Zip Code")
+                elif value == "Other":
+                    filter_text_dict[key].append(f"living at Out-of-Area Zip Code")
+                else:
+                    filter_text_dict[key].append(f"living at Zip Code {value}")
+                    
             elif key in list(status_options.keys()):
                 filter_text_dict[key].append(status_options[key][value])
             else:
@@ -324,15 +357,13 @@ def construct_filter_string(filter_dict):
     if len(filter_text_list) > 1:
         filter_string = ', '.join(
             filter_text_list[:-1]) + ', and ' + filter_text_list[-1] + " "
-    else:
+    elif len(filter_text_list) == 1:
         filter_string = filter_text_list[0] + " "
-        
-    
-    
+    else:
+        filter_string = ""
 
     return filter_string
 # -----------------------------------------------------------------------
-
 
 def construct_site_string(meal_sites):
     site_string = ""
@@ -345,6 +376,20 @@ def construct_site_string(meal_sites):
 
     return site_string
 
+#-----------------------------------------------------------------------
+
+def construct_slice_title(filter_dict):
+    timestamp_filter = filter_dict.get("entry_timestamp")
+    slice_title = construct_filter_string(filter_dict=filter_dict)
+    
+    if timestamp_filter:
+        if slice_title:
+            slice_title+=", "
+        slice_title+= f"{timestamp_filter['start_date']} to {timestamp_filter['end_date']}"
+
+    slice_title = slice_title.strip()
+    slice_title = "<br>".join(textwrap.wrap(slice_title, width=45))
+    return slice_title
 
 #-----------------------------------------------------------------------
 
@@ -369,6 +414,7 @@ def graph_message(message_text):
                     )
     return message
 
+#-----------------------------------------------------------------------
 
 def old_filter_options_helper(selected_demographic, filter_dict):
 
@@ -533,4 +579,4 @@ def old_filter_options_helper(selected_demographic, filter_dict):
         filters = [dem_row2, dem_row3, status_row1, status_row2]   
               
     return filters
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
