@@ -6,7 +6,7 @@
 		{% include 'imports.html' %}
     </head>
     <body class="forceOpenSans">
-		<script>
+		<!-- <script>
 			function check()
 			{
 			 var check=document.getElementsByTagName('input');
@@ -30,7 +30,7 @@
 			  }
 			 }
 			}
-			</script>
+			</script> -->
 			<div id="wrapper">
 			<!-- <input type="button" value="Check All" onclick="check();">
 			<input type="button" value="Uncheck All" onclick="uncheck();">
@@ -59,15 +59,15 @@
 								<!-- {% set i = False %} -->
 								{% for item in lastrace %}
 								{% if item== race %}
-								<input type="checkbox"  class="patronInput mainButton" checked = "checked"  id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
+								<input type="checkbox"  class="patronInput btn-check mainButton"  id="btn-check-{{race}}" name="race" value={{race}}>
+								<label class="btn active-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
 								<!-- {set i = True %} -->
 								{% else %}
 								{% endif %}
 								{% endfor %}
 								<!-- {if i == False %} -->
-								<input type="checkbox"  class="patronInput mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
+								<input type="checkbox"  class="patronInput btn-check mainButton" id="btn-check-{{race}}" name="race" value={{race}}>
+								<label class="btn inactive-button" id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label>
 								
 								{%endfor%}
 							</div>
