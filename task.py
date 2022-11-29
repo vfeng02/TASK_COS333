@@ -176,6 +176,13 @@ def admindisplaydata():
         "admin.html"
     )
 
+@app.route("/dash", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def dash():
+    return app.index()
+
+
+
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
 def register(): 

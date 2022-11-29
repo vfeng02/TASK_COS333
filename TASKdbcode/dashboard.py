@@ -27,7 +27,8 @@ operators = [['ge ', '>='],
 def init_dashboard(server):
     dash_app = dash.Dash(
         server=server,
-        routes_pathname_prefix="/dashapp/")
+        )
+
     # Load DataFrame
     df = demographic_db.get_patrons()
 
