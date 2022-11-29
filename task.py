@@ -28,25 +28,17 @@ from werkzeug.security import generate_password_hash,\
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
 from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
-
-
-#----------------------------------------------------------------------
-my_users = {
-    "chuck": {"password": "norris", "roles": "admin"},
-    "lee": {"password": "douglas", "roles": ""},
-    "mary": {"password": "jane", "roles": ""},
-    "steven": {"password": "wilson", "roles": "admin"},
-}
-
+from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
+csrf = CSRFProtect()
 with app.app_context():
         app = tabledashboard.init_tabledashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
-
+        csrf.init_app(app)
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
@@ -64,6 +56,7 @@ def get_current_time():
  #-----------------------------------------------------------------------
 @app.route('/login', methods=['GET'])
 def login(): 
+    
     return render_template("login.html")
 
 
