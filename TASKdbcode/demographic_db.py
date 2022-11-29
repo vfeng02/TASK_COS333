@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #-----------------------------------------------------------------------
-# demographic_database.py
+# demographic_db.py
 # Author: Andres Blanco Bonilla
 # Sets up TASK database table classes for SQLAlchemy to use
 #-----------------------------------------------------------------------
@@ -265,7 +265,7 @@ def get_total_entries():
 # role is either administrator or representative
 def add_user(input_dict):
     
-    if input_dict["role"] not in ["admin", "representative"]:
+    if input_dict["role"] not in ["administrator", "representative"]:
         return
         # maybe do some other checks here for a "valid" username/email/password
 
@@ -344,7 +344,7 @@ def be_admin(username):
                 query = session.query(User).filter(User.username == username)
                 if not query: return False
                 for row in query:
-                    if row.role != 'admin': 
+                    if row.role != 'administrator': 
                         return "User does not have admin role"
         engine.dispose()
 

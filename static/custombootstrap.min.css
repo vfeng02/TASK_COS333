@@ -118,7 +118,7 @@ hr {
     color: inherit;
     background-color: currentColor;
     border: 0;
-    opacity: .25
+    opacity: 1
 }
 
 hr:not([size]) {
@@ -4496,7 +4496,7 @@ fieldset:disabled .btn {
 .nav-link {
     display: block;
     padding: .5rem 1rem;
-    color: #ffc88f;
+    color: #ffa74c;
     text-decoration: none;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out
 }
@@ -4548,6 +4548,7 @@ fieldset:disabled .btn {
     background-color: #ff911f;
     border-color: #ff911f
 }
+
 
 .nav-tabs .dropdown-menu {
     margin-top: -1px;
@@ -4628,7 +4629,7 @@ fieldset:disabled .btn {
     padding-top: .3125rem;
     padding-bottom: .3125rem;
     margin-right: 1rem;
-    font-size: 1.25rem;
+    font-size: calc(1.3rem + .6vw);
     text-decoration: none;
     white-space: nowrap
 }
@@ -5085,21 +5086,21 @@ fieldset:disabled .btn {
 }
 
 .navbar-light .navbar-brand {
-    color: rgba(0, 0, 0, .9)
+    color: #6b6b6b
 }
 
 .navbar-light .navbar-brand:focus,
 .navbar-light .navbar-brand:hover {
-    color: rgba(0, 0, 0, .9)
+    color:#d9dad9;
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: rgba(0, 0, 0, .55)
+    color: #6b6b6b
 }
 
 .navbar-light .navbar-nav .nav-link:focus,
 .navbar-light .navbar-nav .nav-link:hover {
-    color: rgba(0, 0, 0, .7)
+    color: #d9dad9
 }
 
 .navbar-light .navbar-nav .nav-link.disabled {
@@ -6720,10 +6721,10 @@ fieldset:disabled .btn {
 }
 
 .tooltip-inner {
-    max-width: 200px;
+    max-width: 500px;
     padding: .25rem .5rem;
     color: #fff;
-    text-align: center;
+    text-align: left;
     background-color: #000;
     border-radius: .25rem
 }
@@ -12227,5 +12228,3 @@ fieldset:disabled .btn {
         display: none !important
     }
 }
-
-/*# sourceMappingURL=bootstrap.min.css.map */
