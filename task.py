@@ -31,7 +31,7 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask("TASK", template_folder='templates', instance_relative_config=False)
+app = Flask(__name__, template_folder='templates', instance_relative_config=False)
 
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
@@ -177,25 +177,25 @@ def admindisplaydata():
         "admin.html"
     )
 
-@app.route("/lineapp2", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
-def lineapp():
-    return linedashboard.line_app.index()
+# @app.route("/lineapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def lineapp():
+#     return line_app.index()
 
-@app.route("/barapp2", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
-def barapp():
-    return bardashboard.bar_app.index()
+# @app.route("/barapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def barapp():
+#     return bar_app.index()
 
-@app.route("/pieapp2", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
-def pieapp():
-    return piedashboard.pie_app.index()
+# @app.route("/pieapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def pieapp():
+#     return pie_app.index()
 
-@app.route("/tableapp2", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
-def tableapp():
-    return tabledashboard.table_app.index()
+# @app.route("/tableapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def tableapp():
+#     return table_app.index()
 
 
 # --------------------------------------------------------------------------
