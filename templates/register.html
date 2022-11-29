@@ -80,6 +80,7 @@
         <input id="admin "type="radio" name="AccountType" value="admin" data-once>
         <label for="admin">Admin</label>
       </div>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     </div>
   </div>
   <button type="submit" class="signup">Sign Up</button>
