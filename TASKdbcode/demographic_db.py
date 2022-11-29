@@ -265,7 +265,7 @@ def get_total_entries():
 # role is either administrator or representative
 def add_user(input_dict):
     
-    if input_dict["role"] not in ["admin", "representative"]:
+    if input_dict["role"] not in ["administrator", "representative"]:
         return
         # maybe do some other checks here for a "valid" username/email/password
 
