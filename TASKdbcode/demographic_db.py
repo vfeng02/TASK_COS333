@@ -318,10 +318,7 @@ def display_users():
     
 def check_my_users(user):
     """Check if user exists and its credentials.
-    Take a look at encrypt_app.py and encrypt_cli.py
-     to see how to encrypt passwords
     """
-
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
 
