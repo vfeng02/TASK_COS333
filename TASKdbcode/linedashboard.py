@@ -121,7 +121,7 @@ def init_linedashboard(server):
     )
 
     init_callbacks(line_app)
-
+    helpers.protect_dashviews(line_app)
     return line_app.server
 
 def init_callbacks(line_app):

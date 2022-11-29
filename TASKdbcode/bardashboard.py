@@ -129,6 +129,7 @@ def init_bardashboard(server):
 
 
     init_callbacks(bar_app)
+    helpers.protect_dashviews(bar_app)
 
     return bar_app.server
 

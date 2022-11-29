@@ -145,6 +145,7 @@ def init_piedashboard(server):
     # pie_app.enable_dev_tools(
     # dev_tools_ui=True,
     # dev_tools_serve_dev_bundles=True,)
+    helpers.protect_dashviews(pie_app)
 
     return pie_app.server
 
