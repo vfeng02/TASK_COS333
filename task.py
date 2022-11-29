@@ -33,12 +33,15 @@ from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__, template_folder='templates')
 csrf = CSRFProtect()
+csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
         app = tabledashboard.init_tabledashboard(app)
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
         csrf.init_app(app)
+
+        
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
