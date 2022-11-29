@@ -36,82 +36,85 @@
 			<input type="button" value="Uncheck All" onclick="uncheck();">
 		 -->
 			</div>
-			
-    {% include 'header.html' %}
-    <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
-		<div style="margin-top: 10px;">
-			<center>
-				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
-				<hr>
-				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
-			</center>
-		</div>
-		<hr>
-		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
-			<div class="row" id = "wrapper">
-				<div class="col-sm-4">
+			{% include 'header.html' %}
+
+			<div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
+				<div style="margin-top: 10px;">
 					<center>
-					<div class="row">
-						<center><h4>Race (Select All That Apply)</h4></center>
-					</div>
-						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
-							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{%for race in ['White','Black','Hispanic','Unknown']%}
-							{% if race == 'Unknown' %}
-							<input type="checkbox" class="btn-check" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							<!-- <label class="btn btn-secondary active"> 
-								<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
-							</label> -->
-							{%else%}
-							<input type="checkbox" class="btn-check" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							{%endif%}
-							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
-							{%endfor%}
-							<select class="form-select-sm" style="width: 120.5px">  
-								<option selected>More options</option>
-								{% for race in ['American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select>
-							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
+						<hr>
+						<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+					</center>
+				</div>
+				<hr>
+				<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
+					<div class="row" id = "wrapper">
+						<div class="col-sm-4">
+							<center>
+							<div class="row">
+								<center><h4>Race (Select All That Apply)</h4></center>
+							</div>
+								<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
+									<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
+									<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
+									{%for race in ['White','Black','Hispanic','Unknown']%}
+									{% if race == 'Unknown' %}
+									<input type="checkbox" class="btn-check" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+									<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+									<!-- <label class="btn btn-secondary active"> 
+										<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
+									</label> -->
+									{%else%}
+									<input type="checkbox" class="btn-check" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+									<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+									{%endif%}
+									<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
+									{%endfor%}
+									<div id="list1" class="dropdown-check-list" tabindex="100">
+										<span class="anchor">More</span>
+										<ul class="items">
+											{% for race in ['American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+										<input type="checkbox" name="race" value={{race}}>
+										<label class="btn" for="btn-{{race}}">{{race}}</label>
+										{% endfor %}
+										</ul>
+									</div>
+									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+								</div>
+								
+							
+							<!-- <div class="row">
+								<center>
+									<text>Other: </text>
+									<select name="otherraces" id = "otherraces">  
+										{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+										<option value="{{race}}">{{race}}</option>
+										{% endfor %}
+									</select>
+								</center>
+							</div> -->
+						</center>
 						</div>
 						
-					
-					<!-- <div class="row">
-						<center>
-							<text>Other: </text>
-							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select>
-						</center>
-					</div> -->
-				</center>
-				</div>
-				
-				<div class="col-sm-4">
-					<div class="row">
-						<center><h4>Age Range</h4></center>
-					</div>
-					<div class="row">
-						<center>
-							<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
-								{% autoescape true %}
-								{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
-								{%endfor%}
-								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-Unknown" for="btn-age-Unknown">Unknown</label>
-								{% endautoescape %}
+						<div class="col-sm-4">
+							<div class="row">
+								<center><h4>Age Range</h4></center>
 							</div>
-						</center>
-					</div>
-				</div>
+							<div class="row">
+								<center>
+									<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
+										{% autoescape true %}
+										{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66']%}
+										<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
+										<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
+										{%endfor%}
+										<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
+										<label class="btn btn-secondary inactive-button" id = "toggle-button-Unknown" for="btn-age-Unknown">Unknown</label>
+										{% endautoescape %}
+									</div>
+								</center>
+							</div>
+						</div>
 				<div class="col-sm-4">
 					<div class="row">
 						<center><p>Zip Code</p></center>
@@ -283,7 +286,18 @@
 				</div>
 			</tr>
 		</div>
-		
+		<div id="list1" class="dropdown-check-list" tabindex="100">
+			<span class="anchor">Select Fruits</span>
+			<ul class="items">
+			  <li><input type="checkbox" />Apple </li>
+			  <li><input type="checkbox" />Orange</li>
+			  <li><input type="checkbox" />Grapes </li>
+			  <li><input type="checkbox" />Berry </li>
+			  <li><input type="checkbox" />Mango </li>
+			  <li><input type="checkbox" />Banana </li>
+			  <li><input type="checkbox" />Tomato</li>
+			</ul>
+		  </div>
 		
         </form>
 		<div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
@@ -302,7 +316,6 @@
 				</div>
 			</tr>
 		</div>
-		
         {% include 'footer.html' %}
     </div>
 	
@@ -313,20 +326,6 @@
 
 <script>
 	'use strict';
-	function check(tagName)
-	{
-		var check=document.getElementsByTagName(tagName);
-		if (!check[i].checked){
-			check[i].checked=true;
-		}
-	}
-	function uncheck(tagName)
-	{
-		var uncheck=document.getElementsByTagName(tagName);
-		if (uncheck[i].checked){
-			uncheck[i].checked=false;
-		}
-	}
 	function validateForm() {
 		
 		var x = document.forms["patronForm"]["guessed"].value;
@@ -337,6 +336,14 @@
 		}
 		return true;
 	}
+	var checkList = document.getElementById('list1');
+        checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
+          if (checkList.classList.contains('visible'))
+            checkList.classList.remove('visible');
+          else
+            checkList.classList.add('visible');
+        }
+        
 	function handleResponse(response)
 	{
 		$('#error').html(response);
@@ -397,6 +404,58 @@
 	.active-recur-config {
 		display: block !important;
 	}
+	.dropdown-check-list {
+  display: inline-block;
+}
+
+.dropdown-check-list .anchor {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  padding: 5px 50px 5px 10px;
+  border: 1px solid #ccc;
+}
+.dropdown-check-list.visible .items {
+  display: block;
+}
+
+
+.dropdown-check-list .anchor:after {
+  position: absolute;
+  content: "";
+  border-left: 2px solid black;
+  border-top: 2px solid black;
+  padding: 5px;
+  right: 10px;
+  top: 20%;
+  -moz-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  -o-transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+}
+
+.dropdown-check-list .anchor:active:after {
+  right: 8px;
+  top: 21%;
+}
+
+.dropdown-check-list ul.items {
+  padding: 2px;
+  display: none;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.dropdown-check-list ul.items li {
+  list-style: none;
+}
+
+.dropdown-check-list.visible .anchor {
+  color: #0094ff;
+}
+
 
 	.inactive-recur-config {
 		display: none !important;
