@@ -41,8 +41,6 @@ with app.app_context():
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
         csrf.init_app(app)
-
-        
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 

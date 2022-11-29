@@ -28,7 +28,7 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_bardashboard(server):
     bar_app = dash.Dash(
-        name="barapp",
+        __name__,
         server=server,
         # using the default bootstrap style sheet, could be changed
         external_stylesheets=[CUSTOM_BOOTSTRAP],

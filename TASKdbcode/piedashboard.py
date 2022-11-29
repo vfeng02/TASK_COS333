@@ -30,7 +30,7 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_piedashboard(server):
     pie_app = dash.Dash(
-        name="pieapp", 
+        __name__, 
         server=server, 
         # using default bootstrap style sheet, could be changed
         external_stylesheets=[CUSTOM_BOOTSTRAP],
