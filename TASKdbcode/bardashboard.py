@@ -28,11 +28,11 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_bardashboard(server):
     bar_app = dash.Dash(
-        __name__,
+        name="barapp",
         server=server,
-        routes_pathname_prefix="/barapp/",
         # using the default bootstrap style sheet, could be changed
-        external_stylesheets=[CUSTOM_BOOTSTRAP])
+        external_stylesheets=[CUSTOM_BOOTSTRAP],
+        url_base_pathname="/barapp/")
 
     bar_app.layout = html.Div(
         children=[

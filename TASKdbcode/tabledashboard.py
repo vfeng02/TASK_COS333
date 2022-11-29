@@ -31,10 +31,10 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_tabledashboard(server):
     table_app = dash.Dash(
-        __name__,
+        name="tableapp",
         server=server,
-        routes_pathname_prefix="/tableapp/",
-        external_stylesheets=[CUSTOM_BOOTSTRAP])
+        external_stylesheets=[CUSTOM_BOOTSTRAP],
+        url_base_pathname="/tableapp/")
 
     # icon="material-symbols:download-rounded" style="color: #194f77;"
     total_entries = demographic_db.get_total_entries()

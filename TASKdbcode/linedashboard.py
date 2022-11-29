@@ -29,10 +29,11 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_linedashboard(server):
     line_app = dash.Dash(
-        __name__,
+        #__name__"lineapp,
+        name="lineapp",
         server=server,
-        routes_pathname_prefix="/lineapp/",
-        external_stylesheets=[CUSTOM_BOOTSTRAP, GOOGLE_FONTS])
+        external_stylesheets=[CUSTOM_BOOTSTRAP, GOOGLE_FONTS], 
+        url_base_pathname="/lineapp/")
 
     demographic_options = []
     for option in database_constants.DEMOGRAPHIC_OPTIONS:

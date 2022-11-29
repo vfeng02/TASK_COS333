@@ -31,7 +31,8 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask(__name__, template_folder='templates')
+app = Flask("TASK", template_folder='templates', instance_relative_config=False)
+
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -176,12 +177,28 @@ def admindisplaydata():
         "admin.html"
     )
 
-@app.route("/dash", methods=['POST','GET'])
+@app.route("/lineapp2", methods=['POST','GET'])
 @login_required(must=[demographic_db.be_admin])
-def dash():
-    return app.index()
+def lineapp():
+    return linedashboard.line_app.index()
+
+@app.route("/barapp2", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def barapp():
+    return bardashboard.bar_app.index()
+
+@app.route("/pieapp2", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def pieapp():
+    return piedashboard.pie_app.index()
+
+@app.route("/tableapp2", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def tableapp():
+    return tabledashboard.table_app.index()
 
 
+# --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
