@@ -13,17 +13,20 @@
             <br>
             <center>
                 <form action="/submitpatrondata" method="get">
-                    <div class="row col-sm-4">
-                        <select name="mealsite" id = "mealsite">  
+                    <div class="row">
+                        <center>
+                            <select name="mealsite" id = "mealsite"style = " width:50%;>  
                             {% for site in mealsites %}
                             <option value="{{site}}">{{site}}</option>
                             {% endfor %}
                         </select>
+                    </center>
+                        
                     </div>
                     <br>
-                    <div class="row col-sm-3">
+                    <div class="row">
                         <center>
-                            <input id='go' type= "submit" class="form-control mainButton enter-button" style="background: #145078;color:white"
+                            <input id='go' type= "submit" class="form-control mainButton enter-button" style="background: #145078;color:white; width:50%;"
                             type="button" value="Go">
                         </center>
                     </div>
