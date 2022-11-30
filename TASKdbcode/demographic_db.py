@@ -27,6 +27,7 @@ Base = declarative_base()
 DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
+engine = sqlalchemy.create_engine(DATABASE_URL)
 
 # Table for both types of users in the database
 # Role will either be representative or administrator
@@ -83,7 +84,7 @@ def add_patron(input_dict):
                 input_dict[key] = "Unknown"
 
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # demographics = {}
@@ -99,7 +100,7 @@ def add_patron(input_dict):
             row.num_entries += 1
             session.commit()
 
-        engine.dispose()
+        # engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -108,15 +109,15 @@ def add_patron(input_dict):
 #-----------------------------------------------------------------------
 def get_last_patron(meal_site):
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
             query = session.query(MealSite)
-            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
-            query = apply_filters(query, filter_spec)
+            filter_spec = {"field": "meal_sites", "op" : "==", "value": meal_site}
+            query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
             
-        engine.dispose()
+        # engine.dispose()
         print(entry)
         print(type(entry))
         return entry
@@ -126,16 +127,27 @@ def get_last_patron(meal_site):
 
 #-----------------------------------------------------------------------
 def delete_last_patron(meal_site):
-
+    filter_dict = {"meal_site": meal_site}
+    #filter_dict2 = {"meal_site": "Medallion Care Behavioral Health"}
+    filter_dict = {key:value for (key, value) in\
+                   filter_dict.items() if value}
+    for key, value in filter_dict.items():
+        filter_spec = {"field": key, "op" : "==", "value": value}
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
-            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
-            obj=apply_filters(session.query(MealSite), filter_spec).order_by(MealSite.entry_timestamp.desc()).first()
+            obj=session.query(MealSite).filter(MealSite.meal_site == "meal_site").order_by(MealSite.entry_timestamp.desc()).first()
+            #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
+            #filter_spec = {"field": key, "op" : "==", "value": value}
+            obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
+            #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
+            query = session.query(EntryCount).filter(EntryCount.meal_site == "meal_site")
+            row = query.one()
+            row.num_entries -= 1
+
             session.commit()
-        engine.dispose()
+
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -143,7 +155,6 @@ def delete_last_patron(meal_site):
 
 
 #-----------------------------------------------------------------------
-
 def get_patrons(filter_dict = {}, select_fields = []):
 
     filter_dict = {key:value for (key, value) in\
@@ -155,7 +166,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
     
     
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
@@ -185,7 +196,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
             # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)
 
-        engine.dispose()
+        # engine.dispose()
         return demographic_df
 
     except Exception as ex:
@@ -196,7 +207,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
 
 def filter_dms(filter_dicts):
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
             query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
@@ -212,7 +223,7 @@ def filter_dms(filter_dicts):
                         
                     query = apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
-        engine.dispose()
+        # engine.dispose()
         return demographic_df
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -221,7 +232,7 @@ def filter_dms(filter_dicts):
 
 def get_num_entries(meal_site):
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
         num_entries = 0
 
         with sqlalchemy.orm.Session(engine) as session:
@@ -231,7 +242,7 @@ def get_num_entries(meal_site):
             else:
                 query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
                 num_entries = query.one().num_entries
-        engine.dispose()
+        # engine.dispose()
         return num_entries
 
     except Exception as ex:
@@ -243,14 +254,14 @@ def get_num_entries(meal_site):
 def get_total_entries():
     
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
             query = session.query(functions.sum(EntryCount.num_entries).label('total_num'))
             num_entries = query.one().total_num
             #print(query)
-        engine.dispose()
+        # engine.dispose()
         return num_entries
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -272,7 +283,7 @@ def add_user(input_dict):
     # print(input_dict)
 
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # demographics = {}
@@ -286,7 +297,7 @@ def add_user(input_dict):
 
             session.commit()
 
-        engine.dispose()
+        # engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -297,7 +308,7 @@ def add_user(input_dict):
 def display_users():
     
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
 
@@ -308,7 +319,7 @@ def display_users():
                     print('-------------------------------------------')
                     print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nemail:{row.email}")
                     print('-------------------------------------------')
-        engine.dispose()
+        # engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -320,7 +331,7 @@ def check_my_users(user):
     """Check if user exists and its credentials.
     """
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == user["username"])
@@ -328,7 +339,7 @@ def check_my_users(user):
                 for row in query:
                     if check_password_hash(row.password_hash, user["password"]): 
                         return True
-        engine.dispose()
+        # engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -338,7 +349,7 @@ def check_my_users(user):
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == username)
@@ -346,7 +357,7 @@ def be_admin(username):
                 for row in query:
                     if row.role != 'administrator': 
                         return "User does not have admin role"
-        engine.dispose()
+        # engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)

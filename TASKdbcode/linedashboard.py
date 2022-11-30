@@ -108,17 +108,18 @@ def init_linedashboard(server):
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
 
             ], className='menu-l'
-            )], width = 4),
+            )], style = {'height':'100%'}, width = 4),
             dbc.Col([
             dcc.Graph(id='line_graph',
                       className = 'card',
                       config={'displayModeBar': True,
                               'displaylogo': False},
                       style={'width': '100%', 'height': '100%',
-                             'display':'block'}
+                             'display':'block'}, 
+                      responsive = True
                       )], width = 8),
         ])], fluid = True)],style = {'display':'block', 'background-color': '#145078',
-                                   'height':'100vh', 'width':'100%'}
+                                     'min-height':'100%', 'height':'100vh', 'width':'100%','overflow':'scroll'}
     )
 
     init_callbacks(line_app)

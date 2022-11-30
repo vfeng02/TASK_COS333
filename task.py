@@ -31,8 +31,7 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask(__name__, template_folder='templates', instance_relative_config=False)
-
+app = Flask(__name__, template_folder='templates')
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -41,6 +40,8 @@ with app.app_context():
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
         csrf.init_app(app)
+
+        
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
@@ -64,7 +65,6 @@ def login():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -88,7 +88,6 @@ def selectmealsite():
 
  #-----------------------------------------------------------------------
 @app.route('/about', methods=['GET'])
-@login_required(basic=True)
 def selectmealsit1e():
 
     html_code = render_template('about.html')
@@ -103,21 +102,22 @@ def submitpatrondata():
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
     set_new_mealsite = False         
-    print("selected site")
-    print(mealsite)
+    # print("selected site")
+    # print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
 
     races = []
-    if request.args.get('race') is not None:
-        for race in request.args.get('race'):
-            races.append(race)
+    # print(request.args.getlist('race'))
+    if request.args.getlist('race') is not None:
+        for race in request.args.getlist('race'):
+            print(race)
+            if (race != 'Unknown'):
+                races.append(race)
         races = list(filter(None, races))
-    racecsv = "".join(races)
-        
-    language = request.args.get('lang')
-    print('language',language)
+    racecsv = ",".join(races)
+    language = request.args.get('language')
     age_range = request.args.get('age_range')
     # problem because the names changed
     gender = request.args.get('gender')
@@ -126,7 +126,7 @@ def submitpatrondata():
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
     guessed = request.args.get('guessed')
-    print('guess',guessed)
+    # print('guess',guessed)
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
@@ -175,28 +175,12 @@ def admindisplaydata():
         "admin.html"
     )
 
-# @app.route("/lineapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def lineapp():
-#     return line_app.index()
-
-# @app.route("/barapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def barapp():
-#     return bar_app.index()
-
-# @app.route("/pieapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def pieapp():
-#     return pie_app.index()
-
-# @app.route("/tableapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def tableapp():
-#     return table_app.index()
+@app.route("/dash", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def dash():
+    return app.index()
 
 
-# --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
@@ -215,7 +199,7 @@ def register():
     )
 
 @app.route('/deletelastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def deletelast():
     meal_site = request.args.get('mealsite')
     demographic_db.delete_last_patron(meal_site)
@@ -238,48 +222,22 @@ def deletelast():
     return response
 
 @app.route('/getlastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
-    print(last['meal_site'])
-    html_code = render_template('submitpatrondata.html',
-        mealsite = meal_site,
-        ampm=get_ampm(),
-        current_time=get_current_time(),
-        otherlanguages = database_constants.otherlanguages,
-        races = database_constants.races,
-        ages = database_constants.ages,
-        genders = database_constants.genders,
-        zip_codes = database_constants.ZIP_CODE_OPTIONS,
-        homeless_options = database_constants.HOMELESS_OPTIONS,
-        veteran_options = database_constants.VETERAN_OPTIONS,
-        disabled_options = database_constants.DISABLED_OPTIONS,
-        patron_response_options = database_constants.GUESSED_OPTIONS,
-        lastrace = last['race'],
-        lastlanguage = last['language'],
-        lastage = last['age_range'],
-        lastgender = last['gender'],
-        lastzip = last['zip_code'],
-        lasthomeless = last['homeless'],
-        lastveteran = last['veteran'],
-        lastdisabled = last['disabled'],
-        lastguess = last['guessed']
+    html_code = render_template('prev.html',
+        lastrace = last['race'].iloc[0],
+        lastlanguage = last['language'].iloc[0],
+        lastage = last['age_range'].iloc[0],
+        lastgender = last['gender'].iloc[0],
+        lastzip = last['zip_code'].iloc[0],
+        lasthomeless = last['homeless'].iloc[0],
+        lastveteran = last['veteran'].iloc[0],
+        lastdisabled = last['disabled'].iloc[0],
+        lastguess = last['guessed'].iloc[0],
+        last = last
         )
     response = make_response(html_code)
     return response
-    # selects = ["service_timestamp", "meal_site", "race", "gender",
-    #            "age_range"]
-    # filters = {"meal_site": "First Baptist Church"}
-    # df = demographic_db.get_patrons(selects, filters)
-
-    # html_code = render_template('admindisplaydata.html',
-    #     ampm=get_ampm(),
-    #     current_time=get_current_time(),
-    #     data = df)
-
-    # response = make_response(html_code)
-    # return response
-
-
-
+    

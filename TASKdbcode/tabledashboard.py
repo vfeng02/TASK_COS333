@@ -16,6 +16,7 @@ from dash_iconify import DashIconify as di
 import pandas
 import xlsxwriter
 from TASKdbcode import demographic_db
+from TASKdbcode import graphdashboard_helpers as helpers
 
 PAGE_SIZE = 100
 operators = [['ge ', '>='],
@@ -132,6 +133,7 @@ def init_tabledashboard(server):
         )
 
     init_callbacks(table_app)
+    helpers.protect_dashviews(table_app)
 
     return table_app.server
 
@@ -222,13 +224,13 @@ def init_callbacks(table_app):
         [Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
         Input('table-filtering', 'sort_by'),
-        Input('table-filtering', "filter_query")],
-        State('num_total_entries', 'data'))
-    def update_table(page_current, page_size, sort_by, filter, num_total):
+        Input('table-filtering', "filter_query")])
+    def update_table(page_current, page_size, sort_by, filter):
         # print(filter)
         filtering_expressions = filter.split(' && ')
         filter_dicts = []
         time_filter = {}
+
 
         for filter_part in filtering_expressions:
 
@@ -263,6 +265,8 @@ def init_callbacks(table_app):
             print(dff)
 
         num_entries = len(dff.index)
+        num_total = demographic_db.get_total_entries()
+            
 
         # selected_sites = list(dff["meal_site"].unique())
         # total_site_entries = 0
