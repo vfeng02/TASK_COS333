@@ -42,7 +42,7 @@ DEMOGRAPHIC_CATEGORY_DROPDOWN_VALUES = ["race", "language", "age_range",\
 # Check all that apply
 # Maybe display White as White/Caucasian
 RACE_OPTIONS = ["American Indian/Alaska Native", "Asian", "Black",\
-    "Native Hawaiian/Pacific Islander", "White", "Hispanic",\
+    "Native Hawaiian/ Pacific Islander", "White", "Hispanic",\
         "Unknown"]
 
 races = sorted(RACE_OPTIONS)

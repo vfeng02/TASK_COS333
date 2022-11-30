@@ -38,29 +38,27 @@
 {% endblock %}
 </nav>
 
-<div class="jumbotron">
-    <div class="container">
+
+   
     {% block messages %}
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
+        <div class="jumbotron"></div>
+        <div class="container">
           <ul class="flashes alert">
           {% for category, message in messages %}
             <li class="flashes alert alert-{{category}}">{{ message }}</li>
           {% endfor %}
           </ul>
-        {% else %}
-          {% if request.path == url_for('simplelogin.login') %}
-          <ul class="flashes alert alert-primary">
-            <li>Please provide username and password to login</li>
-          </ul>
-          {% endif %}
+        </div>
+      </div>
         {% endif %}
         {% endwith %}
     {% endblock %}
-    </div>
-</div>
+    
 
-<div class="container">
+
+<div class="container" style="height:50%">
 {% block page_body %}
 <div class="row">
 <p>

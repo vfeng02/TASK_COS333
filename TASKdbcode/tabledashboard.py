@@ -32,7 +32,7 @@ CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 def init_tabledashboard(server):
     table_app = dash.Dash(
-        name="tableapp",
+        __name__,
         server=server,
         external_stylesheets=[CUSTOM_BOOTSTRAP],
         url_base_pathname="/tableapp/")
