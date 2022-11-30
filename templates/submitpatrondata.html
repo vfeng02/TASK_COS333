@@ -145,7 +145,7 @@
 								<select class="form-select-sm" id="lang-more-options">  
 									<option selected>More options</option>
 									{% for lang in otherlanguages %}
-									<option value="{{lang}}">{{lang}}</option>
+									<option id="{{lang}}-option" value="{{lang}}">{{lang}}</option>
 									{% endfor %}
 								</select>
 							</div>
@@ -168,13 +168,13 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
-						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-male" name="gender" value="Male">
-						<label class="btn btn-secondary inactive-button" id = "toggle-gender-male" for="btn-check-male">Male</label>
-						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-check-female" name="gender" value="Female">
-						<label class="btn btn-secondary inactive-button" id = "toggle-gender-female" for="btn-check-female">Female</label>
+						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Male" name="gender" value="Male">
+						<label class="btn btn-secondary inactive-button" id = "toggle-gender-male" for="btn-gender-Male">Male</label>
+						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Female" name="gender" value="Female">
+						<label class="btn btn-secondary inactive-button" id = "toggle-gender-female" for="btn-gender-Female">Female</label>
 						<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-gender-Unknown" name="gender" value="Unknown">
 						<label class="btn btn-secondary inactive-button" id = "toggle-gender-Unknown" for="btn-gender-Unknown">Unknown</label>
-						<select class="form-select-sm">
+						<select id="gender-more-options" class="form-select-sm">
 							<option selected>More options</option>
 							{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other'] %}
 							<option name="gender" value="{{gender}}">{{gender}}</option>
@@ -286,7 +286,7 @@
 		
 		
         </form>
-		<div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
+		<!-- <div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
 			<tr>
 				<div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
 					<center>
@@ -301,7 +301,7 @@
 					</center>
 				</div>
 			</tr>
-		</div>
+		</div> -->
 		
         {% include 'footer.html' %}
     </div>

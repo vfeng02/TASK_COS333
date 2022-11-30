@@ -117,8 +117,8 @@ def submitpatrondata():
         races = list(filter(None, races))
     racecsv = ",".join(races)
         
-    language = request.args.get('lang')
-    # print('language',language)
+    language = request.args.get('language')
+    print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
     gender = request.args.get('gender')
