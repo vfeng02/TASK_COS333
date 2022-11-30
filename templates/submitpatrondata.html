@@ -57,9 +57,9 @@
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-
-							{%for race in ['White','Black','American Indian/Alaska Native', 
-							'Native Hawaiian/ Pacific Islander','Hispanic','Unknown']%}
+							{% autoescape true %}
+							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander','Unknown']%}
 							{% if race == 'Unknown' %}
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
@@ -72,6 +72,7 @@
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
+							{% endautoescape %}
 							<!-- <select class="form-select-sm" style="width: 120.5px">  
 								<option selected>More options</option>
 								{% for race in ['American Indian/Alaska Native', 
@@ -82,7 +83,7 @@
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						</div>
 						
-					
+						
 					<!-- <div class="row">
 						<center>
 							<text>Other: </text>

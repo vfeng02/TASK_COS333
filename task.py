@@ -112,13 +112,12 @@ def submitpatrondata():
     # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:
         for race in request.args.getlist('race'):
+            print(race)
             if (race != 'Unknown'):
                 races.append(race)
         races = list(filter(None, races))
     racecsv = ",".join(races)
-        
     language = request.args.get('language')
-    print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
     gender = request.args.get('gender')
@@ -227,9 +226,6 @@ def deletelast():
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
-    print(last)
-    print("hi ppl")
-    print(last['meal_site'])
     html_code = render_template('prev.html',
         lastrace = last['race'].iloc[0],
         lastlanguage = last['language'].iloc[0],
