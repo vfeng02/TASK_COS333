@@ -41,7 +41,7 @@
     <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
 		<div style="margin-top: 10px;">
 			<center>
-				<h2 style mar="gin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
+				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
 				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 			</center>
@@ -312,21 +312,18 @@
         {% include 'footer.html' %}
     </div>
 	
-<button class="open-button" onclick="openForm();location.href='/getlastpatron?mealsite={{mealsite}}';">Previous Submission</button>
+<button id = "bob" class="open-button" onclick="openForm();">Previous Submission</button>
 
 <div class="form-popup" id="myForm">
   <form action="/action_page.php" class="form-container">
-   <p>Race(s): {{lastrace}}</p>
-   <p>Language: {{lastlanguage}}</p>
-   <p>Age: {{lastage}}</p>
-   <p>Gender: {{lastgender}}</p>
-   <p>Zip Code: {{lastzip}}</p>
-   <p>Homeless: {{lasthomeless}}</p>
-   <p>Veteran: {{lastveteran}}</p>
-   <p>Disabled: {{lastdisabled}}</p>
-   <p>Guess: {{lastguess}}</p>
+	
+  <div id = "results">
+  </div>
     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
   </form>
+</div>
+<div class="container-fluid">
+	<div id="results"></div>
 </div>
 
 <script>
@@ -334,6 +331,7 @@ function openForm() {
   document.getElementById("myForm").style.display = "block";
   $(document).ready(function () {
     $(document).on('click', '.refresher', function () {
+		getResults();
         $.ajax({
             url: 'ajax.php',
             method: get,
@@ -361,20 +359,6 @@ function closeForm() {
 
 <script>
 	'use strict';
-	function check(tagName)
-	{
-		var check=document.getElementsByTagName(tagName);
-		if (!check[i].checked){
-			check[i].checked=true;
-		}
-	}
-	function uncheck(tagName)
-	{
-		var uncheck=document.getElementsByTagName(tagName);
-		if (uncheck[i].checked){
-			uncheck[i].checked=false;
-		}
-	}
 	function validateForm() {
 		
 		var x = document.forms["patronForm"]["guessed"].value;
@@ -387,12 +371,15 @@ function closeForm() {
 	}
 	function handleResponse(response)
 	{
-		$('#error').html(response);
+		$('#results').html(response);
 	}
 	let request = null;
 	function getResults()
 	{
-		
+		mealsite = encodeURIComponent(mealsite);
+		let url = '/getlastpatron?mealsite='+mealsite
+		if (request!= null)
+			request.abort();
 		request = $.ajax(
 			{
 				type: 'GET',
@@ -403,12 +390,9 @@ function closeForm() {
 	}
 	function setup()
 	{
-		$("#checkboxid").removeAttr("checked");
-		$(window).on('load', getResults);
-		$('#dept').on('input', getResults);
-		$('#coursenum').on('input', getResults);
-		$('#area').on('input', getResults);
-		$('#title').on('input', getResults);
+		$(document).on('load', getResults);
+		$('#myForm').on('click', getResults);
+		getResults();
 	}
 	$('document').ready(setup);
 </script>

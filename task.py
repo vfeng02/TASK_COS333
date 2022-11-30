@@ -229,19 +229,7 @@ def getlast():
     print(last)
     print("hi ppl")
     print(last['meal_site'])
-    html_code = render_template('submitpatrondata.html',
-        mealsite = meal_site,
-        ampm=get_ampm(),
-        current_time=get_current_time(),
-        otherlanguages = database_constants.otherlanguages,
-        races = database_constants.races,
-        ages = database_constants.ages,
-        genders = database_constants.genders,
-        zip_codes = database_constants.ZIP_CODE_OPTIONS,
-        homeless_options = database_constants.HOMELESS_OPTIONS,
-        veteran_options = database_constants.VETERAN_OPTIONS,
-        disabled_options = database_constants.DISABLED_OPTIONS,
-        patron_response_options = database_constants.GUESSED_OPTIONS,
+    html_code = render_template('prev.html',
         lastrace = last['race'].iloc[0],
         lastlanguage = last['language'].iloc[0],
         lastage = last['age_range'].iloc[0],
