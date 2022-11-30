@@ -317,14 +317,16 @@
 <div class="form-popup" id="myForm">
   <form action="/action_page.php" class="form-container">
 	
-  <div id = "results">
-  </div>
+	<div class="container-fluid">
+		<div id="resulto"></div>
+	</div>
     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
   </form>
 </div>
 <div class="container-fluid">
 	<div id="results"></div>
 </div>
+
 
 <script>
 function openForm() {
@@ -391,12 +393,41 @@ function closeForm() {
 	function setup()
 	{
 		$(document).on('load', getResults);
-		$('#myForm').on('click', getResults);
+		$('#dept').on('input', getResults);
 		getResults();
 	}
 	$('document').ready(setup);
 </script>
 
+
+<script>
+	'use strict';
+	function handleResponse(response)
+	{
+		$('#resulto').html(response);
+	}
+	request = null;
+	function getResults()
+	{
+		
+		
+		let url = '/getlastpatron?mealsite=Architects%20Housing'
+		if (request!= null)
+			request.abort();
+		request = $.ajax(
+			{
+				type: 'GET',
+				url:url,
+				success: handleResponse
+			}
+		);
+	}
+	function setup()
+	{
+		getResults();
+	}
+	$('document').ready(setup);
+</script>
 </html>
 
 <style>
