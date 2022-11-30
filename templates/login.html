@@ -13,28 +13,35 @@
 
 
 {% block page_body %}
+<center> 
+  <div style = "width:50%; position:relative;-ms-transform: translateY(50%);
+  transform: translateY(50%);">
+  
        <form action="{{ url_for('simplelogin.login') }}" method="post">
             <div class="form-group">
             {{ form.csrf_token }}
-            Email<div class="form-control">{{ form.username }}</div><br>
-            Password<div class="form-control"> {{ form.password }}</div><br>
+            <h2>Email</h2><div><div class="form-control" >{{form.username }}</div></div><br>
+            <h2>Password</h2><div><div class="form-control"> {{ form.password }}</div></div><br>
             {% if next %}<input type="hidden" name="next" value="{{next}}">{% endif %}
             </form>
            <input type="submit" value="Sign In">
            
        </form>
+       <style>
+        html {
+          height: 100%;
+        }
+        body {
+          /* no-repeat center center fixed; */
+          background-image: url('/static/photos/login.jpg');
+          background-size: auto 100%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: #145078;
+        }
+      </style>
+  </div>
+</center>
 {% endblock %}
 
-<style>
-  html {
-    height: 100%;
-  }
-  body {
-    /* no-repeat center center fixed; */
-    background-image: url(https://i.ibb.co/YBWpstC/indexb.jpg);
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: #FEF6F6;
-  }
-</style>
+
