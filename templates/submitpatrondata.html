@@ -58,7 +58,8 @@
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
 
-							{%for race in ['White','Black','Hispanic','Unknown']%}
+							{%for race in ['White','Black','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander','Hispanic','Unknown']%}
 							{% if race == 'Unknown' %}
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
@@ -291,7 +292,7 @@
 		
 		
         </form>
-		<!-- <div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
+		<div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
 			<tr>
 				<div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
 					<center>
@@ -306,7 +307,7 @@
 					</center>
 				</div>
 			</tr>
-		</div> -->
+		</div>
 		
         {% include 'footer.html' %}
     </div>
