@@ -103,21 +103,22 @@ def submitpatrondata():
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
     set_new_mealsite = False         
-    print("selected site")
-    print(mealsite)
+    # print("selected site")
+    # print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
 
     races = []
-    if request.args.get('race') is not None:
-        for race in request.args.get('race'):
+    # print(request.args.getlist('race'))
+    if request.args.getlist('race') is not None:
+        for race in request.args.getlist('race'):
             races.append(race)
         races = list(filter(None, races))
-    racecsv = "".join(races)
+    racecsv = ",".join(races)
         
     language = request.args.get('lang')
-    print('language',language)
+    # print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
     gender = request.args.get('gender')
@@ -126,7 +127,7 @@ def submitpatrondata():
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
     guessed = request.args.get('guessed')
-    print('guess',guessed)
+    # print('guess',guessed)
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 

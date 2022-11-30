@@ -59,13 +59,13 @@
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
 							{%for race in ['White','Black','Hispanic','Unknown']%}
 							{% if race == 'Unknown' %}
-							<input type="checkbox" class="btn-check" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
 							<!-- <label class="btn btn-secondary active"> 
 								<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
 							</label> -->
 							{%else%}
-							<input type="checkbox" class="btn-check" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+							<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
@@ -106,7 +106,7 @@
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
 								{%endfor%}
 								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-Unknown" for="btn-age-Unknown">Unknown</label>
+								<label class="btn btn-secondary inactive-button" id = "toggle-age-Unknown" for="btn-age-Unknown">Unknown</label>
 								{% endautoescape %}
 							</div>
 						</center>
@@ -142,7 +142,7 @@
 								{%endfor%}
 								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-lang-Unknown" name="language" value="Unknown">
 								<label class="btn btn-secondary inactive-button" id = "toggle-lang-Unknown" for="btn-lang-Unknown">Unknown</label>
-								<select class="form-select-sm">  
+								<select class="form-select-sm" id="lang-more-options">  
 									<option selected>More options</option>
 									{% for lang in otherlanguages %}
 									<option value="{{lang}}">{{lang}}</option>
@@ -309,6 +309,9 @@
 </body>
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+</script>
+
+<script src = "/static/js/moreoptionbuttons.js">
 </script>
 
 <script>
