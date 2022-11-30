@@ -112,7 +112,8 @@ def submitpatrondata():
     # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:
         for race in request.args.getlist('race'):
-            races.append(race)
+            if (race != 'Unknown'):
+                races.append(race)
         races = list(filter(None, races))
     racecsv = ",".join(races)
         
