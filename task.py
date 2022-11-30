@@ -31,8 +31,7 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask(__name__, template_folder='templates', instance_relative_config=False)
-
+app = Flask(__name__, template_folder='templates')
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -41,6 +40,8 @@ with app.app_context():
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
         csrf.init_app(app)
+
+        
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
@@ -103,20 +104,21 @@ def submitpatrondata():
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
     set_new_mealsite = False         
-    print("selected site")
-    print(mealsite)
+    # print("selected site")
+    # print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
 
     races = []
-    if request.args.get('race') is not None:
-        for race in request.args.get('race'):
+    # print(request.args.getlist('race'))
+    if request.args.getlist('race') is not None:
+        for race in request.args.getlist('race'):
             races.append(race)
         races = list(filter(None, races))
-    racecsv = "".join(races)
+    racecsv = ",".join(races)
         
-    language = request.args.get('lang')
+    language = request.args.get('language')
     print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
@@ -126,7 +128,7 @@ def submitpatrondata():
     veteran = request.args.get('veteran')
     disabled = request.args.get('disabled')
     guessed = request.args.get('guessed')
-    print('guess',guessed)
+    # print('guess',guessed)
 
     patron_data = {"race": racecsv, "language": language,
     "age_range": age_range, "gender": gender, "zip_code": zip_code, 
@@ -175,28 +177,12 @@ def admindisplaydata():
         "admin.html"
     )
 
-# @app.route("/lineapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def lineapp():
-#     return line_app.index()
-
-# @app.route("/barapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def barapp():
-#     return bar_app.index()
-
-# @app.route("/pieapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def pieapp():
-#     return pie_app.index()
-
-# @app.route("/tableapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def tableapp():
-#     return table_app.index()
+@app.route("/dash", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def dash():
+    return app.index()
 
 
-# --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])

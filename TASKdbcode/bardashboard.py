@@ -30,9 +30,9 @@ def init_bardashboard(server):
     bar_app = dash.Dash(
         __name__,
         server=server,
-        routes_pathname_prefix="/barapp/",
         # using the default bootstrap style sheet, could be changed
-        external_stylesheets=[CUSTOM_BOOTSTRAP])
+        external_stylesheets=[CUSTOM_BOOTSTRAP],
+        url_base_pathname="/barapp/")
 
     bar_app.layout = html.Div(
         children=[
@@ -129,6 +129,7 @@ def init_bardashboard(server):
 
 
     init_callbacks(bar_app)
+    helpers.protect_dashviews(bar_app)
 
     return bar_app.server
 
