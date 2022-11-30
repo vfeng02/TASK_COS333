@@ -135,7 +135,6 @@ def delete_last_patron(meal_site):
         filter_spec = {"field": key, "op" : "==", "value": value}
     try:
 
-
         with sqlalchemy.orm.Session(engine) as session:
             obj=session.query(MealSite).filter(MealSite.meal_site == "meal_site").order_by(MealSite.entry_timestamp.desc()).first()
             #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
