@@ -115,8 +115,8 @@ def init_linedashboard(server):
                       config={'displayModeBar': True,
                               'displaylogo': False},
                       style={'width': '100%', 'height': '100%',
-                             'display':'block'}
-                      )], width = 8, responsive = True),
+                             'display':'block'}, responsive = True
+                      )], width = 8),
         ])], fluid = True)],style = {'display':'block', 'background-color': '#145078',
                                    'min-height':'100%', 'height':'100vh', 'width':'100%'}
     )
