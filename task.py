@@ -31,7 +31,8 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', instance_relative_config=False)
+
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -40,8 +41,6 @@ with app.app_context():
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
         csrf.init_app(app)
-
-        
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
@@ -176,12 +175,28 @@ def admindisplaydata():
         "admin.html"
     )
 
-@app.route("/dash", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
-def dash():
-    return app.index()
+# @app.route("/lineapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def lineapp():
+#     return line_app.index()
+
+# @app.route("/barapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def barapp():
+#     return bar_app.index()
+
+# @app.route("/pieapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def pieapp():
+#     return pie_app.index()
+
+# @app.route("/tableapp/", methods=['POST','GET'])
+# @login_required(must=[demographic_db.be_admin])
+# def tableapp():
+#     return table_app.index()
 
 
+# --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
@@ -265,6 +280,5 @@ def getlast():
 
     # response = make_response(html_code)
     # return response
-
 
 

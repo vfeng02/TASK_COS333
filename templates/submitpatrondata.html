@@ -57,8 +57,9 @@
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{%for race in ['White','Black','Hispanic','Unknown']%}
-							{% if race == 'Unknown' %}
+							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander', 'Unknown']%}
+							{% if race == race1 %}
 							<input type="checkbox" class="btn-check" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
 							<!-- <label class="btn btn-secondary active"> 
@@ -70,12 +71,13 @@
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
-							<select class="form-select-sm" style="width: 120.5px">  
+							<!-- <select class="form-select-sm" style="width: 120.5px">  
 								<option selected>More options</option>
-								{% for race in ['American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+								{% for race in ['American Indian/Alaska Native', 
+								'Native Hawaiian/Pacific Islander'] %}
 								<option value="{{race}}">{{race}}</option>
 								{% endfor %}
-							</select>
+							</select> -->
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						</div>
 						
@@ -306,6 +308,25 @@
         {% include 'footer.html' %}
     </div>
 	
+<button class="open-button" onclick="openForm()">Open Form</button>
+
+<div class="form-popup" id="myForm">
+  <form action="/action_page.php" class="form-container">
+   {{race1}}
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
+
 </body>
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
@@ -401,6 +422,73 @@
 	.inactive-recur-config {
 		display: none !important;
 	}
+	/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
 	body {
 	/* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG/1200px-Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG); */ */
 	/* background-color: #cccccc; */
