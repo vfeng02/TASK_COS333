@@ -312,11 +312,19 @@
         {% include 'footer.html' %}
     </div>
 	
-<button class="open-button" onclick="openForm()">Open Form</button>
+<button class="open-button" onclick="openForm();location.href='/getlastpatron?mealsite={{mealsite}}';">Previous Submission</button>
 
 <div class="form-popup" id="myForm">
   <form action="/action_page.php" class="form-container">
-   {{race1}}
+   <p>Race(s): {{lastrace}}</p>
+   <p>Language: {{lastlanguage}}</p>
+   <p>Age: {{lastage}}</p>
+   <p>Gender: {{lastgender}}</p>
+   <p>Zip Code: {{lastzip}}</p>
+   <p>Homeless: {{lasthomeless}}</p>
+   <p>Veteran: {{lastveteran}}</p>
+   <p>Disabled: {{lastdisabled}}</p>
+   <p>Guess: {{lastguess}}</p>
     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
   </form>
 </div>
@@ -324,6 +332,18 @@
 <script>
 function openForm() {
   document.getElementById("myForm").style.display = "block";
+  $(document).ready(function () {
+    $(document).on('click', '.refresher', function () {
+        $.ajax({
+            url: 'ajax.php',
+            method: get,
+            dataType: 'json',
+            success: function(response) {
+                $('#table-to-refresh').html(response);
+            }
+        });
+    });
+});
 }
 
 function closeForm() {

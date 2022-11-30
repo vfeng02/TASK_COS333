@@ -65,7 +65,6 @@ def login():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -89,7 +88,6 @@ def selectmealsite():
 
  #-----------------------------------------------------------------------
 @app.route('/about', methods=['GET'])
-@login_required(basic=True)
 def selectmealsit1e():
 
     html_code = render_template('about.html')
@@ -201,7 +199,7 @@ def register():
     )
 
 @app.route('/deletelastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def deletelast():
     meal_site = request.args.get('mealsite')
     demographic_db.delete_last_patron(meal_site)
@@ -224,10 +222,12 @@ def deletelast():
     return response
 
 @app.route('/getlastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
+    print(last)
+    print("hi ppl")
     print(last['meal_site'])
     html_code = render_template('submitpatrondata.html',
         mealsite = meal_site,
@@ -242,29 +242,17 @@ def getlast():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        lastrace = last['race'],
-        lastlanguage = last['language'],
-        lastage = last['age_range'],
-        lastgender = last['gender'],
-        lastzip = last['zip_code'],
-        lasthomeless = last['homeless'],
-        lastveteran = last['veteran'],
-        lastdisabled = last['disabled'],
-        lastguess = last['guessed']
+        lastrace = last['race'].iloc[0],
+        lastlanguage = last['language'].iloc[0],
+        lastage = last['age_range'].iloc[0],
+        lastgender = last['gender'].iloc[0],
+        lastzip = last['zip_code'].iloc[0],
+        lasthomeless = last['homeless'].iloc[0],
+        lastveteran = last['veteran'].iloc[0],
+        lastdisabled = last['disabled'].iloc[0],
+        lastguess = last['guessed'].iloc[0],
+        last = last
         )
     response = make_response(html_code)
     return response
-    # selects = ["service_timestamp", "meal_site", "race", "gender",
-    #            "age_range"]
-    # filters = {"meal_site": "First Baptist Church"}
-    # df = demographic_db.get_patrons(selects, filters)
-
-    # html_code = render_template('admindisplaydata.html',
-    #     ampm=get_ampm(),
-    #     current_time=get_current_time(),
-    #     data = df)
-
-    # response = make_response(html_code)
-    # return response
-
-
+    

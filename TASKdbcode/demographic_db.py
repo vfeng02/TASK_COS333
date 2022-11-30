@@ -111,8 +111,8 @@ def get_last_patron(meal_site):
         engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
             query = session.query(MealSite)
-            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
-            query = apply_filters(query, filter_spec)
+            filter_spec = {"field": "meal_sites", "op" : "==", "value": meal_site}
+            query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
             
@@ -126,13 +126,20 @@ def get_last_patron(meal_site):
 
 #-----------------------------------------------------------------------
 def delete_last_patron(meal_site):
-
+    filter_dict = {"meal_site": meal_site}
+    #filter_dict2 = {"meal_site": "Medallion Care Behavioral Health"}
+    filter_dict = {key:value for (key, value) in\
+                   filter_dict.items() if value}
+    for key, value in filter_dict.items():
+        filter_spec = {"field": key, "op" : "==", "value": value}
     try:
         engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
-            filter_spec = {"field": "meal_site", "op" : "==", "value": meal_site}
-            obj=apply_filters(session.query(MealSite), filter_spec).order_by(MealSite.entry_timestamp.desc()).first()
+            #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
+            #filter_spec = {"field": key, "op" : "==", "value": value}
+            obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
+            #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
             session.commit()
         engine.dispose()
@@ -143,7 +150,6 @@ def delete_last_patron(meal_site):
 
 
 #-----------------------------------------------------------------------
-
 def get_patrons(filter_dict = {}, select_fields = []):
 
     filter_dict = {key:value for (key, value) in\
