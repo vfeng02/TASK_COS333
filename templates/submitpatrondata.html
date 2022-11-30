@@ -43,7 +43,7 @@
 			<center>
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
-				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 			</center>
 		</div>
 		<hr>
@@ -359,7 +359,7 @@ function closeForm() {
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>
-
+<!-- <div class="col-sm-3"><input type="text" class="form-control" id="dept" placeholder="Department" autoFocus></div> -->
 <script>
 	'use strict';
 	function validateForm() {
@@ -411,8 +411,15 @@ function closeForm() {
 	function getResults()
 	{
 		
-		
-		let url = '/getlastpatron?mealsite=Architects%20Housing'
+		let ca = document.cookie.split(';');
+		let c = ca[1];
+		let a = c.split('"');
+		let ac = a[1];
+		console.log(ac)
+		let meal = encodeURIComponent(ac);
+		let url = '/getlastpatron?mealsite='+meal
+		console.log(url)
+		//let url = '/getlastpatron?mealsite='+'Architects%20Housing'
 		if (request!= null)
 			request.abort();
 		request = $.ajax(
