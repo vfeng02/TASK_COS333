@@ -15,7 +15,7 @@ from sqlalchemy.sql import functions
 from TASKdbcode import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
-from sqlalchemy_filters import apply_filters
+from sqlalchemy_filters import filters
 # from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
@@ -221,7 +221,7 @@ def filter_dms(filter_dicts):
                     else:
                         filter_spec = filter_dict
                         
-                    query = apply_filters(query, filter_spec)
+                    query = filters.apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         # engine.dispose()
         return demographic_df
