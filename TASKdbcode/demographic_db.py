@@ -192,7 +192,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
                 else:
                     filter_spec = {"field": key, "op" : "==", "value": value}
                     
-                query = apply_filters(query, filter_spec)
+                query = filters.apply_filters(query, filter_spec)
             # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)
 
