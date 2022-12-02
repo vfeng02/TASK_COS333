@@ -1,53 +1,23 @@
 <!DOCTYPE html>
 <html>
-	<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993" integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA==" data-cf-beacon='{"rayId":"76e50f826ed29956","version":"2022.11.3","r":1,"token":"41e3bf83fbc54099b0e9960e461f0e4d","si":100}' crossorigin="anonymous"></script>
     <head>
         <title>TASK.com</title>
 		{% include 'imports.html' %}
     </head>
     <body class="forceOpenSans">
-		<!-- <script>
-			function check()
-			{
-			 var check=document.getElementsByTagName('input');
-			 for(var i=0;i<check.length;i++)
-			 {
-			  if(check[i].type=='checkbox')
-			  {
-			   check[i].checked=true;
-			  }
-			 }
-			}
-			
-			function uncheck()
-			{
-			 var uncheck=document.getElementsByTagName('input');
-			 for(var i=0;i<uncheck.length;i++)
-			 {
-			  if(uncheck[i].type=='checkbox')
-			  {
-			   uncheck[i].checked=false;
-			  }
-			 }
-			}
-			</script> -->
 			<div id="wrapper">
-			<!-- <input type="button" value="Check All" onclick="check();">
-			<input type="button" value="Uncheck All" onclick="uncheck();">
-		 -->
 			</div>
-			
     {% include 'header.html' %}
     <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
 		<div style="margin-top: 10px;">
 			<center>
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
-				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 			</center>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
+		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get">
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
 					<center>
@@ -57,9 +27,9 @@
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-
-							{%for race in ['White','Black','American Indian/Alaska Native', 
-							'Native Hawaiian/ Pacific Islander','Hispanic','Unknown']%}
+							{% autoescape true %}
+							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander','Unknown']%}
 							{% if race == 'Unknown' %}
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
@@ -72,6 +42,7 @@
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
+							{% endautoescape %}
 							<!-- <select class="form-select-sm" style="width: 120.5px">  
 								<option selected>More options</option>
 								{% for race in ['American Indian/Alaska Native', 
@@ -82,7 +53,7 @@
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						</div>
 						
-					
+						
 					<!-- <div class="row">
 						<center>
 							<text>Other: </text>
@@ -358,7 +329,7 @@ function closeForm() {
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>
-
+<!-- <div class="col-sm-3"><input type="text" class="form-control" id="dept" placeholder="Department" autoFocus></div> -->
 <script>
 	'use strict';
 	function validateForm() {
@@ -410,8 +381,15 @@ function closeForm() {
 	function getResults()
 	{
 		
-		
-		let url = '/getlastpatron?mealsite=Architects%20Housing'
+		let ca = document.cookie.split(';');
+		let c = ca[1];
+		let a = c.split('"');
+		let ac = a[1];
+		console.log(ac)
+		let meal = encodeURIComponent(ac);
+		let url = '/getlastpatron?mealsite='+meal
+		console.log(url)
+		//let url = '/getlastpatron?mealsite='+'Architects%20Housing'
 		if (request!= null)
 			request.abort();
 		request = $.ajax(
@@ -547,6 +525,6 @@ function closeForm() {
 	  background-size: auto 100%;
 	  background-repeat: no-repeat;
 	  background-position: center center;
-	  background-color: #145078;
+	  /* background-color: #145078; */
 	}
   </style>

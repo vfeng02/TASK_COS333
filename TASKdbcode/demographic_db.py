@@ -15,7 +15,7 @@ from sqlalchemy.sql import functions
 from TASKdbcode import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
-from sqlalchemy_filters import apply_filters
+from sqlalchemy_filters import filters
 # from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
@@ -221,7 +221,7 @@ def filter_dms(filter_dicts):
                     else:
                         filter_spec = filter_dict
                         
-                    query = apply_filters(query, filter_spec)
+                    query = filters.apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         # engine.dispose()
         return demographic_df
@@ -344,7 +344,38 @@ def check_my_users(user):
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+def admin_change_user_password(username, password): 
+    try: 
+        with sqlalchemy.orm.Session(engine) as session:
+                    query = session.query(User).filter(User.username == username)
+                    if not query: return False
+                    for row in query:
+                        row.password = password
+            # engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
     
+def user_change_password(username, password, new_password):
+    try:
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+                query = session.query(User).filter(User.username == username)
+                if not query: print("User does not exist.")
+                for row in query:
+                    if check_password_hash(row.password_hash, password): 
+                        row.password_hash = generate_password_hash(new_password)
+                        return
+                    else: 
+                        return ("Password does not match the username's password in the database")
+        # engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
 
 def be_admin(username):
     """Validator to check if user has admin role"""
