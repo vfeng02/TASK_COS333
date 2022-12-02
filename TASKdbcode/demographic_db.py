@@ -335,12 +335,12 @@ def check_my_users(user):
         print(user["username"], " hello")
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == user["username"])
+                print(query)
                 if not query: return False
                 for row in query:
                     if check_password_hash(row.password_hash, user["password"]): 
                         return True
         engine.dispose()
-
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
@@ -381,17 +381,20 @@ def be_admin(username):
     try:
         print(username)
         with sqlalchemy.orm.Session(engine) as session:
-                query = session.query(User).filter(User.username == username)
+                query = session.query(User).filter(User.username == str(username))
+                print(query)
                 if not query: return False
                 for row in query:
                     if row.role != 'administrator': 
                         return False 
                         # "User does not have admin role"
                     return
-
-    except Exception as ex:
-        print(ex, file=sys.stderr)
+    except EOFError as ex: 
+        print("there is an error in be_admin")
         sys.exit(1)
+    # except Exception as ex:
+    #     print(ex, file=sys.stderr)
+    #     sys.exit(1)
     
 
 
