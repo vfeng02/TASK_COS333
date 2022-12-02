@@ -79,11 +79,11 @@ def init_piedashboard(server):
                             html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',
                                     'borderBottom': '2px #ff911f', "opacity": "unset"}),
                             html.Div([
-                                html.H4("Select Demographic Category for Slices", style={
+                                html.H4("Select Category for Slices", style={
                                     'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
                                 di(icon="material-symbols:help-outline-rounded",
                                    id="dchelp", color="white", inline=True, height=20),
-                                dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the pie chart.",
+                                dbc.Tooltip([html.P("Break down diner data by the demographic category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the pie chart.",
                                                     style={"textAlign": "left", "marginBottom": 0})], target="dchelp", style={"width": 600}),
                                 html.H5("Break down diners by...", style={'color': 'white'})]),
                             dbc.DropdownMenu(

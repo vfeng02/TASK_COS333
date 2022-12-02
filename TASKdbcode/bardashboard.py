@@ -71,11 +71,11 @@ def init_bardashboard(server):
                 dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "bar")),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
-                    html.H4("Select Demographic Category for Bar Grouping", style={
+                    html.H4("Select Category for Bar Grouping", style={
                             'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
                     di(icon="material-symbols:help-outline-rounded",
                        id="dchelp", color="white", inline=True, height=20),
-                    dbc.Tooltip([html.P("Break down diner data by the category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the bar graph.",
+                    dbc.Tooltip([html.P("Break down diner data by the demographic category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the bar graph.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="dchelp", style={"width": 600}),
                     html.H5("Break down diners by...",style={'color': 'white'})]),
                     dbc.DropdownMenu(
