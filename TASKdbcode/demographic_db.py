@@ -331,15 +331,15 @@ def check_my_users(user):
     """Check if user exists and its credentials.
     """
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
-
+        engine = sqlalchemy.create_engine(DATABASE_URL)
+        print(user["username"], " hello")
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == user["username"])
                 if not query: return False
                 for row in query:
                     if check_password_hash(row.password_hash, user["password"]): 
                         return True
-        # engine.dispose()
+        engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -360,8 +360,7 @@ def admin_change_user_password(username, password):
     
 def user_change_password(username, password, new_password):
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
-
+        engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == username)
                 if not query: print("User does not exist.")
@@ -371,7 +370,7 @@ def user_change_password(username, password, new_password):
                         return
                     else: 
                         return ("Password does not match the username's password in the database")
-        # engine.dispose()
+        engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -380,15 +379,15 @@ def user_change_password(username, password, new_password):
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
-
+        print(username)
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == username)
                 if not query: return False
                 for row in query:
                     if row.role != 'administrator': 
-                        return "User does not have admin role"
-        # engine.dispose()
+                        return False 
+                        # "User does not have admin role"
+                    return
 
     except Exception as ex:
         print(ex, file=sys.stderr)
