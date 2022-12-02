@@ -79,7 +79,7 @@ def init_piedashboard(server):
                             html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f',
                                     'borderBottom': '2px #ff911f', "opacity": "unset"}),
                             html.Div([
-                                html.H4("Select Category for Slices", style={
+                                html.H4("Select Demographic Category for Slices", style={
                                     'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
                                 di(icon="material-symbols:help-outline-rounded",
                                    id="dchelp", color="white", inline=True, height=20),

@@ -71,7 +71,7 @@ def init_bardashboard(server):
                 dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "bar")),
                 html.Hr(style={"width": "100%", 'borderTop': '3px solid #ff911f','borderBottom': '2px #ff911f',"opacity": "unset"}),
                 html.Div([
-                    html.H4("Select Category for Bar Grouping", style={
+                    html.H4("Select Demographic Category for Bar Grouping", style={
                             'display': 'inline-block', 'margin-right': '5px', 'color': 'white'}),
                     di(icon="material-symbols:help-outline-rounded",
                        id="dchelp", color="white", inline=True, height=20),
@@ -123,7 +123,7 @@ def init_bardashboard(server):
                       responsive = True
                       )], width = 8),
         ])], fluid = True)],style = {'display':'block', 'background-color': '#145078',
-                                          'min-height':'100%', 'height': '100vh', 'width': '100%', 'overflow':'scroll'}
+                                     'min-height':'100%', 'height': '100vh', 'width': '100%', 'overflow':'scroll'}
     )
 
 
