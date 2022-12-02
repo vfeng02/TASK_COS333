@@ -344,6 +344,19 @@ def check_my_users(user):
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+def change_user_password(username, password): 
+    try: 
+        with sqlalchemy.orm.Session(engine) as session:
+                    query = session.query(User).filter(User.username == username)
+                    if not query: return False
+                    for row in query:
+                        row.password = password
+            # engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
     
 
 def be_admin(username):
