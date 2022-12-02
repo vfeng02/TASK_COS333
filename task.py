@@ -43,9 +43,9 @@ with app.app_context():
         app = counttabledashboard.init_counttabledashboard(app)
         csrf.init_app(app)
 
-        
-        SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+
+        SimpleLogin(app, login_checker=demographic_db.check_my_users)
 
 #-----------------------------------------------------------------------
 
