@@ -331,7 +331,6 @@ def check_my_users(user):
     """Check if user exists and its credentials.
     """
     try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
         print(user["username"], " hello")
         with sqlalchemy.orm.Session(engine) as session:
                 query = session.query(User).filter(User.username == user["username"])
@@ -340,48 +339,45 @@ def check_my_users(user):
                 for row in query:
                     if check_password_hash(row.password_hash, user["password"]): 
                         return True
-        engine.dispose()
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
 
-def admin_change_user_password(username, password): 
-    try: 
-        with sqlalchemy.orm.Session(engine) as session:
-                    query = session.query(User).filter(User.username == username)
-                    if not query: return False
-                    for row in query:
-                        row.password = password
-            # engine.dispose()
+# def admin_change_user_password(username, password): 
+#     try: 
+#         with sqlalchemy.orm.Session(engine) as session:
+#                     query = session.query(User).filter(User.username == username)
+#                     if not query: return False
+#                     for row in query:
+#                         row.password = password
+#             # engine.dispose()
 
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+#     except Exception as ex:
+#         print(ex, file=sys.stderr)
+#         sys.exit(1)
     
-def user_change_password(username, password, new_password):
-    try:
-        engine = sqlalchemy.create_engine(DATABASE_URL)
-        with sqlalchemy.orm.Session(engine) as session:
-                query = session.query(User).filter(User.username == username)
-                if not query: print("User does not exist.")
-                for row in query:
-                    if check_password_hash(row.password_hash, password): 
-                        row.password_hash = generate_password_hash(new_password)
-                        return
-                    else: 
-                        return ("Password does not match the username's password in the database")
-        engine.dispose()
+# def user_change_password(username, password, new_password):
+#     try:
+#         with sqlalchemy.orm.Session(engine) as session:
+#                 query = session.query(User).filter(User.username == username)
+#                 if not query: print("User does not exist.")
+#                 for row in query:
+#                     if check_password_hash(row.password_hash, password): 
+#                         row.password_hash = generate_password_hash(new_password)
+#                         return
+#                     else: 
+#                         return ("Password does not match the username's password in the database")
 
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+#     except Exception as ex:
+#         print(ex, file=sys.stderr)
+#         sys.exit(1)
 
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
         print(username)
         with sqlalchemy.orm.Session(engine) as session:
-                query = session.query(User).filter(User.username == str(username))
+                query = session.query(User).filter(User.username == username)
                 print(query)
                 if not query: return False
                 for row in query:
