@@ -345,7 +345,7 @@ def check_my_users(user):
         print(ex, file=sys.stderr)
         sys.exit(1)
 
-def change_user_password(username, password): 
+def admin_change_user_password(username, password): 
     try: 
         with sqlalchemy.orm.Session(engine) as session:
                     query = session.query(User).filter(User.username == username)
@@ -358,6 +358,24 @@ def change_user_password(username, password):
         print(ex, file=sys.stderr)
         sys.exit(1)
     
+def user_change_password(username, password, new_password):
+    try:
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+                query = session.query(User).filter(User.username == username)
+                if not query: print("User does not exist.")
+                for row in query:
+                    if check_password_hash(row.password_hash, password): 
+                        row.password_hash = generate_password_hash(new_password)
+                        return
+                    else: 
+                        return ("Password does not match the username's password in the database")
+        # engine.dispose()
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
 
 def be_admin(username):
     """Validator to check if user has admin role"""
