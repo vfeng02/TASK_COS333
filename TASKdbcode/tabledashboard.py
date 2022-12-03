@@ -116,10 +116,15 @@ def init_tabledashboard(server):
             page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
+            row_deletable=True,
 
             filter_action='custom',
             filter_query='',
-
+            row_selectable = 'multi',
+            selected_rows = [], 
+            column_selectable = 'single',
+            selected_columns = [], 
+            column_deletable=True, 
             sort_action='custom',
             sort_mode='multi',
             sort_by=[],

@@ -43,7 +43,7 @@
 			<center>
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
-				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 			</center>
 		</div>
 		<hr>
@@ -57,7 +57,9 @@
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{%for race in ['White','Black','Hispanic','Unknown']%}
+							{% autoescape true %}
+							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander','Unknown']%}
 							{% if race == 'Unknown' %}
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
@@ -70,16 +72,18 @@
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
-							<select class="form-select-sm" style="width: 120.5px">  
+							{% endautoescape %}
+							<!-- <select class="form-select-sm" style="width: 120.5px">  
 								<option selected>More options</option>
-								{% for race in ['American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+								{% for race in ['American Indian/Alaska Native', 
+								'Native Hawaiian/Pacific Islander'] %}
 								<option value="{{race}}">{{race}}</option>
 								{% endfor %}
-							</select>
+							</select> -->
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						</div>
 						
-					
+						
 					<!-- <div class="row">
 						<center>
 							<text>Other: </text>
@@ -278,7 +282,7 @@
 					
 		<div class="row" style="justify-content:center">
 			<tr>
-				<div class="col-sm-4" style="width:58.5%; align-content:center;">
+				<div class="col-sm-4" style="width:45%; align-content:center;">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
@@ -289,26 +293,65 @@
 		
 		
         </form>
-		<!-- <div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
+		<div class="row" style="justify-content:center; margin-left: 28%; margin-right: 28%; width:44%; justify-content:center; background-color:white"">
 			<tr>
-				<div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
+				<!-- <div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
 					<center>
 						<input id='getlast' class="form-control patronInput mainButton enter-button"
 						type="button" onclick="location.href='/getlastpatron?mealsite={{mealsite}}';" value="Previous Submission">
 					</center>
-				</div>
-				<div class="col-sm-2" style="width:50%; align-content:right;">
+				</div> -->
+				<div class="col-sm-2" style="width:100%; align-content:right;">
 					<center>
 						<input id='deletelast' class="form-control patronInput mainButton enter-button"
 						type="button" onclick="location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
 					</center>
 				</div>
 			</tr>
-		</div> -->
+		</div>
 		
         {% include 'footer.html' %}
     </div>
 	
+<button id = "bob" class="open-button" onclick="openForm();">Previous Submission</button>
+
+<div class="form-popup" id="myForm">
+  <form action="/action_page.php" class="form-container">
+	
+	<div class="container-fluid">
+		<div id="resulto"></div>
+	</div>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+<div class="container-fluid">
+	<div id="results"></div>
+</div>
+
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+  $(document).ready(function () {
+    $(document).on('click', '.refresher', function () {
+		getResults();
+        $.ajax({
+            url: 'ajax.php',
+            method: get,
+            dataType: 'json',
+            success: function(response) {
+                $('#table-to-refresh').html(response);
+            }
+        });
+    });
+});
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
+
 </body>
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
@@ -316,23 +359,9 @@
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>
-
+<!-- <div class="col-sm-3"><input type="text" class="form-control" id="dept" placeholder="Department" autoFocus></div> -->
 <script>
 	'use strict';
-	function check(tagName)
-	{
-		var check=document.getElementsByTagName(tagName);
-		if (!check[i].checked){
-			check[i].checked=true;
-		}
-	}
-	function uncheck(tagName)
-	{
-		var uncheck=document.getElementsByTagName(tagName);
-		if (uncheck[i].checked){
-			uncheck[i].checked=false;
-		}
-	}
 	function validateForm() {
 		
 		var x = document.forms["patronForm"]["guessed"].value;
@@ -345,12 +374,15 @@
 	}
 	function handleResponse(response)
 	{
-		$('#error').html(response);
+		$('#results').html(response);
 	}
 	let request = null;
 	function getResults()
 	{
-		
+		mealsite = encodeURIComponent(mealsite);
+		let url = '/getlastpatron?mealsite='+mealsite
+		if (request!= null)
+			request.abort();
 		request = $.ajax(
 			{
 				type: 'GET',
@@ -361,16 +393,49 @@
 	}
 	function setup()
 	{
-		$("#checkboxid").removeAttr("checked");
-		$(window).on('load', getResults);
+		$(document).on('load', getResults);
 		$('#dept').on('input', getResults);
-		$('#coursenum').on('input', getResults);
-		$('#area').on('input', getResults);
-		$('#title').on('input', getResults);
+		getResults();
 	}
 	$('document').ready(setup);
 </script>
 
+
+<script>
+	'use strict';
+	function handleResponse(response)
+	{
+		$('#resulto').html(response);
+	}
+	request = null;
+	function getResults()
+	{
+		
+		let ca = document.cookie.split(';');
+		let c = ca[1];
+		let a = c.split('"');
+		let ac = a[1];
+		console.log(ac)
+		let meal = encodeURIComponent(ac);
+		let url = '/getlastpatron?mealsite='+meal
+		console.log(url)
+		//let url = '/getlastpatron?mealsite='+'Architects%20Housing'
+		if (request!= null)
+			request.abort();
+		request = $.ajax(
+			{
+				type: 'GET',
+				url:url,
+				success: handleResponse
+			}
+		);
+	}
+	function setup()
+	{
+		getResults();
+	}
+	$('document').ready(setup);
+</script>
 </html>
 
 <style>
@@ -407,9 +472,89 @@
 	.inactive-recur-config {
 		display: none !important;
 	}
+	/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
 	body {
 	/* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG/1200px-Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG); */ */
 	/* background-color: #cccccc; */
 	}
 
 </style>
+<style>
+	html {
+	  height: 100%;
+	}
+	body {
+	  /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+
+	  background-size: auto 100%;
+	  background-repeat: no-repeat;
+	  background-position: center center;
+	  background-color: #145078;
+	}
+  </style>
