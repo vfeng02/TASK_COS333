@@ -19,6 +19,7 @@ from TASKdbcode import tabledashboard
 from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
 from TASKdbcode import linedashboard
+from TASKdbcode import counttabledashboard
 import sqlalchemy
 import sys
 from werkzeug.security import generate_password_hash,\
@@ -40,9 +41,10 @@ with app.app_context():
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
+        app = counttabledashboard.init_counttabledashboard(app)
         csrf.init_app(app)
-        SimpleLogin(app, login_checker=demographic_db.check_my_users)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+        SimpleLogin(app, login_checker=demographic_db.check_my_users)
 
 #-----------------------------------------------------------------------
 

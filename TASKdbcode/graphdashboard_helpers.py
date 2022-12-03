@@ -37,6 +37,18 @@ def protect_dashviews(dashapp):
             )
 #-----------------------------------------------------------------------
 
+#-----------------------------------------------------------------------
+
+# def table_buttons_helper():
+#     button_option_list = []
+#     for option in database_constants.DEMOGRAPHIC_OPTIONS:
+#         button_option = {"label": f"{database_constants.DEMOGRAPHIC_CATEGORIES[option]} Counts", "value": option},
+#         button_option_list.append(button_option)
+#     button_option_list.append({"label": "All Counts", "value": "all"})
+#     return button_option_list
+
+#-----------------------------------------------------------------------
+
 def selected_fields_helper(callback_context):
     # print(list(callback_context.keys()))
 
@@ -224,7 +236,7 @@ def filter_options_helper(selected_demographic, filter_dict, graph_type):
                 end_date = filter_dict["entry_timestamp"]["end_date"]
         
         time_row = dbc.Row(dcc.DatePickerRange(id='range',
-                           min_date_allowed=datetime.datetime(2022, 10, 1),
+                           min_date_allowed=datetime.datetime(2020, 10, 1),
                            start_date_placeholder_text='From Any Date',
                            end_date_placeholder_text='To Any Date',
                            start_date=start_date,

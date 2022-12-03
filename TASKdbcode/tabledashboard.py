@@ -44,7 +44,7 @@ def init_tabledashboard(server):
         dbc.Container([
         dbc.Row([
             dbc.Col(
-                html.H3("View Raw Data", style = {'color':'#ffc88f', 'margin-top':'5px', 'margin-left':'5px'}), 
+                html.H3("View Entry Data", style = {'color':'#ffc88f', 'margin-top':'5px', 'margin-left':'5px'}), 
                 width = 3, style = {'margin-left':'7px','margin-right':'0px'}),
             dbc.Col(
                 html.Div(className="vr", style={"margin-right": "0px",'height':'60px'}), width = 1, align = "center"),
@@ -52,7 +52,7 @@ def init_tabledashboard(server):
                 html.Div(id='num_entries_display', children=[], style = {'color':'white'}), width = 4),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current ", style = {"color":"#ffa74c"}), html.Span("Entry Data Excel")],
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current "), html.Span("Entry Data Excel")],
                                    id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All "), html.Span("Entry Data Excel")],
