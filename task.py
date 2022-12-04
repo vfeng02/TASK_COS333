@@ -200,6 +200,20 @@ def register():
         "register.html"
     )
 
+@app.route('/viewusers', methods=['GET','POST'])
+@login_required(must=[demographic_db.be_admin])
+def viewusers(): 
+    html = demographic_db.get_users(0)
+    return render_template("viewusers.html")
+
+
+@app.route('/users', methods=['GET','POST'])
+@login_required(must=[demographic_db.be_admin])
+def users(): 
+    role = request.cookies.get('role')
+    html = demographic_db.get_users(0)
+    return html
+
 @app.route('/deletelastpatron')
 @login_required(basic=True)
 def deletelast():

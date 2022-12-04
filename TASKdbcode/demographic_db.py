@@ -136,7 +136,6 @@ def delete_last_patron(meal_site):
     try:
 
         with sqlalchemy.orm.Session(engine) as session:
-            obj=session.query(MealSite).filter(MealSite.meal_site == "meal_site").order_by(MealSite.entry_timestamp.desc()).first()
             #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
             #filter_spec = {"field": key, "op" : "==", "value": value}
             obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
@@ -204,6 +203,21 @@ def get_patrons(filter_dict = {}, select_fields = []):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
+def get_users(value):
+    try:
+        with sqlalchemy.orm.Session(engine) as session:
+            if value == 0:
+                 query =session.query(User)
+            if value == 1:
+                 query =session.query(User).filter_by(role = "administrator")
+            if value == 2:
+                 query =session.query(User).filter_by(role = "representative")
+            user_df = pandas.read_sql(query.statement, session.bind)
+        html_code = user_df.to_html()
+        return html_code
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
 
 def filter_dms(filter_dicts):
     try:

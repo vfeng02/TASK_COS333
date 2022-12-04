@@ -48,7 +48,7 @@ def init_bardashboard(server):
                     di(icon="material-symbols:help-outline-rounded",
                        id="mshelp", color="white", inline=True, height=20),
                     dbc.Tooltip([html.P("Select the meal sites whose entries you want to be included in the bar graph. Each meal site will get its own bar, or set of bars, on the graph. Clear your selection to automatically select any/all meal sites.",
-                                        style={"textAlign": "left", "marginBottom": 0})], target="mshelp", style={"width": 600}),
+                                        style={"textAlign": "left", "marginBottom": 0})], target="mshelp", style={"width": 600}, triggers="hover")),
                     html.H5("Compare data from diners at...", style = {"color":"white"})]),
                 dcc.Dropdown(id='site_options',
                              options=[{'value': o, 'label': o}
@@ -65,7 +65,7 @@ def init_bardashboard(server):
                     di(icon="material-symbols:help-outline-rounded",
                        id="fhelp", color="white", inline=True, height=20),
                     dbc.Tooltip([html.P("The bar graph will only include data from diners who meet the criteria of all your selected filters. Clear a filter selection to automatically include any/all options of that category.",
-                                        style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}),
+                                        style={"textAlign": "left", "marginBottom": 0})], target="fhelp", style={"width": 600}, triggers="hover"),
                 ], style={'color': 'white'}),
                 html.H5("Make a graph of diners who are...",style={'color': 'white'}),
                 dbc.Row(id="filter_options", children=helpers.filter_options_helper(None, {}, "bar")),
@@ -77,7 +77,7 @@ def init_bardashboard(server):
                        id="dchelp", color="white", inline=True, height=20),
                     dbc.Tooltip([html.P("Break down diner data by the demographic category you select. For example, selecting Veteran Status will create slices for Veteran, Not a Veteran, and Unknown on the bar graph.",
                                         style={"textAlign": "left", "marginBottom": 0})], target="dchelp", style={"width": 600}),
-                    html.H5("Break down diners by...",style={'color': 'white'})]),
+                    html.H5("Break down diners by...",style={'color': 'white'})], triggers="hover"),
                     dbc.DropdownMenu(
                                 [
                                     dbc.DropdownMenuItem(
