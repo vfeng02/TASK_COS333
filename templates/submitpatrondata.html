@@ -75,12 +75,15 @@
 						<center>
 							<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
 								{% autoescape true %}
-								{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66']%}
+								{%for age in ages%}
+								{%if age == 'Unknown'%}
+								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
+								<label class="btn btn-secondary inactive-button" id = "toggle-age-Unknown" for="btn-age-Unknown">Unknown</label>
+								{%else%}
 								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
 								{%endfor%}
-								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
-								<label class="btn btn-secondary inactive-button" id = "toggle-age-Unknown" for="btn-age-Unknown">Unknown</label>
+								
 								{% endautoescape %}
 							</div>
 						</center>
