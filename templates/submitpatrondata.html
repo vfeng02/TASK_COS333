@@ -6,31 +6,6 @@
 		{% include 'imports.html' %}
     </head>
     <body class="forceOpenSans">
-		<!-- <script>
-			function check()
-			{
-			 var check=document.getElementsByTagName('input');
-			 for(var i=0;i<check.length;i++)
-			 {
-			  if(check[i].type=='checkbox')
-			  {
-			   check[i].checked=true;
-			  }
-			 }
-			}
-			
-			function uncheck()
-			{
-			 var uncheck=document.getElementsByTagName('input');
-			 for(var i=0;i<uncheck.length;i++)
-			 {
-			  if(uncheck[i].type=='checkbox')
-			  {
-			   uncheck[i].checked=false;
-			  }
-			 }
-			}
-			</script> -->
 			<div id="wrapper">
 			<!-- <input type="button" value="Check All" onclick="check();">
 			<input type="button" value="Uncheck All" onclick="uncheck();">
@@ -70,9 +45,9 @@
 							{%endif%}
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
-							<select class="form-select-sm" style="width: 120.5px">  
-								<option selected>More options</option>
-								{% for race in ['American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+							<select class="form-select-sm" id="race-multiselect" multiple="multiple" name="race" style="width: 120.5px">  
+								<!-- <option selected>More options</option> -->
+								{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
 								<option value="{{race}}">{{race}}</option>
 								{% endfor %}
 							</select>
@@ -101,12 +76,16 @@
 						<center>
 							<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
 								{% autoescape true %}
-								{%for age in ['<18','18-29', '30-42', '43-54', '55-66', '>66']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
-								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
-								{%endfor%}
+								{%for age in ages%}
+								{%if age == 'Unknown'%}
 								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
 								<label class="btn btn-secondary inactive-button" id = "toggle-age-Unknown" for="btn-age-Unknown">Unknown</label>
+								{%else%}
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
+								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
+								{%endif%}
+								{%endfor%}
+								
 								{% endautoescape %}
 							</div>
 						</center>
@@ -313,6 +292,9 @@
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
 </script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>

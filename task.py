@@ -150,7 +150,7 @@ def submitpatrondata():
         current_time=get_current_time(),
         otherlanguages = database_constants.otherlanguages,
         races = database_constants.races,
-        ages = database_constants.ages,
+        ages = database_constants.AGE_RANGE_OPTIONS,
         genders = database_constants.genders,
         zip_codes = zip_codes_by_mealsite,
         homeless_options = database_constants.HOMELESS_OPTIONS,

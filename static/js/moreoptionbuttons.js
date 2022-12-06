@@ -44,6 +44,9 @@ function updateGender() {
 function setup() {
     $('#lang-more-options').on('change', updateLang);
     $('#gender-more-options').on('change', updateGender);
+    $('#race-multiselect').select2({
+        placeholder: "More options"
+    });
 }
 
 $('document').ready(setup);
