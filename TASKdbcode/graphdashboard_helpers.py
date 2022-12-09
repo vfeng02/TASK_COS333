@@ -23,7 +23,8 @@ import plotly.graph_objects as go
 import textwrap
 import datetime
 from flask_simplelogin import login_required
-
+import task
+from flask import request
 #-----------------------------------------------------------------------
 
 def protect_dashviews(dashapp):
@@ -33,9 +34,12 @@ def protect_dashviews(dashapp):
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):
             dashapp.server.view_functions[view_func] = login_required(
-                dashapp.server.view_functions[view_func], must=[demographic_db.be_admin]
+                dashapp.server.view_functions[view_func], must=[admin_cookies]
             )
 #-----------------------------------------------------------------------
+
+def admin_cookies(app): 
+    return request.cookies.get("admin")
 
 #-----------------------------------------------------------------------
 

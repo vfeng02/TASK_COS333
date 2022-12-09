@@ -345,13 +345,15 @@ def be_admin(username):
                 if not query: return False
                 for row in query:
                     if row.role != 'administrator': 
-                        return "User does not have admin role"
+                        return False
+                    return True
         engine.dispose()
 
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
     
+
 
 # def admin_change_user_password(username, password): 
 #     try: 

@@ -124,7 +124,6 @@ def init_tabledashboard(server):
             selected_rows = [], 
             column_selectable = 'single',
             selected_columns = [], 
-            column_deletable=True, 
             sort_action='custom',
             sort_mode='multi',
             sort_by=[],

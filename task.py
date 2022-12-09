@@ -57,11 +57,17 @@ def get_ampm():
 def get_current_time():
     return time.asctime(time.localtime())
 
+def admin_cookies(username): 
+    return request.cookies.get("admin")
+    
+
  #-----------------------------------------------------------------------
 @app.route('/login', methods=['GET'])
 def login(): 
-    
-    return render_template("login.html")
+    login = make_response(render_template("login.html"))
+    admin = demographic_db.be_admin(request.get("email"))
+    login.set_cookie('admin', admin)
+    return login
 
 
 @app.route('/', methods=['GET'])
@@ -172,7 +178,7 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(must=[admin_cookies])
 def admindisplaydata():
     return render_template(
         "admin.html"
@@ -202,7 +208,7 @@ def admindisplaydata():
 # --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(must=[admin_cookies])
 def register(): 
     email = request.args.get('email')
     password = request.args.get('password')
