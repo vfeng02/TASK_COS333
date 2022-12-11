@@ -24,7 +24,7 @@ import textwrap
 import datetime
 from flask_simplelogin import login_required
 import task
-from flask import request
+from flask import request, session
 #-----------------------------------------------------------------------
 
 def protect_dashviews(dashapp):
@@ -34,12 +34,14 @@ def protect_dashviews(dashapp):
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):
             dashapp.server.view_functions[view_func] = login_required(
-                dashapp.server.view_functions[view_func], must=[admin_cookies]
+                dashapp.server.view_functions[view_func], username="jaimeparker"
             )
 #-----------------------------------------------------------------------
 
 def admin_cookies(app): 
+    # return session.get("admin")
     return request.cookies.get("admin")
+
 
 #-----------------------------------------------------------------------
 

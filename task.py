@@ -48,7 +48,7 @@ with app.app_context():
         csrf.init_app(app)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
         app.secret_key = "andresallisonvickyrohan"
-        #login_manager.init_app(app)
+        # login_manager.init_app(app)
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
 
 #-----------------------------------------------------------------------
@@ -71,6 +71,11 @@ def get_ampm():
 def get_current_time():
     return time.asctime(time.localtime())
 
+def admin_cookies(username): 
+    # return session.get("admin")
+    return request.cookies.get("admin")
+    
+
  #-----------------------------------------------------------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login(): 
@@ -84,16 +89,10 @@ def login():
     # if check: 
     #     login_user()
 
-    check = demographic_db.be_admin(request.args.get("username"))
+    # check = demographic_db.be_admin(request.args.get("username"))
     login = make_response(render_template("login.html"))
-    login.set_cookie('admin', check)
+    # login.set_cookie('admin', check)
     return login
-
-def admin_cookies(): 
-    admin = request.get_cookie('admin')
-    if admin is True: 
-        return True
-    return False
 
 # @app.route('/logout', methods=['POST'])
 # def logout():
@@ -208,7 +207,7 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[admin_cookies])
+@login_required(username="jaimeparker")
 def admindisplaydata():
     return render_template(
         "admin.html"
@@ -238,7 +237,7 @@ def admindisplaydata():
 # --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def register(): 
     email = request.args.get('email')
     password = request.args.get('password')
