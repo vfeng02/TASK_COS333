@@ -56,7 +56,7 @@
   }
   </style>
   <body>
-   {% include "header.html" %}
+   {% include "admin_header.html" %}
   <form>
   <div class="formContainer" style = "width:70%;margin-left:15%">
   <h1><center>Register User</center></h1>
@@ -78,25 +78,31 @@
       <!-- <div class="radio-label"> 
         <label class="label">Account Type</label>
       </div> -->
-      
-      <div class="form-item orange enter-button" style ="padding:1%"> 
+   <div >
+      <div class="form-item orange enter-button" style ="padding:1%; float:left;width:50%"> 
         <input id="representative" type="radio" name="AccountType" value="representative" data-once>
         <label for="representative">Representative</label>
       </div>
       <center>
-      <div class="form-item orange enter-button" align="justify" style="margin-left:0%;padding:1%"> 
+      <div class="form-item orange enter-button"align="justify" style="margin-left:0%;padding:1%;float:right;width:50%"> 
         <input id="admin" style="margin-left:46%" type="radio" name="AccountType" value="admin" data-once>
         <label for="admin">Admin</label>
       </div>
+   </div>
    </center>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     </div>
-   <br/>
-  </div>
-  <button type="submit" class="signup">Sign Up</button>
+  <br/>
+  <br/>
+  <div style="width:68%;margin-left:16%"><button type="submit" class="signup">Register User</button></div>
+  
+  <br/>
+  <hr>
+   
   </div>
   </div>
   </form>
+</div>
   </body>
   </html><style>
    html {
