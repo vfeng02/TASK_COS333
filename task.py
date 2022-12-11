@@ -9,7 +9,7 @@
 from ctypes import set_errno
 from dis import dis
 import time
-from flask import Flask, request
+from flask import Flask, request, session, jsonify
 from flask import render_template, make_response
 # sys.path.insert(0, 'TASKdbcode')
 # sys.path.insert(0, 'TASKfrontend/templates')
@@ -30,12 +30,15 @@ from werkzeug.security import generate_password_hash,\
 import psycopg2
 from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager, login_user
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates', instance_relative_config=False)
 
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
+# login_manager = LoginManager()
+# login_manager.login_view = 'login'
 with app.app_context():
         app = tabledashboard.init_tabledashboard(app)
         app = piedashboard.init_piedashboard(app)
@@ -44,10 +47,21 @@ with app.app_context():
         app = counttabledashboard.init_counttabledashboard(app)
         csrf.init_app(app)
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+        app.secret_key = "andresallisonvickyrohan"
+        #login_manager.init_app(app)
         SimpleLogin(app, login_checker=demographic_db.check_my_users)
 
 #-----------------------------------------------------------------------
 
+def be_admin(username):
+    if username == "jaimeparker":
+        return True
+    else: 
+        return False
+
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return demographic_db.user_exists(user_id)
 
 def get_ampm():
     if time.strftime('%p') == "AM":
@@ -57,18 +71,34 @@ def get_ampm():
 def get_current_time():
     return time.asctime(time.localtime())
 
-def admin_cookies(username): 
-    return request.cookies.get("admin")
-    
-
  #-----------------------------------------------------------------------
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login(): 
+    # admin = demographic_db.be_admin(get_username)
+    # # session["admin"] = admin
+    # login.set_cookie('admin', admin)
+
+    # user = {'username': request.args.get("username"), "password":request.args.get('password')}
+
+    # check = demographic_db.check_my_users(user)
+    # if check: 
+    #     login_user()
+
+    check = demographic_db.be_admin(request.args.get("username"))
     login = make_response(render_template("login.html"))
-    admin = demographic_db.be_admin(request.get("email"))
-    login.set_cookie('admin', admin)
+    login.set_cookie('admin', check)
     return login
 
+def admin_cookies(): 
+    admin = request.get_cookie('admin')
+    if admin is True: 
+        return True
+    return False
+
+# @app.route('/logout', methods=['POST'])
+# def logout():
+#     logout_user()
+#     return redirect("/login")
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
@@ -208,7 +238,7 @@ def admindisplaydata():
 # --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
-@login_required(must=[admin_cookies])
+@login_required(must=[demographic_db.be_admin])
 def register(): 
     email = request.args.get('email')
     password = request.args.get('password')
