@@ -29,6 +29,7 @@ from flask_simplelogin import login_required
 def protect_dashviews(dashapp):
     """If you want your Dash app to require a login,
     call this function with the Dash app you want to protect"""
+    pass
 
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):

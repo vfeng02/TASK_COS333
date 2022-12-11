@@ -79,7 +79,7 @@ def add_patron(input_dict):
             if key == "language":
                 input_dict[key] = "English"
             elif key == "guessed":
-                input_dict[key] = "False"
+                input_dict[key] = "No"
             else:
                 input_dict[key] = "Unknown"
 
