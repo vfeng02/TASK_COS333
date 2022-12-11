@@ -12,11 +12,11 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import functions
-import database_constants
+# import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters
-# from TASKdbcode import database_constants
+from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
     check_password_hash
@@ -79,7 +79,7 @@ def add_patron(input_dict):
             if key == "language":
                 input_dict[key] = "English"
             elif key == "guessed":
-                input_dict[key] = "No"
+                input_dict[key] = "False"
             else:
                 input_dict[key] = "Unknown"
 

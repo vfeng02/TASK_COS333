@@ -39,8 +39,18 @@ def init_tabledashboard(server):
 
     # icon="material-symbols:download-rounded" style="color: #194f77;"
     total_entries = demographic_db.get_total_entries()
-
     # Create Layout
+    columns = [1,2,3,4,5,6,7,8,9,10]
+    # {"name": "meal site", "id": "meal_site", "type": "text"},
+    # {"name": "race", "id": "race", "type": "text"},
+    # {"name": "language", "id": "language", "type": "text"},
+    # {"name": "age range", "id": "age_range", "type": "text"},
+    # {"name": "gender", "id": "gender", "type": "text"},
+    # {"name": "zip code", "id": "zip_code", "type": "text"},
+    # {"name": "homeless", "id": "homeless", "type": "text"},
+    # {"name": "veteran", "id": "veteran", "type": "text"},
+    # {"name": "disabled", "id": "disabled", "type": "text"},
+    # {"name": "guessed", "id": "guessed", "type": "text"}]
     table_app.layout = html.Div([
         dbc.Container([
         dbc.Row([
@@ -80,6 +90,23 @@ def init_tabledashboard(server):
                 {"name": "guessed", "id": "guessed", "type": "text"}    
             ],
             css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
+            tooltip_header={
+                'entry_timestamp': 'Enter a date and/or time in YYYY-MM-DD\'T\'HH:MM:SS format to filter for a specific year, month, date, or time.',
+        'meal_site': 'Filter for meal site. Use the \'or\' character with spaces to get more than one meal site',
+        'race': 'Enter \'race1\' to filter for all entries containing race1 (including multiracial), and \
+        enter \'eq race1\' to filter for entries exactly equal race1. Enter \',\' to filter for all mutliracial entries.\
+             Use the \'or\' character with spaces to get more than one race.',
+        'language':'Filter for language. Use the \'or\' character with spaces to get more than one language.',
+        'age_range': 'Filter for language. Use the \'or\' character with spaces to get more than one type.',
+        'gender': 'Filter for gender. Use the \'or\' character with spaces to get more than one type.',
+        "zip_code": 'Filter for zip code. Use the \'or\' character with spaces to get more than one type.',
+        "homeless": 'Filter for homeless status. Use the \'or\' character with spaces to get more than one type.',
+        "veteran": 'Filter for veteran status. Use the \'or\' character with spaces to get more than one type.',
+        "disabled": 'Filter for disabled status. Use the \'or\' character with spaces to get more than one type.',
+        "guessed": 'Filter for guessed status. Use the \'or\' character with spaces to get more than one type.',
+    },
+    tooltip_delay=0,
+    tooltip_duration=None,
             style_table = {'overflowY': 'auto',
                 'height':'80vh', 'width':'100%'
             },

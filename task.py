@@ -203,7 +203,6 @@ def register():
 @app.route('/viewusers', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
 def viewusers(): 
-    html = demographic_db.get_users(0)
     return render_template("viewusers.html")
 
 
@@ -211,7 +210,7 @@ def viewusers():
 @login_required(must=[demographic_db.be_admin])
 def users(): 
     role = request.cookies.get('role')
-    html = demographic_db.get_users(0)
+    html = demographic_db.get_users(role)
     return html
 
 @app.route('/deletelastpatron')
