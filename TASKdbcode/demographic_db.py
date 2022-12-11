@@ -12,7 +12,7 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import functions
-from TASKdbcode import database_constants
+import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
 from sqlalchemy_filters import apply_filters

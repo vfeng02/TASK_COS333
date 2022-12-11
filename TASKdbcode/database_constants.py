@@ -135,18 +135,18 @@ ZIP_CODE_DROPDOWN_OPTIONS = ["08608", "08609", "08610", "08611", "08618", "08629
                       "15370", "19067", "Other", "Unknown"]
 
 
-HOMELESS_OPTIONS = ["Yes", "No", "Unknown"]
+HOMELESS_OPTIONS = ["True", "False", "Unknown"]
 
-VETERAN_OPTIONS = ["Yes", "No",  "Unknown"]
+VETERAN_OPTIONS = ["True", "False", "Unknown"]
 
-DISABLED_OPTIONS = ["Yes", "No", "Unknown"]
+DISABLED_OPTIONS = ["True", "False", "Unknown"]
 
-GUESSED_OPTIONS = ["Yes", "No"]
+GUESSED_OPTIONS = ["True", "False"]
 
-STATUS_OPTION_MAPPING = {"homeless":{"Yes":"Homeless", "No":"Not Homeless", "Unknown":"Unknown if Homeless"},
-                         "veteran":{"Yes":"Veteran", "No":"Not Veteran", "Unknown":"Unknown if Veteran"},
-                         "disabled":{"Yes":"Disabled", "No":"Not Disabled", "Unknown":"Unknown if Disabled"},
-                         "guessed":{"Yes":"Entry Completely Guessed", "No":"Entry Not Guessed"}}
+STATUS_OPTION_MAPPING = {"homeless":{"True":"Homeless", "False":"Not Homeless", "Unknown":"Unknown if Homeless"},
+                         "veteran":{"True":"Veteran", "False":"Not Veteran", "Unknown":"Unknown if Veteran"},
+                         "disabled":{"True":"Disabled", "False":"Not Disabled", "Unknown":"Unknown if Disabled"},
+                         "guessed":{"True":"Entry Completely Guessed", "False":"Entry Not Guessed"}}
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\
