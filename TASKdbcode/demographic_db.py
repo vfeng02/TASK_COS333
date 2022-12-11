@@ -208,7 +208,8 @@ def get_users(value):
             elif value == 'representatives':
                  query =session.query(User).filter_by(role = "representative")
             user_df = pandas.read_sql(query.statement, session.bind)
-        html_code = user_df
+        html_code = user_df.drop(['password_hash'], axis =1)
+
         print(html_code.to_html())
         return html_code
         

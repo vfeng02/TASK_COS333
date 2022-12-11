@@ -20,6 +20,7 @@ from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
 from TASKdbcode import linedashboard
 from TASKdbcode import counttabledashboard
+from pretty_html_table import build_table
 import sqlalchemy
 import sys
 from werkzeug.security import generate_password_hash,\
@@ -209,10 +210,16 @@ def viewusers():
 @app.route('/users', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
 def users(): 
-    
     role = request.args.get('role')
     df = demographic_db.get_users(role)
-    return render_template("users.html",tables=[df.to_html(classes='data')], titles=df.columns.values)
+    html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
+    if role == 'administrators':
+        r = 'Administrator'
+    elif role == 'representatives':
+        r = 'Representative'
+    elif role == 'all':
+        r = 'All'
+    return render_template("users.html",table=html, titles=df.columns.values, role = r)
 
 @app.route('/deletelastpatron')
 @login_required(basic=True)
