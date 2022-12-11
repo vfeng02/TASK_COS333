@@ -209,9 +209,10 @@ def viewusers():
 @app.route('/users', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
 def users(): 
-    role = request.cookies.get('role')
-    html = demographic_db.get_users(role)
-    return html
+    
+    role = request.args.get('role')
+    df = demographic_db.get_users(role)
+    return render_template("users.html",tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 @app.route('/deletelastpatron')
 @login_required(basic=True)

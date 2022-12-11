@@ -198,17 +198,20 @@ def get_patrons(filter_dict = {}, select_fields = []):
 
 #-----------------------------------------------------------------------
 def get_users(value):
+    
     try:
         with sqlalchemy.orm.Session(engine) as session:
-            if value == 0:
+            if value == 'all':
                  query =session.query(User)
-            if value == 1:
+            elif value == 'administrators':
                  query =session.query(User).filter_by(role = "administrator")
-            if value == 2:
+            elif value == 'representatives':
                  query =session.query(User).filter_by(role = "representative")
             user_df = pandas.read_sql(query.statement, session.bind)
-        html_code = user_df.to_html()
+        html_code = user_df
+        print(html_code.to_html())
         return html_code
+        
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
