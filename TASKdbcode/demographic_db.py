@@ -28,7 +28,7 @@ DATABASE_URL = ("postgresql+psycopg2://usqmchwx:"
                 "jVw_QrUQ-blJpl1dXhixIQmPAsD89W-R"
                 "@peanut.db.elephantsql.com/usqmchwx")
 engine = sqlalchemy.create_engine(DATABASE_URL)
-
+print("FLASHING FLASHING")
 # Table for both types of users in the database
 # Role will either be representative or administrator
 class User(Base):
@@ -100,8 +100,6 @@ def add_patron(input_dict):
             row.num_entries += 1
             session.commit()
 
-        # engine.dispose()
-
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
@@ -109,15 +107,12 @@ def add_patron(input_dict):
 #-----------------------------------------------------------------------
 def get_last_patron(meal_site):
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
             query = session.query(MealSite)
             filter_spec = {"field": "meal_sites", "op" : "==", "value": meal_site}
             query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
-            
-        # engine.dispose()
         print(entry)
         print(type(entry))
         return entry
@@ -165,7 +160,6 @@ def get_patrons(filter_dict = {}, select_fields = []):
     
     
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
@@ -221,7 +215,6 @@ def get_users(value):
 
 def filter_dms(filter_dicts):
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
             query = session.query(MealSite).order_by(MealSite.entry_timestamp.desc())
@@ -237,7 +230,6 @@ def filter_dms(filter_dicts):
                         
                     query = apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
-        # engine.dispose()
         return demographic_df
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -246,7 +238,6 @@ def filter_dms(filter_dicts):
 
 def get_num_entries(meal_site):
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
         num_entries = 0
 
         with sqlalchemy.orm.Session(engine) as session:
@@ -256,7 +247,6 @@ def get_num_entries(meal_site):
             else:
                 query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
                 num_entries = query.one().num_entries
-        # engine.dispose()
         return num_entries
 
     except Exception as ex:
@@ -268,14 +258,11 @@ def get_num_entries(meal_site):
 def get_total_entries():
     
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
 
         with sqlalchemy.orm.Session(engine) as session:
             # Keep the filters that were entered in the dict
             query = session.query(functions.sum(EntryCount.num_entries).label('total_num'))
             num_entries = query.one().total_num
-            #print(query)
-        # engine.dispose()
         return num_entries
     except Exception as ex:
         print(ex, file=sys.stderr)
