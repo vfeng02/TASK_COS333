@@ -355,20 +355,6 @@ function closeForm() {
 		$('#results').html(response);
 	}
 	let request = null;
-	function getResults()
-	{
-		mealsite = encodeURIComponent(mealsite);
-		let url = '/getlastpatron?mealsite='+mealsite
-		if (request!= null)
-			request.abort();
-		request = $.ajax(
-			{
-				type: 'GET',
-				url:url,
-				success: handleResponse
-			}
-		);
-	}
 	function setup()
 	{
 		$(document).on('load', getResults);
@@ -390,16 +376,16 @@ function closeForm() {
 	{
 		
 		let ca = document.cookie.split(';');
-		console.log(ca)
+		console.log("CA", ca)
 		let c = ca[1];
 		if (c[0] != 'm'){
-			c = ca[1]
+			c = ca[0];
 		}
-		
 		let a = c.split('"');
 		let ac = a[1];
-		console.log(ac)
+		console.log("AC", ac)
 		let meal = encodeURIComponent(ac);
+		console.log("MEAL", meal)
 		let url = '/getlastpatron?mealsite='+meal
 		console.log(url)
 		//let url = '/getlastpatron?mealsite='+'Architects%20Housing'
