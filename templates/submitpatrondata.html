@@ -15,8 +15,15 @@
 				<hr>
 				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 				<hr>
-				<h5 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
-			
+				<div class = 'row' style ="margin-left: 30%; margin-right: 30%; width:40%;">
+				<h5 style =" width:100%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
+				<div class="col-sm-2" style="width:100%; align-content:right;">
+					<center>
+						<input id='deletelast' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
+					</center>
+				</div>
+			</div>
 			</center>
 		</div>
 		<hr>
@@ -243,13 +250,13 @@
 					</center>
 					</div>
 				</div>
-			</div>
-		</div>
+			
+		<br/>
 		<div class="row" style="background-color:white;width:50%;margin-left:24.5%;"><br>
 					
 		<div class="row" style="justify-content:center; padding:2%; ">
 			<tr>
-				<div class="col-sm-4" style="width:45%; align-content:center;">
+				<div class="col-sm-4" style="width:100%; align-content:center;">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
@@ -260,25 +267,10 @@
 		
 		
         </form>
-		<div class="row" style="justify-content:center; margin-left: 27.5%; margin-right: 27.5%; width:45%; justify-content:center; background-color:white"">
-			<tr>
-				<!-- <div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
-					<center>
-						<input id='getlast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/getlastpatron?mealsite={{mealsite}}';" value="Previous Submission">
-					</center>
-				</div> -->
-				<div class="col-sm-2" style="width:100%; align-content:right;">
-					<center>
-						<input id='deletelast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
-					</center>
-				</div>
-			</tr>
-		</div>
 	</div>
         {% include 'footer.html' %}
     </div>
+</div>
 	
 <button id = "bob" class="open-button" onclick="openForm();">Previous Submission</button>
 
