@@ -18,17 +18,37 @@ Sets up HTML page to input patron data
 
 <body class="forceOpenSans" style="width: 100%; height: 100%;  background-color: #0a283c; overflow:auto;">
   {% include 'admin_header.html' %}
-  <div class="container-fluid">
-    <h2 style="color: white; display: inline; margin-right: 5px;">
-      Meal Site Demographics
+  <div class = "container-fluid">
+  <div class = "container-fluid" style = "float: inline-start; margin-bottom: 15px; border: 2px solid #0c3048; border-radius: 5px 5px 5px 5px; background-color: #0c3048; width: 100%">
+    <div class = "row">
+    <div class = "col">
+    <img src="/static/TASK Logo KO.png" width="526" height="200" alt="TASK Logo KO">
+    </div>
+    <div class = "col">
+    <h1 style="color: #ffc88f; display: inline-block; margin-right: 5px;">Welcome, Administrator!</h1>
+    <br>
+    <h2 style="color: white; display: inline-block; margin-right: 5px;">
+      Meal Site Demographics Page
       <iconify-icon inline icon="material-symbols:help-outline-rounded" id="msdhelp" style="color:white;"
-      data-bs-toggle="tooltip" data-bs-placement="right" title="Explore the tabs below to visualize and analyze the demographic data that has been collected from diners at the Trenton Area Soup Kitchen's community meal sites.">
+      data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true" title="Select <b>View Entry Data</b> to filter and sort a table with the all the raw data of the diner entries that have been recorded.
+      Because there is a lot of data, the table is separated into pages, which show 100 entries at a time. Click through the pages at the bottom of the table to browse all the entries.
+      Download the table to excel by clicking one of the buttons above the table.
+      <br/><br/>Select <b>View Count Data</b> to sort a table with all the raw data for the simple counts of diner demographics. There are columns of demographic counts; scroll horizontally through the table to see all the data. Download the table to excel by clicking one of the buttons above the table.
+      <br/><br/>Select <b>Graph by Demographic</b> to filter entry data and create a pie chart with the percentage breakdown of diner demographics. Download the pie chart as an image by clicking the camera icon in the upper-left corner of the graph.
+      <br/><br/>Select <b>Graph by Meal Site</b> to filter entry data and create a bar graph comparing demographic counts between meal sites. Download the bar graph as an image by clicking the camera icon in the upper-left corner of the graph.
+      <br/><br/>Select <b>Graph by Date</b> to filter entry data and create a line graph showing how demographic counts have changed over time. Download the line graph as an image by clicking the camera icon in the upper-left corner of the graph.">
       </iconify-icon>
     </h2>
-    <h4 style="color: white; font-family: Open Sans, sans-serif;">
-      Select how you want to visualize data...
+    <br>
+    <h4 style="color: white; display:inline-block; font-family: Open Sans, sans-serif;">
+      Explore the tabs below to visualize, analyze, and download
+      the demographic data that has been collected
+      from diners at the Trenton Area Soup Kitchen's community meal sites...
     </h4>
   </div>
+</div>
+  </div>
+</div>
   <!-- <iframe src="/tableapp" width="100%" height="600" frameborder="0"></iframe> -->
   <!-- <div style="margin-top: 10px;"> -->
   <!-- <div class="container-fluid">
@@ -44,24 +64,31 @@ Sets up HTML page to input patron data
 
   </div> -->
   <div class="container-fluid" style="height: 100%; width: 100%;">
-    <div class="nav nav-tabs" style="height: 100%; width: 100%; margin-bottom: 0px;">
+    <div class="nav nav-tabs" style="height: 100%; width: 100%; margin-bottom: 0px; color:#ffc88f">
       <button class="nav-link active" onclick="getGraph(event, 'table')" id="defaultOpen">
-        View Raw Data
+        <h4>View Entry Data<iconify-icon inline icon="material-symbols:table-view-rounded" style="margin-left: 5px;"></iconify-icon></h4>
+      </button>
+      <button class="nav-link" onclick="getGraph(event, 'counttable')">
+        <h4>View Count Data<iconify-icon inline icon="material-symbols:table" style="margin-left: 5px;"></iconify-icon></h4>
       </button>
       <button class="nav-link" onclick="getGraph(event, 'pie')">
-        Graph by<br>Demographic
+        <h4>Graph by Demographic<iconify-icon inline icon="bi:pie-chart-fill" style="margin-left: 5px;"></iconify-icon></h4>
       </button>
       <button class="nav-link" onclick="getGraph(event, 'bar')">
-        Graph by<br>Meal Site
+        <h4>Graph by Meal Site<iconify-icon inline icon="material-symbols:bar-chart" style="margin-left: 5px;"></iconify-icon></h4>
       </button>
       <button class="nav-link" onclick="getGraph(event, 'line')">
-        Graph by<br>Date
+        <h4>Graph by Date<iconify-icon inline icon="mdi:chart-line" style="margin-left: 5px;"></iconify-icon></h4>
       </button>
     </div>
 
     <!-- Tab content -->
     <div id="table" class="tab-content" style="width: 100%; background-color: #ff911f;">
       <iframe src="/tableapp" style="height: 100%; display: block; width: 100%; background-color: #ff911f;"></iframe>
+    </div>
+
+    <div id="counttable" class="tab-content" style="width: 100%; background-color: #ff911f;">
+      <iframe src="/counttableapp" style="height: 100%; display: block; width: 100%; background-color: #ff911f;"></iframe>
     </div>
 
     <div id="pie" class="tab-content" style="width: 100%; background-color: #ff911f;">
@@ -163,7 +190,7 @@ Sets up HTML page to input patron data
 <!-- <a href="/dashapp/" class="dash-link">
     <span>Login</span>
 </a> -->
-<style>
+<!-- <style>
   .help-tip {
     top: 18px;
     right: 18px;
@@ -226,9 +253,9 @@ Sets up HTML page to input patron data
     position: absolute;
     top: -40px;
     left: 0;
-  }
+  } -->
 
-  /* 
+  <!-- /* 
   .tab-pane {
 
     border-left: 1px solid #ddd;
@@ -295,5 +322,5 @@ Sets up HTML page to input patron data
     padding: 0px;
     border: 1px solid #ccc;
     border-top: none;
-  } */
-</style>
+  } */ -->
+<!-- </style> -->

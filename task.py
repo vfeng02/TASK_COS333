@@ -19,8 +19,11 @@ from TASKdbcode import tabledashboard
 from TASKdbcode import piedashboard
 from TASKdbcode import bardashboard
 from TASKdbcode import linedashboard
+from TASKdbcode import counttabledashboard
+from pretty_html_table import build_table
 import sqlalchemy
 import sys
+import textwrap
 from werkzeug.security import generate_password_hash,\
     check_password_hash
 
@@ -31,8 +34,7 @@ from flask_simplelogin import SimpleLogin, get_username, login_required, is_logg
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
-app = Flask(__name__, template_folder='templates', instance_relative_config=False)
-
+app = Flask(__name__, template_folder='templates')
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -40,9 +42,12 @@ with app.app_context():
         app = piedashboard.init_piedashboard(app)
         app = bardashboard.init_bardashboard(app)
         app = linedashboard.init_linedashboard(app)
+        app = counttabledashboard.init_counttabledashboard(app)
         csrf.init_app(app)
-        SimpleLogin(app, login_checker=demographic_db.check_my_users)
+
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
+
+        SimpleLogin(app, login_checker=demographic_db.check_my_users)
 
 #-----------------------------------------------------------------------
 
@@ -64,7 +69,6 @@ def login():
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
-@login_required(basic=True)
 def index():
     html_code = render_template('index.html',
     ampm=get_ampm(),
@@ -88,7 +92,6 @@ def selectmealsite():
 
  #-----------------------------------------------------------------------
 @app.route('/about', methods=['GET'])
-@login_required(basic=True)
 def selectmealsit1e():
 
     html_code = render_template('about.html')
@@ -99,26 +102,34 @@ def selectmealsit1e():
 @app.route('/submitpatrondata', methods=['GET'])
 @login_required(basic=True)
 def submitpatrondata():
-    # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
-    mealsite = request.cookies.get('site')
-    set_new_mealsite = False         
-    # print("selected site")
-    # print(mealsite)
+    mealsite = request.cookies.get('mealsite')
+    new = False
+    num = request.cookies.get('num')
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
-        set_new_mealsite = True
+        new = True
         mealsite = new_mealsite
+        num = '0'
+    
+    submitted = request.args.get('language')
+    if submitted:
+        num = str(int(num)+1)   
+    
 
     races = []
-    # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:
         for race in request.args.getlist('race'):
-            races.append(race)
+            if (race != 'Unknown'):
+                if race == "Native":
+                    races.append("Native Hawaiian/Pacific Islander")
+                elif race == "American":
+                    races.append("American Indian/Alaska Native")
+                else:
+                    races.append(race)
         races = list(filter(None, races))
+    print("RACE", races)
     racecsv = ",".join(races)
-        
     language = request.args.get('language')
-    print('language',language)
     age_range = request.args.get('age_range')
     # problem because the names changed
     gender = request.args.get('gender')
@@ -134,9 +145,6 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "guessed": guessed}
 
-    # print(patron_data)
-
-    # print(any(patron_data.values()))
 
     zip_codes_by_mealsite = database_constants.ZIP_CODES[database_constants.MEAL_SITE_LOCATIONS[mealsite]]
     
@@ -157,13 +165,13 @@ def submitpatrondata():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        racecheck = ""
+        num = num,
         )
     response = make_response(html_code)
-
-    if set_new_mealsite:
-        response.set_cookie('site', mealsite)
-
+    response.set_cookie('num',num)
+    if new:
+        response.set_cookie('mealsite', new_mealsite)
+   
     return response
 
  #-----------------------------------------------------------------------
@@ -176,28 +184,12 @@ def admindisplaydata():
         "admin.html"
     )
 
-# @app.route("/lineapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def lineapp():
-#     return line_app.index()
-
-# @app.route("/barapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def barapp():
-#     return bar_app.index()
-
-# @app.route("/pieapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def pieapp():
-#     return pie_app.index()
-
-# @app.route("/tableapp/", methods=['POST','GET'])
-# @login_required(must=[demographic_db.be_admin])
-# def tableapp():
-#     return table_app.index()
+@app.route("/dash", methods=['POST','GET'])
+@login_required(must=[demographic_db.be_admin])
+def dash():
+    return app.index()
 
 
-# --------------------------------------------------------------------------
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
@@ -215,11 +207,37 @@ def register():
         "register.html"
     )
 
+@app.route('/viewusers', methods=['GET','POST'])
+@login_required(must=[demographic_db.be_admin])
+def viewusers(): 
+    return render_template("viewusers.html")
+
+
+@app.route('/users', methods=['GET','POST'])
+@login_required(must=[demographic_db.be_admin])
+def users(): 
+    role = request.args.get('role')
+    df = demographic_db.get_users(role)
+    html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
+    if role == 'administrators':
+        r = 'Administrator'
+    elif role == 'representatives':
+        r = 'Representative'
+    elif role == 'all':
+        r = 'All'
+    return render_template("users.html",table=html, titles=df.columns.values, role = r)
+
 @app.route('/deletelastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def deletelast():
     meal_site = request.args.get('mealsite')
-    demographic_db.delete_last_patron(meal_site)
+    num = request.cookies.get('num')
+    if int(num) >0:
+        num = str(int(num) -1)
+        demographic_db.delete_last_patron(meal_site)
+    else:
+        num = '0'
+ 
     html_code = render_template('submitpatrondata.html',
         mealsite = meal_site,
         ampm=get_ampm(),
@@ -233,54 +251,32 @@ def deletelast():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        racecheck = ""
+        num = num
         )
     response = make_response(html_code)
+    response.set_cookie('num', num)
     return response
 
 @app.route('/getlastpatron')
-#@login_required(basic=True)
+@login_required(basic=True)
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
-    print(last['meal_site'])
-    html_code = render_template('submitpatrondata.html',
-        mealsite = meal_site,
-        ampm=get_ampm(),
-        current_time=get_current_time(),
-        otherlanguages = database_constants.otherlanguages,
-        races = database_constants.races,
-        ages = database_constants.ages,
-        genders = database_constants.genders,
-        zip_codes = database_constants.ZIP_CODE_OPTIONS,
-        homeless_options = database_constants.HOMELESS_OPTIONS,
-        veteran_options = database_constants.VETERAN_OPTIONS,
-        disabled_options = database_constants.DISABLED_OPTIONS,
-        patron_response_options = database_constants.GUESSED_OPTIONS,
-        lastrace = last['race'],
-        lastlanguage = last['language'],
-        lastage = last['age_range'],
-        lastgender = last['gender'],
-        lastzip = last['zip_code'],
-        lasthomeless = last['homeless'],
-        lastveteran = last['veteran'],
-        lastdisabled = last['disabled'],
-        lastguess = last['guessed']
+    lastrace = last['race'].iloc[0]
+    print(lastrace)
+    lastrace = "\n".join(textwrap.wrap(lastrace, width=20))
+    html_code = render_template('prev.html',
+        lastrace = lastrace,
+        lastlanguage = last['language'].iloc[0],
+        lastage = last['age_range'].iloc[0],
+        lastgender = last['gender'].iloc[0],
+        lastzip = last['zip_code'].iloc[0],
+        lasthomeless = last['homeless'].iloc[0],
+        lastveteran = last['veteran'].iloc[0],
+        lastdisabled = last['disabled'].iloc[0],
+        lastguess = last['guessed'].iloc[0],
+        last = last
         )
     response = make_response(html_code)
     return response
-    # selects = ["service_timestamp", "meal_site", "race", "gender",
-    #            "age_range"]
-    # filters = {"meal_site": "First Baptist Church"}
-    # df = demographic_db.get_patrons(selects, filters)
-
-    # html_code = render_template('admindisplaydata.html',
-    #     ampm=get_ampm(),
-    #     current_time=get_current_time(),
-    #     data = df)
-
-    # response = make_response(html_code)
-    # return response
-
-
-
+    

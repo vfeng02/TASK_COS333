@@ -16,6 +16,7 @@ from dash_iconify import DashIconify as di
 import pandas
 import xlsxwriter
 from TASKdbcode import demographic_db
+from TASKdbcode import graphdashboard_helpers as helpers
 
 PAGE_SIZE = 100
 operators = [['ge ', '>='],
@@ -38,13 +39,23 @@ def init_tabledashboard(server):
 
     # icon="material-symbols:download-rounded" style="color: #194f77;"
     total_entries = demographic_db.get_total_entries()
-
     # Create Layout
+    columns = [1,2,3,4,5,6,7,8,9,10]
+    # {"name": "meal site", "id": "meal_site", "type": "text"},
+    # {"name": "race", "id": "race", "type": "text"},
+    # {"name": "language", "id": "language", "type": "text"},
+    # {"name": "age range", "id": "age_range", "type": "text"},
+    # {"name": "gender", "id": "gender", "type": "text"},
+    # {"name": "zip code", "id": "zip_code", "type": "text"},
+    # {"name": "homeless", "id": "homeless", "type": "text"},
+    # {"name": "veteran", "id": "veteran", "type": "text"},
+    # {"name": "disabled", "id": "disabled", "type": "text"},
+    # {"name": "guessed", "id": "guessed", "type": "text"}]
     table_app.layout = html.Div([
         dbc.Container([
         dbc.Row([
             dbc.Col(
-                html.H3("View Raw Data", style = {'color':'#ffc88f', 'margin-top':'5px', 'margin-left':'5px'}), 
+                html.H3("View Entry Data", style = {'color':'#ffc88f', 'margin-top':'5px', 'margin-left':'5px'}), 
                 width = 3, style = {'margin-left':'7px','margin-right':'0px'}),
             dbc.Col(
                 html.Div(className="vr", style={"margin-right": "0px",'height':'60px'}), width = 1, align = "center"),
@@ -52,7 +63,7 @@ def init_tabledashboard(server):
                 html.Div(id='num_entries_display', children=[], style = {'color':'white'}), width = 4),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current ", style = {"color":"#ffa74c"}), html.Span("Entry Data Excel")],
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current "), html.Span("Entry Data Excel")],
                                    id="btn_xlsxc", style = {"background-color": "#0085Ca"}))),
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All "), html.Span("Entry Data Excel")],
@@ -79,6 +90,25 @@ def init_tabledashboard(server):
                 {"name": "guessed", "id": "guessed", "type": "text"}    
             ],
             css=[{'selector': 'table', 'rule': 'table-layout: fixed'}],
+            tooltip_header={
+                'entry_timestamp': 'Enter a date and/or time in YYYY-MM-DD\'T\'HH:MM:SS format to filter for a specific year, month, date, or time.',
+        'meal_site': 'Filter for meal site. Use the \'or\' character with spaces to get more than one meal site',
+        'race': 'Enter \'race1\' to filter for all entries containing race1 (including multiracial), and \
+        enter \'eq race1\' to filter for entries exactly equal race1. Enter \',\' to filter for all mutliracial entries.\
+             Use the \'or\' character with spaces to get more than one race.',
+        'language':'Filter for language. Use the \'or\' character with spaces to get more than one language. Type in \'eq \' with a space afterwards\
+             before your input to match exactly.',
+        'age_range': 'Filter for age range. Use the \'or\' character with spaces to get more than one type. To use this, type in a range such as 18-24, or type \
+            >x, >=x, <x, or <=x where x is some number. Just entering a number or a non-predefined range will not work.',
+        'gender': 'Filter for gender. Use the \'or\' character with spaces to get more than one type.',
+        "zip_code": 'Filter for zip code. Use the \'or\' character with spaces to get more than one type.',
+        "homeless": 'Filter for homeless status. Use the \'or\' character with spaces to get more than one type.',
+        "veteran": 'Filter for veteran status. Use the \'or\' character with spaces to get more than one type.',
+        "disabled": 'Filter for disabled status. Use the \'or\' character with spaces to get more than one type.',
+        "guessed": 'Filter for guessed status. Use the \'or\' character with spaces to get more than one type.',
+    },
+    tooltip_delay=0,
+    tooltip_duration=None,
             style_table = {'overflowY': 'auto',
                 'height':'80vh', 'width':'100%'
             },
@@ -86,13 +116,13 @@ def init_tabledashboard(server):
                         'height': 'auto'},
             style_cell_conditional=[
                 {'if': {'column_id': 'entry_timestamp'},
-                 'width': '17%'},
+                 'width': '15%'},
                 {'if': {'column_id': 'meal_site'},
-                 'width': '15%'},
+                 'width': '13%'},
                 {'if': {'column_id': 'race'},
-                 'width': '15%'},
+                 'width': '11%'},
                 {'if': {'column_id': 'gender'},
-                 'width': '7%'}
+                 'width': '9%'}
             ],
             style_data={
                 'whiteSpace': 'normal',
@@ -116,10 +146,9 @@ def init_tabledashboard(server):
             page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
-
+            row_deletable=True,
             filter_action='custom',
             filter_query='',
-
             sort_action='custom',
             sort_mode='multi',
             sort_by=[],
@@ -129,6 +158,7 @@ def init_tabledashboard(server):
         )
 
     init_callbacks(table_app)
+    helpers.protect_dashviews(table_app)
 
     return table_app.server
 
@@ -219,13 +249,13 @@ def init_callbacks(table_app):
         [Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
         Input('table-filtering', 'sort_by'),
-        Input('table-filtering', "filter_query")],
-        State('num_total_entries', 'data'))
-    def update_table(page_current, page_size, sort_by, filter, num_total):
+        Input('table-filtering', "filter_query")])
+    def update_table(page_current, page_size, sort_by, filter):
         # print(filter)
         filtering_expressions = filter.split(' && ')
         filter_dicts = []
         time_filter = {}
+
 
         for filter_part in filtering_expressions:
 
@@ -260,6 +290,8 @@ def init_callbacks(table_app):
             print(dff)
 
         num_entries = len(dff.index)
+        num_total = demographic_db.get_total_entries()
+            
 
         # selected_sites = list(dff["meal_site"].unique())
         # total_site_entries = 0

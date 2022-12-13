@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html>
-	<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993" integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA==" data-cf-beacon='{"rayId":"76e50f826ed29956","version":"2022.11.3","r":1,"token":"41e3bf83fbc54099b0e9960e461f0e4d","si":100}' crossorigin="anonymous"></script>
     <head>
         <title>TASK.com</title>
 		{% include 'imports.html' %}
     </head>
     <body class="forceOpenSans">
 			<div id="wrapper">
-			<!-- <input type="button" value="Check All" onclick="check();">
-			<input type="button" value="Uncheck All" onclick="uncheck();">
-		 -->
 			</div>
-			
     {% include 'header.html' %}
     <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
 		<div style="margin-top: 10px;">
 			<center>
-				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Enter Diner Data</h2>
+				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
-				<h4 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<hr>
+				<div class = 'row' style ="margin-left: 30%; margin-right: 30%; width:40%;">
+				<h5 style =" width:100%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
+				<div class="col-sm-2" style="width:100%; align-content:right;">
+					<center>
+						<input id='deletelast' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
+					</center>
+				</div>
+			</div>
 			</center>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get"background-color: white;">
+		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}"  method="get">
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
 					<center>
@@ -32,17 +37,13 @@
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
 							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
 							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{%for race in ['White','Black','Hispanic','Unknown']%}
-							{% if race == 'Unknown' %}
-							<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							<!-- <label class="btn btn-secondary active"> 
-								<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
-							</label> -->
-							{%else%}
+							{% autoescape true %}
+							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
+							'Native Hawaiian/ Pacific Islander','Unknown']%}
+							
 							<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
 							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							{%endif%}
+							
 							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 							{%endfor%}
 							<select class="form-select-sm" id="race-multiselect" multiple="multiple" name="race" style="width: 120.5px">  
@@ -50,11 +51,11 @@
 								{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
 								<option value="{{race}}">{{race}}</option>
 								{% endfor %}
-							</select>
+							</select> -->
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						</div>
 						
-					
+						
 					<!-- <div class="row">
 						<center>
 							<text>Other: </text>
@@ -275,13 +276,13 @@
 					</center>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row"><br></div>
+			
+		<br/>
+		<div class="row" style="background-color:white;width:50%;margin-left:25%;"><br>
 					
-		<div class="row" style="justify-content:center">
+		<div class="row" style="justify-content:center; padding:2%; ">
 			<tr>
-				<div class="col-sm-4" style="width:58.5%; align-content:center;">
+				<div class="col-sm-4" style="width:100%; align-content:center;">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
@@ -292,26 +293,54 @@
 		
 		
         </form>
-		<!-- <div class="row" style="justify-content:center; margin-left: 21%; margin-right: 21%; width:58%; justify-content:center; background-color:white"">
-			<tr>
-				<div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
-					<center>
-						<input id='getlast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/getlastpatron?mealsite={{mealsite}}';" value="Previous Submission">
-					</center>
-				</div>
-				<div class="col-sm-2" style="width:50%; align-content:right;">
-					<center>
-						<input id='deletelast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
-					</center>
-				</div>
-			</tr>
-		</div> -->
-		
+	</div>
         {% include 'footer.html' %}
     </div>
+</div>
 	
+<button id = "bob" class="open-button" onclick="openForm();">Previous Submission</button>
+
+<div class="form-popup" id="myForm">
+  <form action="/action_page.php" class="form-container">
+	
+	<div class="container-fluid">
+		<div id="resulto"></div>
+	</div>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+<div class="container-fluid">
+	<div id="results"></div>
+</div>
+
+
+<script>
+function openForm() {
+	var bo = validateForm();
+	if (bo == false) {
+		return;
+	}
+  document.getElementById("myForm").style.display = "block";
+  $(document).ready(function () {
+    $(document).on('click', '.refresher', function () {
+		getResults();
+        $.ajax({
+            url: 'ajax.php',
+            method: get,
+            dataType: 'json',
+            success: function(response) {
+                $('#table-to-refresh').html(response);
+            }
+        });
+    });
+});
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
+
 </body>
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
@@ -322,41 +351,67 @@
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>
-
+<!-- <div class="col-sm-3"><input type="text" class="form-control" id="dept" placeholder="Department" autoFocus></div> -->
 <script>
 	'use strict';
-	function check(tagName)
-	{
-		var check=document.getElementsByTagName(tagName);
-		if (!check[i].checked){
-			check[i].checked=true;
-		}
-	}
-	function uncheck(tagName)
-	{
-		var uncheck=document.getElementsByTagName(tagName);
-		if (uncheck[i].checked){
-			uncheck[i].checked=false;
-		}
-	}
 	function validateForm() {
 		
-		var x = document.forms["patronForm"]["guessed"].value;
-		console.log(x)
-		if (x == '') {
-		alert("Please select True or False for Guess.");
+		var x = document.cookie.value;
+		let ca = document.cookie.split(';');
+		console.log(ca)
+		let c = ca[0];
+		if (c[0] != 'n'){
+			c = ca[1]
+		}
+		let a = c.split('=');
+		let ac = a[1];
+		if (ac == '0') {
+		alert("You have made 0 submissions so far.");
 			return false;
 		}
 		return true;
 	}
 	function handleResponse(response)
 	{
-		$('#error').html(response);
+		$('#results').html(response);
 	}
 	let request = null;
+	function setup()
+	{
+		$(document).on('load', getResults);
+		$('#dept').on('input', getResults);
+		getResults();
+	}
+	$('document').ready(setup);
+</script>
+
+
+<script>
+	'use strict';
+	function handleResponse(response)
+	{
+		$('#resulto').html(response);
+	}
+	request = null;
 	function getResults()
 	{
 		
+		let ca = document.cookie.split(';');
+		console.log("CA", ca)
+		let c = ca[1];
+		if (c[0] != 'm'){
+			c = ca[0];
+		}
+		let a = c.split('"');
+		let ac = a[1];
+		console.log("AC", ac)
+		let meal = encodeURIComponent(ac);
+		console.log("MEAL", meal)
+		let url = '/getlastpatron?mealsite='+meal
+		console.log(url)
+		//let url = '/getlastpatron?mealsite='+'Architects%20Housing'
+		if (request!= null)
+			request.abort();
 		request = $.ajax(
 			{
 				type: 'GET',
@@ -367,16 +422,10 @@
 	}
 	function setup()
 	{
-		$("#checkboxid").removeAttr("checked");
-		$(window).on('load', getResults);
-		$('#dept').on('input', getResults);
-		$('#coursenum').on('input', getResults);
-		$('#area').on('input', getResults);
-		$('#title').on('input', getResults);
+		getResults();
 	}
 	$('document').ready(setup);
 </script>
-
 </html>
 
 <style>
@@ -413,14 +462,89 @@
 	.inactive-recur-config {
 		display: none !important;
 	}
+	/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
 
-	input:focus, textarea:focus {
-		background-color: #ff9f46;
-	}
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
 
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
 	body {
-	/* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG/1200px-Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG); */ */
-	/* background-color: #cccccc; */
+	
+	background-color: #145078;
 	}
 
 </style>
+<style>
+	html {
+	  height: 100%;
+	}
+	body {
+	  /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+
+	  background-size: auto 100%;
+	  background-repeat: no-repeat;
+	  background-position: center center;
+	  /* background-color: #145078; */
+	}
+  </style>

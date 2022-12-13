@@ -146,7 +146,7 @@ GUESSED_OPTIONS = ["True", "False"]
 STATUS_OPTION_MAPPING = {"homeless":{"True":"Homeless", "False":"Not Homeless", "Unknown":"Unknown if Homeless"},
                          "veteran":{"True":"Veteran", "False":"Not Veteran", "Unknown":"Unknown if Veteran"},
                          "disabled":{"True":"Disabled", "False":"Not Disabled", "Unknown":"Unknown if Disabled"},
-                         "guessed":{"True":"Data Completely Guessed", "False":"Data Given by Diner"}}
+                         "guessed":{"True":"Entry Completely Guessed", "False":"Entry Not Guessed"}}
 
 
 MEAL_SITE_OPTIONS = ["First Baptist Church",\
