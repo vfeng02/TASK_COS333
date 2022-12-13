@@ -36,7 +36,6 @@ class User(Base):
     __tablename__ = "users"
     username = Column(String(), primary_key = True)
     password_hash = Column(String())
-    email = Column(String())
     role = Column(String())
     # idrk about this hashing stuff I just stole it from here
     # https://dev.to/kaelscion/authentication-hashing-in-sqlalchemy-1bem
