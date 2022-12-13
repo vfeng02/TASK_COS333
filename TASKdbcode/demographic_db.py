@@ -16,7 +16,7 @@ import datetime as dt
 # import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
-from sqlalchemy_filters import apply_filters
+from sqlalchemy_filters import filters
 from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
@@ -183,7 +183,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
                 else:
                     filter_spec = {"field": key, "op" : "==", "value": value}
                     
-                query = apply_filters(query, filter_spec)
+                query = filters.apply_filters(query, filter_spec)
             # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)
 
@@ -228,7 +228,7 @@ def filter_dms(filter_dicts):
                     else:
                         filter_spec = filter_dict
                         
-                    query = apply_filters(query, filter_spec)
+                    query = filters.apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         return demographic_df
     except Exception as ex:
@@ -382,7 +382,7 @@ def be_admin(username):
                 print(query)
                 if not query: return False
                 for row in query:
-                    if row.role != 'administrator': 
+                    if row.role != 'jaimeparker': 
                         return False 
                         # "User does not have admin role"
                     return

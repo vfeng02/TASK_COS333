@@ -8,7 +8,7 @@
 			<div id="wrapper">
 			</div>
     {% include 'header.html' %}
-    <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
+    <div class="container-fluid"style ="margin-top: 50px; max-width:750px; justify-content:center; background-color:white" >
 		<div style="margin-top: 10px;">
 			<center>
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; background-color:white">Enter Diner Data</h2>
@@ -31,42 +31,46 @@
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
 					<center>
-					<div class="row">
-						<center><p>Race (Select All That Apply)</p></center>
-					</div>
-						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
-							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{% autoescape true %}
-							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
-							'Native Hawaiian/ Pacific Islander','Unknown']%}
-							
-							<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							
-							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
-							{%endfor%}
-							<select class="form-select-sm" id="race-multiselect" multiple="multiple" name="race" style="width: 120.5px">  
-								<!-- <option selected>More options</option> -->
-								{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select> -->
-							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<div class="row">
+							<center><p>Race (Select All That Apply)</p></center>
 						</div>
+							<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
+								<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
+								<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
+								{%for race in ['White','Black','Hispanic','Unknown']%}
+								{% if race == 'Unknown' %}
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								<!-- <label class="btn btn-secondary active"> 
+									<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
+								</label> -->
+								{%else%}
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								{%endif%}
+								<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
+								{%endfor%}
+								<select class="form-select-sm" id="race-multiselect" multiple="multiple" name="race" style="width: 120.5px">  
+									<!-- <option selected>More options</option> -->
+									{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+									<option value="{{race}}">{{race}}</option>
+									{% endfor %}
+								</select>
+								<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+							</div>
+							
 						
-						
-					<!-- <div class="row">
-						<center>
-							<text>Other: </text>
-							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select>
-						</center>
-					</div> -->
-				</center>
+						<!-- <div class="row">
+							<center>
+								<text>Other: </text>
+								<select name="otherraces" id = "otherraces">  
+									{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+									<option value="{{race}}">{{race}}</option>
+									{% endfor %}
+								</select>
+							</center>
+						</div> -->
+					</center>
 				</div>
 				
 				<div class="col-sm-4">
