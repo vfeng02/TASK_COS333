@@ -227,6 +227,21 @@ def users():
         r = 'All'
     return render_template("users.html",table=html, titles=df.columns.values, role = r)
 
+@app.route('/deleteuser', methods=['GET','POST'])
+@login_required(username="jaimeparker")
+def deleteuser(): 
+    role = request.args.get('role')
+    df = demographic_db.get_users(role)
+    html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
+    if role == 'administrators':
+        r = 'Administrator'
+    elif role == 'representatives':
+        r = 'Representative'
+    elif role == 'all':
+        r = 'All'
+    return render_template("users.html",table=html, titles=df.columns.values, role = r)
+
+
 @app.route('/deletelastpatron')
 @login_required(basic=True)
 def deletelast():
