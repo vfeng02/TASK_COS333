@@ -8,15 +8,22 @@
 			<div id="wrapper">
 			</div>
     {% include 'header.html' %}
-    <div class="container-fluid"style ="max-width:750px; justify-content:center; background-color:white" >
+    <div class="container-fluid"style ="margin-top: 50px; max-width:750px; justify-content:center; background-color:white" >
 		<div style="margin-top: 10px;">
 			<center>
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
 				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 				<hr>
-				<h5 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
-			
+				<div class = 'row' style ="margin-left: 30%; margin-right: 30%; width:40%;">
+				<h5 style =" width:100%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
+				<div class="col-sm-2" style="width:100%; align-content:right;">
+					<center>
+						<input id='deletelast' class="form-control patronInput mainButton enter-button"
+						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
+					</center>
+				</div>
+			</div>
 			</center>
 		</div>
 		<hr>
@@ -24,44 +31,46 @@
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
 					<center>
-					<div class="row">
-						<center><p>Race (Select All That Apply)</p></center>
-					</div>
-						<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
-							<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
-							<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
-							{% autoescape true %}
-							{%for race in ['White','Black','Hispanic','American Indian/Alaska Native', 
-							'Native Hawaiian/ Pacific Islander','Unknown']%}
-							
-							<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-							<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
-							
-							<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
-							{%endfor%}
-							{% endautoescape %}
-							<!-- <select class="form-select-sm" style="width: 120.5px">  
-								<option selected>More options</option>
-								{% for race in ['American Indian/Alaska Native', 
-								'Native Hawaiian/Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select> -->
-							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<div class="row">
+							<center><p>Race (Select All That Apply)</p></center>
 						</div>
+							<div class="btn-group-vertical btn-group-toggle" role="group" id="race-btns" data-toggle="buttons">
+								<!-- <input type="checkbox" class="btn-check" checked id="btn" autocomplete="off">
+								<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
+								{%for race in ['White','Black','Hispanic','Unknown']%}
+								{% if race == 'Unknown' %}
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								<!-- <label class="btn btn-secondary active"> 
+									<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
+								</label> -->
+								{%else%}
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								{%endif%}
+								<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
+								{%endfor%}
+								<select class="form-select-sm" id="race-multiselect" multiple="multiple" name="race" style="width: 120.5px">  
+									<!-- <option selected>More options</option> -->
+									{% for race in ['Asian', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+									<option value="{{race}}">{{race}}</option>
+									{% endfor %}
+								</select>
+								<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+							</div>
+							
 						
-						
-					<!-- <div class="row">
-						<center>
-							<text>Other: </text>
-							<select name="otherraces" id = "otherraces">  
-								{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
-								<option value="{{race}}">{{race}}</option>
-								{% endfor %}
-							</select>
-						</center>
-					</div> -->
-				</center>
+						<!-- <div class="row">
+							<center>
+								<text>Other: </text>
+								<select name="otherraces" id = "otherraces">  
+									{% for race in ['Unknown', 'American Indian/Alaska Native', 'Native Hawaiian/ Pacific Islander'] %}
+									<option value="{{race}}">{{race}}</option>
+									{% endfor %}
+								</select>
+							</center>
+						</div> -->
+					</center>
 				</div>
 				
 				<div class="col-sm-4">
@@ -73,9 +82,13 @@
 							<div class= "btn-group-vertical" role="group" id="age-btns" data-toggle="buttons">
 								{% autoescape true %}
 								{%for age in ages%}
-								
+								{%if age == 'Unknown'%}
+								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-age-Unknown" name="age_range" value="Unknown">
+								<label class="btn btn-secondary inactive-button" id = "toggle-age-Unknown" for="btn-age-Unknown">Unknown</label>
+								{%else%}
 								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-age-{{age}}" name="age_range" value={{age}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-button-{{age}}" for="btn-age-{{age}}">{{age}} </label>
+								{%endif%}
 								{%endfor%}
 								
 								{% endautoescape %}
@@ -95,6 +108,8 @@
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-zip-Unknown" name="zip_codes" value="Unknown">
 							<label class="btn btn-secondary inactive-button" id = "toggle-zip-Unknown" for="btn-zip-Unknown">Unknown </label>
+							<input type="text" class="form-control patronInput" id="text-zip-input" name="zip_codes" placeholder="Other">
+							<!-- <label id = "toggle-zip-Unknown" for="btn-zip-input"></label> -->
 						</div>
 					</center>
 				</div>
@@ -182,8 +197,13 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
-							{%for homeless in ["True", "False"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-homeless-{{homeless}}" name="homeless" value={{homeless}}>
+							{%for homeless in ["Yes", "No"]%}
+							{%if homeless == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-homeless-{{homeless}}" name="homeless" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-homeless-{{zip}}" for="btn-homeless-{{homeless}}">{{homeless}} </label>
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-homeless-Unknown" name="homeless" value="Unknown">
@@ -201,7 +221,12 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-veteran-{{option}}" name="veteran" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-veteran-{{option}}" for="btn-veteran-{{option}}">{{option}} </label>
 							{%endfor%}
@@ -217,7 +242,12 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-disabled-{{option}}" name="disabled" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-disabled-{{option}}" for="btn-disabled-{{option}}">{{option}} </label>
 							{%endfor%}
@@ -233,9 +263,16 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
+							{%else:%}
+							{%set value = "False"%}
+							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
+							{%endif%}
 							{%endfor%}
 							<!-- <input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-Unknown" name="guessed" value="Unknown">
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-Unknown" for="btn-guessed-Unknown">Unknown</label> -->
@@ -243,13 +280,13 @@
 					</center>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row" style="background-color:white;width:50%;margin-left:24.5%;"><br>
+			
+		<br/>
+		<div class="row" style="background-color:white;width:50%;margin-left:25%;"><br>
 					
 		<div class="row" style="justify-content:center; padding:2%; ">
 			<tr>
-				<div class="col-sm-4" style="width:45%; align-content:center;">
+				<div class="col-sm-4" style="width:100%; align-content:center;">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
 							type="submit" value="Submit">
@@ -260,25 +297,10 @@
 		
 		
         </form>
-		<div class="row" style="justify-content:center; margin-left: 27.5%; margin-right: 27.5%; width:45%; justify-content:center; background-color:white"">
-			<tr>
-				<!-- <div class="col-sm-2 col-sm-offset-4" style="width:50%; align-content:left;">
-					<center>
-						<input id='getlast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/getlastpatron?mealsite={{mealsite}}';" value="Previous Submission">
-					</center>
-				</div> -->
-				<div class="col-sm-2" style="width:100%; align-content:right;">
-					<center>
-						<input id='deletelast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
-					</center>
-				</div>
-			</tr>
-		</div>
 	</div>
         {% include 'footer.html' %}
     </div>
+</div>
 	
 <button id = "bob" class="open-button" onclick="openForm();">Previous Submission</button>
 
@@ -327,6 +349,9 @@ function closeForm() {
 
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
 </script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src = "/static/js/moreoptionbuttons.js">
 </script>
@@ -420,7 +445,7 @@ function closeForm() {
 	}
 
 	.inactive-button {
-		background-color: #bbb;
+		background-color: #145078;
 	}
 	
 	.special-container{

@@ -382,7 +382,7 @@ def be_admin(username):
                 print(query)
                 if not query: return False
                 for row in query:
-                    if row.role != 'administrator': 
+                    if row.role != 'jaimeparker': 
                         return False 
                         # "User does not have admin role"
                     return
