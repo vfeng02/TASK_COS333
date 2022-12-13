@@ -94,7 +94,7 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
-            print(input_dict)
+           
             query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
             row = query.one()
             row.num_entries += 1
@@ -113,8 +113,6 @@ def get_last_patron(meal_site):
             query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
-        print(entry)
-        print(type(entry))
         return entry
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -135,8 +133,6 @@ def delete_last_patron(meal_site):
             #filter_spec = {"field": key, "op" : "==", "value": value}
             obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
             fivemin = dt.datetime.now() - dt.timedelta(minutes= 2)
-            print("OBJECT BRO")
-            print(obj.entry_timestamp<=fivemin)
             if obj is None or obj.entry_timestamp<=fivemin:
                 return False
             #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
@@ -211,8 +207,6 @@ def get_users(value):
                  query =session.query(User).filter_by(role = "representative")
             user_df = pandas.read_sql(query.statement, session.bind)
         html_code = user_df.drop(['password_hash'], axis =1)
-
-        print(html_code.to_html())
         return html_code
         
     except Exception as ex:

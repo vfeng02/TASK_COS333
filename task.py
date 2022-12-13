@@ -23,6 +23,7 @@ from TASKdbcode import counttabledashboard
 from pretty_html_table import build_table
 import sqlalchemy
 import sys
+import textwrap
 from werkzeug.security import generate_password_hash,\
     check_password_hash
 
@@ -103,24 +104,30 @@ def selectmealsit1e():
 def submitpatrondata():
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('mealsite')
+    new = False
     num = request.cookies.get('num')
+    if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
+        new = True
+        mealsite = new_mealsite
+        num = '0'
+    
     submitted = request.args.get('language')
     if submitted:
-        num = str(int(num)+1)
-    set_new_mealsite = False         
-    if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
-        set_new_mealsite = True
-        mealsite = new_mealsite
-   
-    set_new_mealsite = False 
+        num = str(int(num)+1)   
+    
+
     races = []
-    # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:
         for race in request.args.getlist('race'):
-            print(race)
             if (race != 'Unknown'):
-                races.append(race)
+                if race == "Native":
+                    races.append("Native Hawaiian/Pacific Islander")
+                elif race == "American":
+                    races.append("American Indian/Alaska Native")
+                else:
+                    races.append(race)
         races = list(filter(None, races))
+    print("RACE", races)
     racecsv = ",".join(races)
     language = request.args.get('language')
     age_range = request.args.get('age_range')
@@ -161,12 +168,10 @@ def submitpatrondata():
         num = num,
         )
     response = make_response(html_code)
-    
-    if set_new_mealsite:
-        response.set_cookie('mealsite', mealsite)
-        num = '0'
     response.set_cookie('num',num)
-
+    if new:
+        response.set_cookie('mealsite', new_mealsite)
+   
     return response
 
  #-----------------------------------------------------------------------
@@ -232,7 +237,7 @@ def deletelast():
         demographic_db.delete_last_patron(meal_site)
     else:
         num = '0'
-    print('BIG NUM', num)
+ 
     html_code = render_template('submitpatrondata.html',
         mealsite = meal_site,
         ampm=get_ampm(),
@@ -257,8 +262,11 @@ def deletelast():
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
+    lastrace = last['race'].iloc[0]
+    print(lastrace)
+    lastrace = "\n".join(textwrap.wrap(lastrace, width=20))
     html_code = render_template('prev.html',
-        lastrace = last['race'].iloc[0],
+        lastrace = lastrace,
         lastlanguage = last['language'].iloc[0],
         lastage = last['age_range'].iloc[0],
         lastgender = last['gender'].iloc[0],
