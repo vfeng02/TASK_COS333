@@ -338,7 +338,7 @@ function closeForm() {
 		var x = document.cookie.value;
 		let ca = document.cookie.split(';');
 		console.log(ca)
-		let c = ca[2];
+		let c = ca[0];
 		let a = c.split('=');
 		let ac = a[1];
 		if (ac == '0') {
