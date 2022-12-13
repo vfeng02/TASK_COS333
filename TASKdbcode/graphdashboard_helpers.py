@@ -30,13 +30,13 @@ def protect_dashviews(dashapp):
     """If you want your Dash app to require a login,
     call this function with the Dash app you want to protect"""
     
-    pass
+    # pass
 
-    # for view_func in dashapp.server.view_functions:
-    #     if view_func.startswith(dashapp.config.url_base_pathname):
-    #         dashapp.server.view_functions[view_func] = login_required(
-    #             dashapp.server.view_functions[view_func], must=[demographic_db.be_admin]
-    #         )
+    for view_func in dashapp.server.view_functions:
+        if view_func.startswith(dashapp.config.url_base_pathname):
+            dashapp.server.view_functions[view_func] = login_required(
+                dashapp.server.view_functions[view_func], must=[demographic_db.be_admin]
+            )
 #-----------------------------------------------------------------------
 
 # def table_buttons_helper():
