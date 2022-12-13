@@ -15,7 +15,7 @@
 				<hr>
 				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 				<hr>
-				<h5 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
+				<h5 style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
 			
 			</center>
 		</div>
@@ -339,6 +339,9 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[0];
+		if (c[0] != 'n'){
+			c = ca[1]
+		}
 		let a = c.split('=');
 		let ac = a[1];
 		if (ac == '0') {
@@ -389,6 +392,9 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[1];
+		if (c[0] == 'n'){
+			c = ca[1]
+		}
 		let a = c.split('"');
 		let ac = a[1];
 		console.log(ac)
