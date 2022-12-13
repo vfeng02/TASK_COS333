@@ -104,12 +104,18 @@ def submitpatrondata():
     # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('site')
+    num = request.cookies.get('num')
+    submitted = request.args.get('language')
+    if submitted:
+        num = str(int(num)+1)
+        print("BIG NOTICE SIGN", submitted)
     set_new_mealsite = False         
     # print("selected site")
     # print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
+        num = 0
 
     races = []
     # print(request.args.getlist('race'))
@@ -159,12 +165,14 @@ def submitpatrondata():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        racecheck = ""
+        num = num,
         )
     response = make_response(html_code)
-
+    
     if set_new_mealsite:
-        response.set_cookie('site', mealsite)
+        response.set_cookie('mealsite', mealsite)
+        num = '0'
+    response.set_cookie('num',num)
 
     return response
 
@@ -225,7 +233,13 @@ def users():
 @login_required(basic=True)
 def deletelast():
     meal_site = request.args.get('mealsite')
-    demographic_db.delete_last_patron(meal_site)
+    num = request.cookies.get('num')
+    if int(num) >0:
+        num = str(int(num) -1)
+        demographic_db.delete_last_patron(meal_site)
+    else:
+        num = '0'
+    print('BIG NUM', num)
     html_code = render_template('submitpatrondata.html',
         mealsite = meal_site,
         ampm=get_ampm(),
@@ -239,9 +253,10 @@ def deletelast():
         veteran_options = database_constants.VETERAN_OPTIONS,
         disabled_options = database_constants.DISABLED_OPTIONS,
         patron_response_options = database_constants.GUESSED_OPTIONS,
-        racecheck = ""
+        num = num
         )
     response = make_response(html_code)
+    response.set_cookie('num', num)
     return response
 
 @app.route('/getlastpatron')

@@ -14,10 +14,13 @@
 				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; background-color:white">Enter Diner Data</h2>
 				<hr>
 				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
+				<hr>
+				<h5 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
+			
 			</center>
 		</div>
 		<hr>
-		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}" onsubmit="return validateForm()" method="get">
+		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}"  method="get">
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
 					<center>
@@ -268,7 +271,7 @@
 				<div class="col-sm-2" style="width:100%; align-content:right;">
 					<center>
 						<input id='deletelast' class="form-control patronInput mainButton enter-button"
-						type="button" onclick="location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
+						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
 					</center>
 				</div>
 			</tr>
@@ -295,6 +298,10 @@
 
 <script>
 function openForm() {
+	var bo = validateForm();
+	if (bo == false) {
+		return;
+	}
   document.getElementById("myForm").style.display = "block";
   $(document).ready(function () {
     $(document).on('click', '.refresher', function () {
@@ -328,10 +335,17 @@ function closeForm() {
 	'use strict';
 	function validateForm() {
 		
-		var x = document.forms["patronForm"]["guessed"].value;
-		console.log(x)
-		if (x == '') {
-		alert("Please select True or False for Guess.");
+		var x = document.cookie.value;
+		let ca = document.cookie.split(';');
+		console.log(ca)
+		let c = ca[3];
+		console.log(c)
+		console.log("HEKOPPPP")
+		let a = c.split('=');
+		let ac = a[1];
+		console.log("THE NUM IS EQUAL TO", ac)
+		if (ac == '0') {
+		alert("You have made 0 submissions so far.");
 			return false;
 		}
 		return true;
@@ -376,6 +390,7 @@ function closeForm() {
 	{
 		
 		let ca = document.cookie.split(';');
+		console.log(ca)
 		let c = ca[1];
 		let a = c.split('"');
 		let ac = a[1];
