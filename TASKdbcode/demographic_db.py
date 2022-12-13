@@ -12,6 +12,7 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import functions
+import datetime as dt
 # import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
@@ -134,13 +135,15 @@ def delete_last_patron(meal_site):
             #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
             #filter_spec = {"field": key, "op" : "==", "value": value}
             obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
+            fivemin = dt.datetime.now() - dt.timedelta(minutes= 2)
+            print("OBJECT BRO")
+            print(obj.entry_timestamp<=fivemin)
+            if obj is None or obj.entry_timestamp<=fivemin:
+                return False
             #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
-            query = session.query(EntryCount).filter(EntryCount.meal_site == "meal_site")
-            row = query.one()
-            row.num_entries -= 1
-
-            session.commit()
+            return True
+            
 
 
     except Exception as ex:
@@ -440,7 +443,6 @@ def be_admin(username):
 
 # class Redding_Circle_Senior_Center(MealSite):
 #     __tablename__ = "redding_circle_senior_center"
-
 
 
 
