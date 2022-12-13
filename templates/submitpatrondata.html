@@ -392,9 +392,10 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[1];
-		if (c[0] == 'n'){
+		if (c[0] != 'm'){
 			c = ca[1]
 		}
+		
 		let a = c.split('"');
 		let ac = a[1];
 		console.log(ac)
