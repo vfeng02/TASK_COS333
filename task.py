@@ -101,22 +101,21 @@ def selectmealsit1e():
 @app.route('/submitpatrondata', methods=['GET'])
 @login_required(basic=True)
 def submitpatrondata():
-    # mealsite = request.args.get('mealsite')
     new_mealsite = request.args.get('mealsite')
-    mealsite = request.cookies.get('site')
+    print("NEW SITE", new_mealsite)
+    mealsite = request.cookies.get('mealsite')
     num = request.cookies.get('num')
     submitted = request.args.get('language')
     if submitted:
         num = str(int(num)+1)
-        print("HI I AM THE NUM", num)
     set_new_mealsite = False         
     # print("selected site")
-    # print(mealsite)
+    print("WHAT IS HAPPENING")
+    print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
-    new_mealsite = 'Trenton Area Soup Kitchen'
-    mealsite = 'Trenton Area Soup Kitchen'
+   
     set_new_mealsite = False 
     races = []
     # print(request.args.getlist('race'))
@@ -146,7 +145,6 @@ def submitpatrondata():
     # print(patron_data)
 
     # print(any(patron_data.values()))
-
     zip_codes_by_mealsite = database_constants.ZIP_CODES[database_constants.MEAL_SITE_LOCATIONS[mealsite]]
     
     if (any(patron_data.values())):
