@@ -15,9 +15,11 @@
 				<hr>
 				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
 				<hr>
-				<div class = 'row' style ="margin-left: 30%; margin-right: 30%; width:40%;">
-				<h5 style =" width:100%; justify-content:center; background-color:white">Number of submissions: {{num}}</h5>
-				<div class="col-sm-2" style="width:100%; align-content:right;">
+				<div class = 'row'>
+
+				<div style = "float:center;width:60%;margin-top:1%"><h5 style =" width:100%; justify-content:center; background-color:white;"> Number of submissions: {{num}}</h5></div>
+				
+				<div class="col-sm-2" style="width:100%; align-content:right;float:right;width:40%">
 					<center>
 						<input id='deletelast' class="form-control patronInput mainButton enter-button"
 						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
