@@ -376,19 +376,27 @@ def check_my_users(user):
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
-        print(username)
-        with sqlalchemy.orm.Session(engine) as session:
-                query = session.query(User).filter(User.username == username)
-                print(query)
-                if not query: return False
-                for row in query:
-                    if row.role != 'jaimeparker': 
-                        return False 
-                        # "User does not have admin role"
-                    return
-    except EOFError as ex: 
-        print("there is an error in be_admin")
+        if username == "jaimeparker":
+            return
+        else: 
+            return False
+    except Exception as ex: 
+        print(ex, file=sys.stderr)  
         sys.exit(1)
+    
+    #     print(username)
+    #     with sqlalchemy.orm.Session(engine) as session:
+    #             query = session.query(User).filter(User.username == username)
+    #             print(query)
+    #             if not query: return False
+    #             for row in query:
+    #                 if row.role != 'jaimeparker': 
+    #                     return False 
+    #                     # "User does not have admin role"
+    #                 return
+    # except EOFError as ex: 
+    #     print("there is an error in be_admin")
+    #     sys.exit(1)
     # except Exception as ex:
     #     print(ex, file=sys.stderr)
     #     sys.exit(1)
