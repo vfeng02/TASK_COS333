@@ -96,8 +96,10 @@ def init_tabledashboard(server):
         'race': 'Enter \'race1\' to filter for all entries containing race1 (including multiracial), and \
         enter \'eq race1\' to filter for entries exactly equal race1. Enter \',\' to filter for all mutliracial entries.\
              Use the \'or\' character with spaces to get more than one race.',
-        'language':'Filter for language. Use the \'or\' character with spaces to get more than one language.',
-        'age_range': 'Filter for language. Use the \'or\' character with spaces to get more than one type.',
+        'language':'Filter for language. Use the \'or\' character with spaces to get more than one language. Type in \'eq \' with a space afterwards\
+             before your input to match exactly.',
+        'age_range': 'Filter for age range. Use the \'or\' character with spaces to get more than one type. To use this, type in a range such as 18-24, or type \
+            >x, >=x, <x, or <=x where x is some number. Just entering a number or a non-predefined range will not work.',
         'gender': 'Filter for gender. Use the \'or\' character with spaces to get more than one type.',
         "zip_code": 'Filter for zip code. Use the \'or\' character with spaces to get more than one type.',
         "homeless": 'Filter for homeless status. Use the \'or\' character with spaces to get more than one type.',
