@@ -36,6 +36,24 @@ function updateGender() {
     }
 }
 
+// function updateRace() {
+//     let gender_val = $('#gender-more-options').val();
+//     if (gender_val != 'More options') {
+//         $('#gender-btns input[name=gender]').val(gender_val);
+//         $('#gender-more-options').attr("style", "background-color:#ff9f46");
+
+//         gender_ids = ["btn-gender-Male", "btn-gender-Female", "btn-gender-Unknown"];
+//         for (id of gender_ids) {
+//             let gender_btn = document.getElementById(id);
+//             console.log(gender_btn);
+//             if (gender_btn.hasAttribute("checked")) {
+//                 gender_btn.removeAttribute("checked");
+//             }
+//         }
+
+//     }
+// }
+
 // function updateLang2() {
     
 // }

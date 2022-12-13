@@ -190,8 +190,13 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="homeless-btns" data-toggle="buttons">
-							{%for homeless in ["True", "False"]%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-homeless-{{homeless}}" name="homeless" value={{homeless}}>
+							{%for homeless in ["Yes", "No"]%}
+							{%if homeless == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-homeless-{{homeless}}" name="homeless" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-homeless-{{zip}}" for="btn-homeless-{{homeless}}">{{homeless}} </label>
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-homeless-Unknown" name="homeless" value="Unknown">
@@ -209,7 +214,12 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="veteran-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-veteran-{{option}}" name="veteran" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-veteran-{{option}}" for="btn-veteran-{{option}}">{{option}} </label>
 							{%endfor%}
@@ -225,7 +235,12 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="disabled-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
+							{%else:%}
+							{%set value = "False"%}
+							{%endif%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-disabled-{{option}}" name="disabled" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-disabled-{{option}}" for="btn-disabled-{{option}}">{{option}} </label>
 							{%endfor%}
@@ -241,9 +256,16 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="guessed-btns" data-toggle="buttons">
-							{%for option in ["True", "False"]%}
+							{%for option in ["Yes", "No"]%}
+							{%if option == "Yes"%}
+							{%set value = "True"%}
 							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
+							{%else:%}
+							{%set value = "False"%}
+							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
+							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
+							{%endif%}
 							{%endfor%}
 							<!-- <input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-Unknown" name="guessed" value="Unknown">
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-Unknown" for="btn-guessed-Unknown">Unknown</label> -->
