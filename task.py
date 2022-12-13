@@ -178,21 +178,21 @@ def submitpatrondata():
 
 
 @app.route('/admin', methods=['GET'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def admindisplaydata():
     return render_template(
         "admin.html"
     )
 
 @app.route("/dash", methods=['POST','GET'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def dash():
     return app.index()
 
 
 
 @app.route('/register', methods=['GET', 'POST'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def register(): 
     email = request.args.get('email')
     password = request.args.get('password')
@@ -208,13 +208,13 @@ def register():
     )
 
 @app.route('/viewusers', methods=['GET','POST'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def viewusers(): 
     return render_template("viewusers.html")
 
 
 @app.route('/users', methods=['GET','POST'])
-@login_required(must=[demographic_db.be_admin])
+@login_required(username="jaimeparker")
 def users(): 
     role = request.args.get('role')
     df = demographic_db.get_users(role)
