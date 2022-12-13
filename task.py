@@ -108,16 +108,16 @@ def submitpatrondata():
     submitted = request.args.get('language')
     if submitted:
         num = str(int(num)+1)
-        print("BIG NOTICE SIGN", submitted)
+        print("HI I AM THE NUM", num)
     set_new_mealsite = False         
     # print("selected site")
     # print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
-        num = 0
     new_mealsite = 'Trenton Area Soup Kitchen'
     mealsite = 'Trenton Area Soup Kitchen'
+    set_new_mealsite = False 
     races = []
     # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:

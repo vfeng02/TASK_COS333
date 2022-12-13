@@ -339,6 +339,9 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[0];
+		if (c[0] != 'n'){
+			c = ca[1]
+		}
 		let a = c.split('=');
 		let ac = a[1];
 		if (ac == '0') {
@@ -389,6 +392,9 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[1];
+		if (c[0] == 'n'){
+			c = ca[1]
+		}
 		let a = c.split('"');
 		let ac = a[1];
 		console.log(ac)
