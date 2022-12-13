@@ -11,6 +11,7 @@
     {% include 'admin_header.html' %}
     <h1 style="color:white;padding-top: 2%;
     padding-bottom: 2%;"><center>{{role}} Users </center></h1>
+    
     <div class = container-fluid style="width: 40%; margin-left:30%; background-color:white; position: absolute; padding-top: 2%;
     padding-right: 2%;
     padding-bottom: 2%;
@@ -18,10 +19,14 @@
            align = "justify" >
    
            <center>{{ table|safe }}</center>
-           
+           <label for="user"><b>Delete User</b></label>
+    <input type="user" placeholder="Delete User" name="user" required><div style="width:68%;margin-left:16%">
+        <button type="submit" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" class="signup">Delete User</button></div>
   </div>
-  <label for="user"><b>Delete User</b></label>
-  <input type="user" placeholder="Delete User" name="user" required>
+  <div>
+    
+  </div>
+ 
     <!-- {% include 'footer.html' %} -->
   </body>
 </html>

@@ -61,39 +61,19 @@
   <div class="formContainer" style = "width:70%;margin-left:15%">
   <h1><center>Add An User</center></h1>
   <hr>
-  <label for="email"><b>Username</b></label>
-  <input type="text" placeholder="Enter Username" name="email" required>
+  <label for="username"><b>Username</b></label>
+  <input type="text" placeholder="Enter Username" name="username" required>
   <label for="password"><b>Password</b></label>
   <input type="password" placeholder="Enter Password" name="password" required>
   <label for="repeatPassword"><b>Repeat Password</b></label>
   <input type="password" placeholder="Repeat Password" name="repeatPassword"
   required>
-  <br/>
   
-  <center>
-  <div class="form-item box-item">
-    <div class="form-item-triple">
-      <h3>Account Type</h3>
-      <br/>
-      <!-- <div class="radio-label"> 
-        <label class="label">Account Type</label>
-      </div> -->
-   <div >
-      <div class="form-item orange enter-button"align="center" style ="width:68%;margin-left:16% padding:1%; float:left"> 
-        <input id="representative" type="radio" name="AccountType" value="representative" data-once>
-        <label for="representative">Representative</label>
-      </div>
-      <center>
-      <!-- <div class="form-item orange enter-button"align="justify" style="margin-left:0%;padding:1%;float:right;width:50%"> 
-        <input id="admin" style="margin-left:46%" type="radio" name="AccountType" value="admin" data-once>
-        <label for="admin">Admin</label>
-      </div> -->
-   </div>
-   </center>
+  
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     </div>
-  <br/>
-  <br/>
+  
+  
   <div style="width:68%;margin-left:16%"><button type="submit" class="signup">Register User</button></div>
   
   <br/>
