@@ -339,11 +339,8 @@ function closeForm() {
 		let ca = document.cookie.split(';');
 		console.log(ca)
 		let c = ca[2];
-		console.log(c)
-		console.log("HEKOPPPP")
 		let a = c.split('=');
 		let ac = a[1];
-		console.log("THE NUM IS EQUAL TO", ac)
 		if (ac == '0') {
 		alert("You have made 0 submissions so far.");
 			return false;

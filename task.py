@@ -116,7 +116,8 @@ def submitpatrondata():
         set_new_mealsite = True
         mealsite = new_mealsite
         num = 0
-
+    new_mealsite = 'Trenton Area Soup Kitchen'
+    mealsite = 'Trenton Area Soup Kitchen'
     races = []
     # print(request.args.getlist('race'))
     if request.args.getlist('race') is not None:
