@@ -116,13 +116,13 @@ def init_tabledashboard(server):
                         'height': 'auto'},
             style_cell_conditional=[
                 {'if': {'column_id': 'entry_timestamp'},
-                 'width': '17%'},
+                 'width': '15%'},
                 {'if': {'column_id': 'meal_site'},
-                 'width': '15%'},
+                 'width': '13%'},
                 {'if': {'column_id': 'race'},
-                 'width': '15%'},
+                 'width': '11%'},
                 {'if': {'column_id': 'gender'},
-                 'width': '7%'}
+                 'width': '9%'}
             ],
             style_data={
                 'whiteSpace': 'normal',
@@ -149,10 +149,6 @@ def init_tabledashboard(server):
             row_deletable=True,
             filter_action='custom',
             filter_query='',
-            row_selectable = 'multi',
-            selected_rows = [], 
-            column_selectable = 'single',
-            selected_columns = [], 
             sort_action='custom',
             sort_mode='multi',
             sort_by=[],

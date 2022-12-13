@@ -23,6 +23,7 @@ from TASKdbcode import counttabledashboard
 from pretty_html_table import build_table
 import sqlalchemy
 import sys
+import textwrap
 from werkzeug.security import generate_password_hash,\
     check_password_hash
 
@@ -119,8 +120,14 @@ def submitpatrondata():
     if request.args.getlist('race') is not None:
         for race in request.args.getlist('race'):
             if (race != 'Unknown'):
-                races.append(race)
+                if race == "Native":
+                    races.append("Native Hawaiian/Pacific Islander")
+                elif race == "American":
+                    races.append("American Indian/Alaska Native")
+                else:
+                    races.append(race)
         races = list(filter(None, races))
+    print("RACE", races)
     racecsv = ",".join(races)
     language = request.args.get('language')
     age_range = request.args.get('age_range')
@@ -255,8 +262,11 @@ def deletelast():
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
+    lastrace = last['race'].iloc[0]
+    print(lastrace)
+    lastrace = "\n".join(textwrap.wrap(lastrace, width=20))
     html_code = render_template('prev.html',
-        lastrace = last['race'].iloc[0],
+        lastrace = lastrace,
         lastlanguage = last['language'].iloc[0],
         lastage = last['age_range'].iloc[0],
         lastgender = last['gender'].iloc[0],
