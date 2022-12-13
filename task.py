@@ -102,16 +102,12 @@ def selectmealsit1e():
 @login_required(basic=True)
 def submitpatrondata():
     new_mealsite = request.args.get('mealsite')
-    print("NEW SITE", new_mealsite)
     mealsite = request.cookies.get('mealsite')
     num = request.cookies.get('num')
     submitted = request.args.get('language')
     if submitted:
         num = str(int(num)+1)
     set_new_mealsite = False         
-    # print("selected site")
-    print("WHAT IS HAPPENING")
-    print(mealsite)
     if mealsite is None or (mealsite != new_mealsite and new_mealsite is not None): 
         set_new_mealsite = True
         mealsite = new_mealsite
@@ -142,9 +138,7 @@ def submitpatrondata():
     "homeless": homeless, "veteran": veteran, "disabled": disabled,
     "guessed": guessed}
 
-    # print(patron_data)
 
-    # print(any(patron_data.values()))
     zip_codes_by_mealsite = database_constants.ZIP_CODES[database_constants.MEAL_SITE_LOCATIONS[mealsite]]
     
     if (any(patron_data.values())):
