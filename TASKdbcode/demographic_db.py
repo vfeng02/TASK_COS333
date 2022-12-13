@@ -377,7 +377,9 @@ def be_admin(username):
     """Validator to check if user has admin role"""
     try:
         if username == "jaimeparker":
-            return True
+            return
+        else: 
+            return False
     except Exception as ex: 
         print(ex, file=sys.stderr)  
         sys.exit(1)
