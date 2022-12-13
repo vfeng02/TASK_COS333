@@ -103,6 +103,8 @@
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-zip-Unknown" name="zip_codes" value="Unknown">
 							<label class="btn btn-secondary inactive-button" id = "toggle-zip-Unknown" for="btn-zip-Unknown">Unknown </label>
+							<input type="text" class="form-control patronInput" id="text-zip-input" name="zip_codes" placeholder="Other">
+							<!-- <label id = "toggle-zip-Unknown" for="btn-zip-input"></label> -->
 						</div>
 					</center>
 				</div>
@@ -390,7 +392,7 @@
 	}
 
 	.inactive-button {
-		background-color: #bbb;
+		background-color: #145078;
 	}
 	
 	.special-container{
@@ -411,6 +413,11 @@
 	.inactive-recur-config {
 		display: none !important;
 	}
+
+	input:focus, textarea:focus {
+		background-color: #ff9f46;
+	}
+
 	body {
 	/* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG/1200px-Cathedral_of_St._Mary_of_the_Assumption_-_Trenton_02.JPG); */ */
 	/* background-color: #cccccc; */

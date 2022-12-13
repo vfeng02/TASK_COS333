@@ -63,7 +63,7 @@ languages = sorted(LANGUAGE_OPTIONS)
 OTHER_LANGUAGE_OPTIONS = ["ASL", "Arabic", "Bengali",\
                     "Chinese", "Creole","Dari", "Farsi", "French",\
                     "German", "Polish", "Russian", "Swahili", "Urdu",\
-                    "Vietnamese", "Other", "Unknown"]
+                    "Vietnamese", "Other"]
 
 otherlanguages = sorted(OTHER_LANGUAGE_OPTIONS)
 

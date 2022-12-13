@@ -12,6 +12,7 @@ function updateLang() {
             console.log(lang_btn);
             if (lang_btn.hasAttribute("checked")) {
                 lang_btn.removeAttribute("checked");
+                // lang_btn.setAttribute("style", "background-color: #145078");
             }
         }
 
@@ -30,6 +31,24 @@ function updateGender() {
             console.log(gender_btn);
             if (gender_btn.hasAttribute("checked")) {
                 gender_btn.removeAttribute("checked");
+            }
+        }
+
+    }
+
+}
+
+function updateZip() {
+    let zip_val = $('#text-zip-input').val();
+    if (zip_val != '') {
+        $('#zip-btns input[name=zip_codes]').val(zip_val);
+        // $('#text-zip-input').attr("style", "background-color:#ff9f46");
+
+        zip_ids = ["btn-zip-Unknown"];
+        for (id of zip_ids) {
+            let zip_btn = document.getElementById(id);
+            if (zip_btn.hasAttribute("checked")) {
+                zip_btn.removeAttribute("checked");
             }
         }
 
@@ -60,8 +79,9 @@ function updateGender() {
 
 
 function setup() {
-    $('#lang-more-options').on('change', updateLang);
-    $('#gender-more-options').on('change', updateGender);
+    $('#lang-more-options').bind('change', updateLang);
+    $('#gender-more-options').bind('change', updateGender);
+    $('#text-zip-input').bind('change', updateZip);
     $('#race-multiselect').select2({
         placeholder: "More options"
     });
