@@ -46,7 +46,7 @@ def fill_db(num_entries):
 
         with sqlalchemy.orm.Session(engine) as session:
             start_date = datetime.datetime(2022, 10, 1, 0, 0, 0, 0)
-            end_date = datetime.datetime(2023, 1, 1, 0, 0, 0, 0)
+            end_date = datetime.datetime(2022, 12, 12, 0, 0, 0, 0)
 
             for meal_site_option in database_constants.MEAL_SITE_OPTIONS:
                 for _ in range(num_entries):

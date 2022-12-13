@@ -25,7 +25,6 @@ def insert_users(session):
     #-------------------------------------------------------------------
 
     admin = database.User(username = "jaimeparker",
-                          email = "jaimep@trentonsoupkitchen.org",
                           role = "administrator")
     admin.set_password("Jaime's password")
     session.add(admin)
@@ -34,31 +33,26 @@ def insert_users(session):
     #-------------------------------------------------------------------
 
     rep = database.User(username = "charleskelly",
-                        email = "charlie@fx.com",
                         role = "representative")
     rep.set_password("Charlie's password")
     session.add(rep)
     
     rep = database.User(username = "ronaldmcdonald",
-                        email = "mac@fx.com",
                         role = "representative")
     rep.set_password("Mac's password")
     session.add(rep)
     
     rep = database.User(username = "dennisreynolds",
-                        email = "dennis@fx.com",
                         role = "representative")
     rep.set_password("Dennis' password")
     session.add(rep)
     
     rep = database.User(username = "deandrareynolds",
-                        email = "dee@fx.com",
                         role = "representative")
     rep.set_password("Dee's password")
     session.add(rep)
     
     rep = database.User(username = "franklinreynolds",
-                        email = "frank@fx.com",
                         role = "representative")
     rep.set_password("Frank's password")
     session.add(rep)
