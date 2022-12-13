@@ -229,7 +229,7 @@
 							{%else:%}
 							{%set value = "False"%}
 							{%endif%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-veteran-{{option}}" name="veteran" value={{option}}>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-veteran-{{option}}" name="veteran" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-veteran-{{option}}" for="btn-veteran-{{option}}">{{option}} </label>
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-veteran-Unknown" name="veteran" value="Unknown">
@@ -250,7 +250,7 @@
 							{%else:%}
 							{%set value = "False"%}
 							{%endif%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-disabled-{{option}}" name="disabled" value={{option}}>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-disabled-{{option}}" name="disabled" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-disabled-{{option}}" for="btn-disabled-{{option}}">{{option}} </label>
 							{%endfor%}
 							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-disabled-Unknown" name="disabled" value="Unknown">
@@ -268,11 +268,11 @@
 							{%for option in ["Yes", "No"]%}
 							{%if option == "Yes"%}
 							{%set value = "True"%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
 							{%else:%}
 							{%set value = "False"%}
-							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{option}}>
+							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-guessed-{{option}}" name="guessed" value={{value}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-guessed-{{option}}" for="btn-guessed-{{option}}">{{option}} </label>
 							{%endif%}
 							{%endfor%}
