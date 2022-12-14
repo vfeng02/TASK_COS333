@@ -29,6 +29,7 @@
 			</center>
 		</div>
 		<hr>
+		<meta id="zipcodes_list" data-zipcodes="{{ zip_codes }}">
 		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}"  method="get">
 			<div class="row" id = "wrapper">
 				<div class="col-sm-4">
@@ -42,13 +43,13 @@
 								{%for race in ['White','Black','Hispanic','Unknown']%}
 								{% if race == 'Unknown' %}
 								<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-race-{{race}}" autocomplete="off" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" for="btn-race-{{race}}">{{race}}</label>
+								<label class="btn btn-secondary inactive-button" id="label-race-{{race}}" for="btn-race-{{race}}">{{race}}</label>
 								<!-- <label class="btn btn-secondary active"> 
 									<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
 								</label> -->
 								{%else%}
-								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" id="btn-race-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-race-{{race}}">{{race}}</label>
 								{%endif%}
 								<!-- <label id = "toggle-button-{{race}}" for="btn-check-{{race}}">{{race}} </label> -->
 								{%endfor%}
@@ -105,13 +106,14 @@
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="zip-btns" data-toggle="buttons">
 							{%for zip in zip_codes%}
-							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-zip-{{zip}}" name="zip_codes" value={{zip}}>
+							<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-zip-{{zip}}" name="zip" value={{zip}}>
 							<label class="btn btn-secondary inactive-button" id = "toggle-zip-{{zip}}" for="btn-zip-{{zip}}">{{zip}} </label>
 							{%endfor%}
-							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-zip-Unknown" name="zip_codes" value="Unknown">
+							<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-zip-Unknown" name="zip" value="Unknown">
 							<label class="btn btn-secondary inactive-button" id = "toggle-zip-Unknown" for="btn-zip-Unknown">Unknown </label>
-							<input type="text" class="form-control patronInput" id="text-zip-input" name="zip_codes" placeholder="Other">
+							<input type="text" class="form-control patronInput" id="text-zip-input" name="zip" maxlength="7" placeholder="Other">
 							<!-- <label id = "toggle-zip-Unknown" for="btn-zip-input"></label> -->
+							<input type="hidden" name="zip_codes" value="Unknown"/>
 						</div>
 					</center>
 				</div>
@@ -126,10 +128,10 @@
 						<center>
 							<div class="btn-group-vertical btn-group-toggle" role="group" id="lang-btns" data-toggle="buttons">
 								{%for lang in ['English','Spanish']%}
-								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-lang-{{lang}}" name="language" value={{lang}}>
+								<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-lang-{{lang}}" name="lang" value={{lang}}>
 								<label class="btn btn-secondary inactive-button" id = "toggle-lang-{{lang}}" for="btn-lang-{{lang}}">{{lang}} </label>
 								{%endfor%}
-								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-lang-Unknown" name="language" value="Unknown">
+								<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-lang-Unknown" name="lang" value="Unknown">
 								<label class="btn btn-secondary inactive-button" id = "toggle-lang-Unknown" for="btn-lang-Unknown">Unknown</label>
 								<select class="form-select-sm" id="lang-more-options">  
 									<option selected>More options</option>
@@ -137,6 +139,7 @@
 									<option id="{{lang}}-option" value="{{lang}}">{{lang}}</option>
 									{% endfor %}
 								</select>
+								<input type="hidden" name="language" value="Unknown"/>
 							</div>
 						</center>
 					</div>
@@ -157,28 +160,19 @@
 					</div>
 					<center>
 						<div class="btn-group-vertical btn-group-toggle" role="group" id="gender-btns" data-toggle="buttons">
-						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Male" name="gender" value="Male">
+						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Male" name="gend" value="Male">
 						<label class="btn btn-secondary inactive-button" id = "toggle-gender-male" for="btn-gender-Male">Male</label>
-						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Female" name="gender" value="Female">
+						<input type="radio" class="btn-check form-control patronInput mainButton" id="btn-gender-Female" name="gend" value="Female">
 						<label class="btn btn-secondary inactive-button" id = "toggle-gender-female" for="btn-gender-Female">Female</label>
-						<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-gender-Unknown" name="gender" value="Unknown">
+						<input type="radio" checked class="btn-check form-control patronInput mainButton" id="btn-gender-Unknown" name="gend" value="Unknown">
 						<label class="btn btn-secondary inactive-button" id = "toggle-gender-Unknown" for="btn-gender-Unknown">Unknown</label>
 						<select id="gender-more-options" class="form-select-sm">
 							<option selected>More options</option>
 							{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other'] %}
-							<option name="gender" value="{{gender}}">{{gender}}</option>
+							<option value="{{gender}}">{{gender}}</option>
 							{% endfor %}
 						</select>
-						<!-- <label class="btn btn-secondary inactive-button" id = "toggle-gender-options">
-							
-						</label> -->
-						
-
-						<!-- <ul class="dropdown-menu">
-							{% for gender in ['Non-Binary', 'TransMale', 'TransFemale', 'Other'] %}
-							<li><a class="dropdown-item" id="btn-gender-{{gender}}" name="gender" value="{{gender}}">{{gender}}</a></li>
-							{% endfor %}
-						</ul> -->
+						<input type="hidden" name="gender" value="Unknown"/>
 						</div>
 					<!-- </center>
 					<div class="row">
@@ -442,9 +436,19 @@ function closeForm() {
 		width: 120.5px;
 	}
 
-	.btn-secondary.checked, .btn-check:checked+.btn-secondary {
+	.btn-check:checked+.btn-secondary {
 		background-color: #ff9f46;
 	}
+
+	/* .race-multiselect span {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	background-color: red;
+}
+.checkbox input:checked + span {
+	background-color: lime;
+} */
 
 	.inactive-button {
 		background-color: #145078;
