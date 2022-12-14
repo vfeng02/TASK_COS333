@@ -41,8 +41,8 @@
 								<label class="btn btn-secondary inactive-button" for="btn">btn</label> -->
 								{%for race in ['White','Black','Hispanic','Unknown']%}
 								{% if race == 'Unknown' %}
-								<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-{{race}}" autocomplete="off" name="race" value={{race}}>
-								<label class="btn btn-secondary inactive-button" for="btn-{{race}}">{{race}}</label>
+								<input type="checkbox" class="btn-check form-control patronInput mainButton" checked id="btn-race-{{race}}" autocomplete="off" name="race" value={{race}}>
+								<label class="btn btn-secondary inactive-button" for="btn-race-{{race}}">{{race}}</label>
 								<!-- <label class="btn btn-secondary active"> 
 									<input type="checkbox" checked class="btn-check" id="btn-{{race}}" name="race" value={{race}}> {{race}}
 								</label> -->
