@@ -143,7 +143,7 @@ def init_tabledashboard(server):
             },
             # style_as_list_view = True,
             page_current=0,
-            #page_count = int(math.ceil(total_entries / PAGE_SIZE)),
+            page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
             row_deletable=True,
@@ -161,6 +161,7 @@ def init_tabledashboard(server):
     helpers.protect_dashviews(table_app)
 
     return table_app.server
+
 
 
 def split_filter_part(filter_part):
@@ -194,6 +195,14 @@ def split_filter_part(filter_part):
 
 
 def init_callbacks(table_app):
+
+    @table_app.callback(
+    Output('table-filtering', 'page_current'),
+    Output('table-filtering', 'page_count'),
+    [Input('table-filtering','filter_query')])
+    def reset_to_page_0(filter_query):
+        total_entries = demographic_db.get_total_entries()
+        return (0, int(math.ceil(total_entries / PAGE_SIZE)) )
 
     @table_app.callback(
     Output("download-dataframe-xlsxa", "data"),
@@ -327,3 +336,5 @@ def init_callbacks(table_app):
         return (dff.iloc[
             page_current*page_size:(page_current + 1)*page_size
         ].to_dict('records'), display)
+     
+
