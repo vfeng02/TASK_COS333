@@ -6,21 +6,14 @@
     </head>
     <body>
         {% include 'header.html' %}
-        <div class="container-fluid" style = "background-color :white;margin-left: 35%;
-        margin-right: auto;width:30%; position: absolute; padding-top: 2%;
-  padding-right: 2%;
-  padding-bottom: 2%;
-  padding-left: 2%;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);">
+        <div class="container-fluid" style = "color:white; background-color:#145078 ; margin-top: 50px; max-width:400px;">
             <center><h1>Select Mealsite</h1></center>
-            <br>
+            <hr style="color:white">
             <center>
                 <form action="/submitpatrondata" method="get">
-                    <div class="row">
+                    <div class="row" >
                         <center>
-                            <select name="mealsite" id = "mealsite"style = " width:250px;">  
+                            <select name="mealsite" id = "mealsite"style="width: 300px">  
                             {% for site in mealsites %}
                             <option value="{{site}}">{{site}}</option>
                             {% endfor %}
@@ -28,10 +21,13 @@
                     </center>
                         
                     </div>
+                    
+                    <!-- <hr style="color:white"> -->
+                    <br>
                     <br>
                     <div class="row">
                         <center>
-                            <input id='go' type= "submit" class="form-control mainButton enter-button" style="background: #145078;color:white; width:250px;"
+                            <input id='go' type= "submit" class="form-control mainButton enter-button" style="background-color:#ff9f46 ;font-weight: bold; color:white; width:250px;"
                             type="button" value="Go">
                         </center>
                     </div>

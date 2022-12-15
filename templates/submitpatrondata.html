@@ -8,27 +8,27 @@
 			<div id="wrapper">
 			</div>
     {% include 'header.html' %}
-    <div class="container-fluid"style ="margin-top: 50px; max-width:750px; justify-content:center; background-color:white" >
-		<div style="margin-top: 10px;">
+    <div class="container-fluid rounded" style ="margin-bottom: 30px; max-width:750px; justify-content:center; background-color:#bbb" >
+		<div style="margin-top: 10px; margin-left: -15px; margin-right: -15px;background-color:#145078">
 			<center>
-				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; background-color:white">Enter Diner Data</h2>
-				<hr>
-				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-left: 15%; margin-right: 15%; width:70%; justify-content:center; background-color:white">You are in {{mealsite}}</h4>
-				<hr>
+				<h2 style ="margin-left: 15%; margin-right: 15%; width:70%; padding: 2%;justify-content:center; color: white;background-color:#145078">Enter Diner Data</h2>
+				<h4 id = 'mealsitebtn' value = {{mealsite}} style ="margin-top: 10px; margin-bottom: 10px; margin-left: 50; margin-right: 0px; justify-content:center; color:#ff9f46;">You are in {{mealsite}}</h4>
+				<hr style="color: white;">
 				<div class = 'row'>
 
-				<div style = "float:center;width:60%;margin-top:1%"><h5 style =" width:100%; justify-content:center; background-color:white;"> Number of submissions: {{num}}</h5></div>
+				<div style = "float:center;width:60%;margin-top:1%; background-color: #145078;"><h5 style ="justify-content:center; color:white;"> Number of submissions:</h5><h5 style="white-space: nowrap; color:#ff9f46;">{{num}}</h5> </div>
 				
 				<div class="col-sm-2" style="width:100%; align-content:right;float:right;width:40%">
 					<center>
-						<input id='deletelast' class="form-control patronInput mainButton enter-button"
+						<input id='deletelast' class="form-control patronInput mainButton enter-button" style="border:2px #ff9f46"
 						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
 					</center>
 				</div>
 			</div>
 			</center>
+			<br>
 		</div>
-		<hr>
+		<br>
 		<meta id="zipcodes_list" data-zipcodes="{{ zip_codes }}">
 		<form id = "patronForm" action="/submitpatrondata?mealsite={{mealsite}}"  method="get">
 			<div class="row" id = "wrapper">
@@ -278,14 +278,14 @@
 				</div>
 			
 		<br/>
-		<div class="row" style="background-color:white;width:50%;margin-left:25%;"><br>
+		<div class="row" style="background-color:#bbb;width:50%;margin-left:25%;"><br>
 					
-		<div class="row" style="justify-content:center; padding:2%; ">
+		<div class="row" style="justify-content:center; padding:2%; background-color:#bbb ">
 			<tr>
-				<div class="col-sm-4" style="width:100%; align-content:center;">
+				<div class="col-sm-4" style="width:100%; align-content:center; background-color:#bbb ">
 					<center>
 						 <input id='submit' class="form-control patronInput mainButton enter-button"
-							type="submit" value="Submit">
+							type="submit" value="Submit" style="font-weight:bold; background-color:white; border:3px solid #ff9f46;">
 					</center>
 				</div>
 			</tr>
@@ -533,6 +533,10 @@ function closeForm() {
 /* Add a red background color to the cancel button */
 .form-container .cancel {
   background-color: red;
+}
+
+.p {
+  color: #ff9f46;
 }
 
 /* Add some hover effects to buttons */
