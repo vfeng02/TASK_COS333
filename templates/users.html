@@ -20,11 +20,13 @@
    
            <center>{{ table|safe }}</center>
            <label for="user"><b>Delete User</b></label>
-    <input type="user" placeholder="Delete User" name="user" required><div style="width:68%;margin-left:16%">
-        <button type="submit" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" class="signup">Delete User</button></div>
+    <input placeholder="Delete User"  required><div style="width:68%;margin-left:16%">
+        <button type="submit" class="username">Delete User</button></div>
   </div>
   <div>
-    
+    <div>
+        {{success}}
+    </div>
   </div>
  
     <!-- {% include 'footer.html' %} -->

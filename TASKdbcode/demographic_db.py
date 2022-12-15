@@ -137,6 +137,7 @@ def delete_last_patron(meal_site):
                 return False
             #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
+            session.commit()
             return True
             
 
@@ -271,7 +272,6 @@ def get_total_entries():
 #-----------------------------------------------------------------------
 
 # input a dict like {"username":username,
-#                    "email":email
 #                    "password":password.
 #                    "role": role}
 # role is either administrator or representative
@@ -291,7 +291,7 @@ def add_user(input_dict):
             # for demographic in demographic_options:
             #     demographics[demographic] = args_dict[demographic]
             user = User(username = input_dict["username"],
-                          email = input_dict["email"],
+
                           role = input_dict["role"])
             user.set_password(input_dict["password"])
             session.add(user)
@@ -305,6 +305,26 @@ def add_user(input_dict):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
+def delete_user(username):
+    
+
+    try:
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            obj=session.query(User).filter_by(username=username, role= 'representative').first()
+            session.delete(obj)
+            session.commit()
+            return True
+            
+
+        # engine.dispose()
+
+    except Exception as ex:
+        return False
+
+#-----------------------------------------------------------------------
+
 
 def display_users():
     
@@ -318,7 +338,7 @@ def display_users():
                 for row in table:
                     print("\nuser")
                     print('-------------------------------------------')
-                    print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nemail:{row.email}")
+                    print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nusername:{row.username}")
                     print('-------------------------------------------')
         # engine.dispose()
 

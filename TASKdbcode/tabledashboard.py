@@ -143,7 +143,7 @@ def init_tabledashboard(server):
             },
             # style_as_list_view = True,
             page_current=0,
-            page_count = int(math.ceil(total_entries / PAGE_SIZE)),
+            #page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
             row_deletable=True,
