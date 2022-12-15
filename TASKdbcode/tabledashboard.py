@@ -198,11 +198,9 @@ def init_callbacks(table_app):
 
     @table_app.callback(
     Output('table-filtering', 'page_current'),
-    Output('table-filtering', 'page_count'),
     [Input('table-filtering','filter_query')])
     def reset_to_page_0(filter_query):
-        total_entries = demographic_db.get_total_entries()
-        return (0, int(math.ceil(total_entries / PAGE_SIZE)) )
+        return (0)
 
     @table_app.callback(
     Output("download-dataframe-xlsxa", "data"),
@@ -255,6 +253,7 @@ def init_callbacks(table_app):
     @table_app.callback(
         Output('table-filtering', 'data'),
         Output('num_entries_display', 'children'),
+        Output('table-filtering', 'page_count'),
         [Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
         Input('table-filtering', 'sort_by'),
@@ -298,6 +297,7 @@ def init_callbacks(table_app):
             dff = dff.loc[dff["entry_timestamp"].astype(str).str.startswith(time_filter["value"])]
             print(dff)
 
+
         num_entries = len(dff.index)
         num_total = demographic_db.get_total_entries()
             
@@ -335,6 +335,7 @@ def init_callbacks(table_app):
 
         return (dff.iloc[
             page_current*page_size:(page_current + 1)*page_size
-        ].to_dict('records'), display)
+        ].to_dict('records'), display, int(math.ceil(num_entries / PAGE_SIZE)) 
+)
      
 
