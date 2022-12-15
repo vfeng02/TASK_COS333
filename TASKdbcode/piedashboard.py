@@ -402,7 +402,7 @@ def init_callbacks(pie_app):
 
                 pie_chart.update_layout(
                     legend={"xanchor": "left",
-                            "x": 1,
+                            "x": 1.5,
                             "yanchor": "top",
                             "y": 1})
 
@@ -413,7 +413,7 @@ def init_callbacks(pie_app):
                             direction="down",
                             active=0,
                             showactive=True,
-                            x=0.75,
+                            x=.75,
                             y=0.99,
                             xanchor="left",
                             yanchor="top",
