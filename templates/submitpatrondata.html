@@ -16,9 +16,9 @@
 				<hr style="color: white;">
 				<div class = 'row'>
 
-				<div style = "float:center;width:60%;margin-top:1%; background-color: #145078;"><h5 style ="justify-content:center; color:white;"> Number of submissions:</h5><h5 style="white-space: nowrap; color:#ff9f46;">{{num}}</h5> </div>
+				<div style = "float:center;max-width:400px;margin-top:1%; background-color: #145078;"><h5 style ="justify-content:center; color:white;"> Number of submissions:</h5><h5 style="white-space: nowrap; color:#ff9f46;">{{num}}</h5> </div>
 				
-				<div class="col-sm-2" style="width:100%; align-content:right;float:right;width:40%">
+				<div class="col-sm-4" style="max-width:400px; justify-content:center;">
 					<center>
 						<input id='deletelast' class="form-control patronInput mainButton enter-button" style="border:2px #ff9f46"
 						type="button" onclick="validateForm();location.href='/deletelastpatron?mealsite={{mealsite}}';" value="Undo Previous Submission">
@@ -479,11 +479,13 @@ function closeForm() {
   padding: 16px 20px;
   border: none;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 0.9;
   position: fixed;
   bottom: 23px;
-  right: 28px;
-  width: 280px;
+  border: 1px solid white;
+  right: 18px;
+  width: 220px;
+  z-index:100;
 }
 
 /* The popup form - hidden by default */

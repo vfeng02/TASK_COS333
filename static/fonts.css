@@ -39,3 +39,7 @@
   background{
     color: hotpink
   }
+
+  .navbar-collapse.in {
+    display: block !important;
+}
