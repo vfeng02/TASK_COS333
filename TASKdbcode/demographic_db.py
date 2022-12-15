@@ -196,16 +196,11 @@ def get_patrons(filter_dict = {}, select_fields = []):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
-def get_users(value):
+def get_users():
     
     try:
-        with sqlalchemy.orm.Session(engine) as session:
-            if value == 'all':
-                 query =session.query(User)
-            elif value == 'administrators':
-                 query =session.query(User).filter_by(role = "administrator")
-            elif value == 'representatives':
-                 query =session.query(User).filter_by(role = "representative")
+        with sqlalchemy.orm.Session(engine) as session: 
+            query =session.query(User)
             user_df = pandas.read_sql(query.statement, session.bind)
         html_code = user_df.drop(['password_hash'], axis =1)
         return html_code
@@ -276,30 +271,19 @@ def get_total_entries():
 #                    "role": role}
 # role is either administrator or representative
 def add_user(input_dict):
-    
-    if input_dict["role"] not in ["administrator", "representative"]:
-        return
-        # maybe do some other checks here for a "valid" username/email/password
-
-    # print(input_dict)
-
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
-
         with sqlalchemy.orm.Session(engine) as session:
-            # demographics = {}
-            # for demographic in demographic_options:
-            #     demographics[demographic] = args_dict[demographic]
-            user = User(username = input_dict["username"],
-
-                          role = input_dict["role"])
+            username = input_dict["username"]
+            user = User(username = username,
+                          role = 'representative')
             user.set_password(input_dict["password"])
-            session.add(user)
-
-            session.commit()
-
-        # engine.dispose()
-
+            obj = session.query(User).filter_by(username=username).first()
+            if not obj:
+                session.add(user)
+                session.commit()
+                return True
+            else:
+                return False
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)

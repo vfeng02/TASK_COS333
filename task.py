@@ -189,53 +189,50 @@ def admindisplaydata():
 @app.route('/register', methods=['GET', 'POST'])
 @login_required(must=[demographic_db.be_admin])
 def register(): 
+    success = ''
     username = request.args.get('username')
-    password = request.args.get('password')
-    account_type = request.args.get('AccountType')
-    repeat_password = request.args.get('repeatPassword')
-    if password != repeat_password: 
-        print("Passwords do not match")
-    account_details = {"username": username, "password": password, "role": account_type}
-    demographic_db.add_user(account_details)
-
+    if username:
+        password = request.args.get('password')
+        account_type = 'representative'
+        repeat_password = request.args.get('repeatPassword')
+        if password != repeat_password: 
+            success = "Passwords do not match"
+        else: 
+            account_details = {"username": username, "password": password, "role": account_type}
+            result = demographic_db.add_user(account_details)
+            if result:
+                success = "Registration Success!"
+            else:
+                success = "Username taken, please try another."
     return render_template(
-        "register.html"
+        "register.html", success = success
     )
-
-@app.route('/viewusers', methods=['GET','POST'])
-@login_required(must=[demographic_db.be_admin])
-def viewusers(): 
-    return render_template("viewusers.html")
-
 
 @app.route('/users', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
-def users(): 
-    role = request.args.get('role')
-    df = demographic_db.get_users(role)
-    html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
-    if role == 'administrators':
-        r = 'Administrator'
-    elif role == 'representatives':
-        r = 'Representative'
-    elif role == 'all':
-        r = 'All'
-    print(html, "HTML")
-    return render_template("users.html",table=html, titles=df.columns.values, role = r, success = '')
+def viewusers(): 
+    return render_template("userdashboard.html")
 
-@app.route('/deleteuser', methods=['GET','POST'])
+@app.route('/viewusers', methods=['GET','POST'])
+@login_required(must=[demographic_db.be_admin])
+def users(): 
+    df = demographic_db.get_users()
+    html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
+    return render_template("viewusers.html",table=html, titles=df.columns.values, success = '')
+
+@app.route('/deleteusers', methods=['GET','POST'])
 @login_required(username="jaimeparker")
 def deleteuser(): 
     success = ''
-    
-    username = request.args.get('username')
+    username = request.args.get('user')
+    print(username)
     if username:
         result = demographic_db.delete_user(username)
         if not result:
             success = 'Not a valid username'
     df = demographic_db.get_users()
     html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
-    return render_template("users.html",table=html, titles=df.columns.values, role = 'All', success = success)
+    return render_template("deleteusers.html",table=html, titles=df.columns.values, role = 'All', success = success)
 
 
 @app.route('/deletelastpatron')
