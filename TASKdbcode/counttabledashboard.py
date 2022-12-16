@@ -83,12 +83,12 @@ def init_counttabledashboard(server):
         ], width = 5, style = {'margin-top':'5px', 'margin-bottom':'5px'}, className = "gx-0"),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
-                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current "), html.Br(), html.Span("Count Data Excel")],
+                                       id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current "), html.Span("Count Data Excel")],
                                    id="btn_xlsxcc", style = {"background-color": "#0085Ca"}))),
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlchelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" All "), html.Span("Count Data Excel")],
                                    id="btn_xlsxac", style = {"background-color": "#0085Ca"})))
-        ], style={'margin-bottom':"5px", 'margin-top':'5px', 'margin-left':"5px"}, align = "center")]),
+        ], style={'margin-bottom':"5px", 'margin-top':'5px', 'margin-left':"5px", 'margin-right':'7px'}, align = "center")]),
         dcc.Download(id="download-dataframe-xlsxcc"),
         dcc.Download(id="download-dataframe-xlsxac"),
         dbc.Row([
