@@ -3,7 +3,9 @@
 # -----------------------------------------------------------------------
 # counttabledashboard.py
 # Author: Andres Blanco Bonilla
-# Dash app for displaying the count table on the admin interface
+# Dash app for displaying the "View Count Data" tab (counttable)
+# on the admin interface.
+# route: /counttableapp
 # -----------------------------------------------------------------------
 
 """Instantiate a Dash app."""
@@ -39,13 +41,9 @@ def init_counttabledashboard(server):
         external_stylesheets=[CUSTOM_BOOTSTRAP],
         url_base_pathname="/counttableapp/")
 
-    # icon="material-symbols:download-rounded" style="color: #194f77;"
-    # total_entries = demographic_db.get_total_entries()
 
-    # Create Layout
-
+    # failed attempt at creating table
     # dff = demographic_db.get_patrons()
-
     # count_df_list = []
     # for option in database_constants.DEMOGRAPHIC_OPTIONS:
     #     count_df = dff.groupby(['meal_site', option]).size().unstack(fill_value=0)
@@ -102,16 +100,6 @@ def init_counttabledashboard(server):
             },
             style_cell={'textAlign': 'left',
                         'height': 'auto'},
-            # style_cell_conditional=[
-            #     {'if': {'column_id': 'entry_timestamp'},
-            #      'width': '17%'},
-            #     {'if': {'column_id': 'meal_site'},
-            #      'width': '15%'},
-            #     {'if': {'column_id': 'race'},
-            #      'width': '15%'},
-            #     {'if': {'column_id': 'gender'},
-            #      'width': '7%'}
-            # ],
             style_data={
                 'whiteSpace': 'normal',
                 'height': 'auto',
@@ -145,10 +133,6 @@ def init_counttabledashboard(server):
 
     return count_table_app.server
 
-
-
-# update non time-based filters
-# fix age range filter
 
 
 def init_callbacks(count_table_app):
@@ -207,6 +191,8 @@ def init_callbacks(count_table_app):
         
         return dcc.send_data_frame(df.to_excel, "taskcountdatacurrent.xlsx", sheet_name="TASK_count_data_current")
 
+    # This callback updates the count table display with the data
+    # that matches the currently selected demographic categories.
     @count_table_app.callback(
         Output('count-table', 'data'),
         Input('demographic_count_options', 'value'))
@@ -228,7 +214,6 @@ def init_callbacks(count_table_app):
             if option in list(database_constants.STATUS_OPTION_MAPPING):
                 print(database_constants.STATUS_OPTION_MAPPING[option])
                 count_df.rename(columns = database_constants.STATUS_OPTION_MAPPING[option], inplace = True)
-                #print(count_df)
             else:
                 count_df.rename(columns = {"Unknown":f"Unknown {option.title()}", "Other":f"Other {option.title()}"}, inplace=True)
             count_df_list.append(count_df)
@@ -236,6 +221,7 @@ def init_callbacks(count_table_app):
         counts_df = reduce(lambda df1,df2: pandas.merge(df1,df2,on='meal_site'), count_df_list)
         counts_df.reset_index(inplace=True)
         counts_df.rename(columns = {'meal_site':'meal site'}, inplace=True)
+        # Testing a display that I ended up thinking was ugly
         # display = html.H4(["Currently Showing: All Count Data", html.Br()], style = {'margin-top': '5px'})
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
         # if len(filter_text_list) > 1:

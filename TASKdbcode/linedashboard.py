@@ -3,11 +3,10 @@
 #-----------------------------------------------------------------------
 # linedashboard.py
 # Author: Andres Blanco Bonilla
-# Dash app for line graph display
+# Dash app for "Graph By Date" (line graph) display.
 # route: /lineapp
 #-----------------------------------------------------------------------
 
-"""Instantiate a Dash app."""
 import dash
 import pandas
 import datetime
@@ -27,9 +26,10 @@ from TASKdbcode import graphdashboard_helpers as helpers
 GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
+# Takes the Flask server as input and initializes a new Dash app
+# for making a line graph on that server.
 def init_linedashboard(server):
     line_app = dash.Dash(
-        #__name__"lineapp,
         __name__,
         server=server,
         external_stylesheets=[CUSTOM_BOOTSTRAP, GOOGLE_FONTS], 
@@ -56,11 +56,11 @@ def init_linedashboard(server):
                                             style = {"textAlign": "left", "marginBottom": 0})], target = "drhelp", style = {"width": 600}),
                         html.H5("View data between the dates of...", style = {"color":"white"})]),
                 dcc.DatePickerRange(id='range',
-                                    min_date_allowed=datetime.datetime(2021, 10, 1),
-                                    start_date=datetime.date(2021, 10, 1),
+                                    min_date_allowed=database_constants.EARLIEST_DATE["date"],
+                                    start_date=database_constants.EARLIEST_DATE["date"],
                                     end_date=datetime.date.today(),
-                                    start_date_placeholder_text = "Earliest Date",
-                                    end_date_placeholder_text = "Latest Date",
+                                    start_date_placeholder_text = database_constants.EARLIEST_DATE["date_string"],
+                                    end_date_placeholder_text = "Today",
                                     clearable=True,
                                     minimum_nights=0
                              ),
@@ -128,6 +128,8 @@ def init_linedashboard(server):
 
 def init_callbacks(line_app):
     
+    # This callback calculates a new line graph and updates the display
+    # once any selection is made on the graph menu.
     @line_app.callback(
             Output('line_graph', 'figure'),
             [Input('range', 'start_date'),
@@ -176,6 +178,7 @@ def init_callbacks(line_app):
                                          yaxis_title = "number of entries")
             return line_graph
 
+        # if "Group" is not selected, then "Split" must be selected.
         else:
 
             if selected_sites:
@@ -187,7 +190,7 @@ def init_callbacks(line_app):
             diner_data_df = diner_data_df.sort_values(by=["entry_timestamp"])
             if time_range_start and not time_range_end:
                     filter_dict['entry_timestamp']['end_date'] = diner_data_df['entry_timestamp'].tail(1).item().date()
-            # split df into df by meal site, add trace for each meal site
+            # split df into df by meal site, add trace (line) for each meal site
             sites_dict = {elem: pandas.DataFrame() for elem in diner_data_df["meal_site"].unique()}
             line_graph = go.Figure()
             line_graph_title = helpers.construct_title(filter_dict=filter_dict, graph_type="line", selected_demographic=selected_grouping)

@@ -7,7 +7,7 @@
 # for other programs to use
 #-----------------------------------------------------------------------
 
-# import demographic_db as database
+import datetime
 
 #-----------------------------------------------------------------------
 
@@ -148,7 +148,6 @@ STATUS_OPTION_MAPPING = {"homeless":{"True":"Homeless", "False":"Not Homeless", 
                          "disabled":{"True":"Disabled", "False":"Not Disabled", "Unknown":"Unknown if Disabled"},
                          "guessed":{"True":"Entry Completely Guessed", "False":"Entry Not Guessed"}}
 
-
 MEAL_SITE_OPTIONS = ["First Baptist Church",\
     "First Presbyterian Church of Hightstown",\
     "First United Methodist Church of Hightstown",\
@@ -186,3 +185,7 @@ MEAL_SITE_OPTIONS = ["First Baptist Church",\
 # MEAL_SITE_OPTIONS = MEAL_SITE_OPTIONS.sort()
 
 mealsites = sorted(MEAL_SITE_OPTIONS)
+
+# this will be changed to 12/8/2022 after we get our project graded
+# 12/8/2022 is the date we visited the TASK in person
+EARLIEST_DATE = {"date_string": "10/1/2022", "date": datetime.date(2022, 10, 1)}
