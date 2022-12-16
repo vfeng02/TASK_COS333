@@ -183,4 +183,6 @@ MEAL_SITE_OPTIONS = ["First Baptist Church",\
     "Independence Gardens",\
     "City of Trenton Hotels"]
 
+# MEAL_SITE_OPTIONS = MEAL_SITE_OPTIONS.sort()
+
 mealsites = sorted(MEAL_SITE_OPTIONS)

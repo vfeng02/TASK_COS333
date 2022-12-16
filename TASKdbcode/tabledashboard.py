@@ -60,7 +60,8 @@ def init_tabledashboard(server):
             dbc.Col(
                 html.Div(className="vr", style={"margin-right": "0px",'height':'60px'}), width = 1, align = "center"),
             dbc.Col(
-                html.Div(id='num_entries_display', children=[], style = {'color':'white'}), width = 4),
+                html.Div(id='num_entries_display', children=[], style = {'color':'white'}), width = 4),dbc.Tooltip([html.P("There’s n total entries in the TASK database. Filtering the table will 'Currently Show:' x / n of those entries. The table will show x entries by pages and each page shows at most 100 entries at a time.",
+                                                    style={"textAlign": "left", "marginBottom": 0})], target="num_entries_display", style={"width": 600}),
             dbc.Col([
                 dbc.Row(dbc.Col(dbc.Button([di(icon = "material-symbols:download-rounded",
                                        id="dlhelp", color = "white", height = 20, style = {'marginRight':'5'}), html.Span("Download"), html.Strong(" Current "), html.Span("Entry Data Excel")],
@@ -143,7 +144,7 @@ def init_tabledashboard(server):
             },
             # style_as_list_view = True,
             page_current=0,
-            #page_count = int(math.ceil(total_entries / PAGE_SIZE)),
+            page_count = int(math.ceil(total_entries / PAGE_SIZE)),
             page_size=PAGE_SIZE,
             page_action='custom',
             row_deletable=True,
@@ -161,6 +162,7 @@ def init_tabledashboard(server):
     helpers.protect_dashviews(table_app)
 
     return table_app.server
+
 
 
 def split_filter_part(filter_part):
@@ -194,6 +196,12 @@ def split_filter_part(filter_part):
 
 
 def init_callbacks(table_app):
+
+    @table_app.callback(
+    Output('table-filtering', 'page_current'),
+    [Input('table-filtering','filter_query')])
+    def reset_to_page_0(filter_query):
+        return (0)
 
     @table_app.callback(
     Output("download-dataframe-xlsxa", "data"),
@@ -246,6 +254,7 @@ def init_callbacks(table_app):
     @table_app.callback(
         Output('table-filtering', 'data'),
         Output('num_entries_display', 'children'),
+        Output('table-filtering', 'page_count'),
         [Input('table-filtering', "page_current"),
         Input('table-filtering', "page_size"),
         Input('table-filtering', 'sort_by'),
@@ -289,6 +298,7 @@ def init_callbacks(table_app):
             dff = dff.loc[dff["entry_timestamp"].astype(str).str.startswith(time_filter["value"])]
             print(dff)
 
+
         num_entries = len(dff.index)
         num_total = demographic_db.get_total_entries()
             
@@ -300,6 +310,7 @@ def init_callbacks(table_app):
         # percent_site_data = (num_entries / total_site_entries)
 
         display = html.H4(["Currently Showing:", html.Br(), f"{num_entries} / {num_total} Entries"], style = {'margin-top': '5px'})
+        
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
 
         # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
@@ -326,4 +337,7 @@ def init_callbacks(table_app):
 
         return (dff.iloc[
             page_current*page_size:(page_current + 1)*page_size
-        ].to_dict('records'), display)
+        ].to_dict('records'), display, int(math.ceil(num_entries / PAGE_SIZE)) 
+)
+     
+
