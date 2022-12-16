@@ -196,14 +196,14 @@ def register():
         account_type = 'representative'
         repeat_password = request.form.get('repeatPassword')
         if password != repeat_password: 
-            success = "Passwords do not match"
+            success = "Error: Passwords do not match"
         else: 
             account_details = {"username": username, "password": password, "role": account_type}
             result = demographic_db.add_user(account_details)
             if result:
-                success = "Registration Success!"
+                success = "Success! Registered "+username+" as a TASK representative."
             else:
-                success = "Username taken, please try another."
+                success = "Error: Username taken, please try another."
     return render_template(
         "register.html", success = success
     )
@@ -221,15 +221,18 @@ def users():
     return render_template("viewusers.html",table=html, titles=df.columns.values, success = '')
 
 @app.route('/deleteusers', methods=['GET','POST'])
-@login_required(username="jaimeparker")
+@login_required(must=[demographic_db.be_admin])
 def deleteuser(): 
     success = ''
     username = request.form.get('user')
     print(username)
     if username:
-        result = demographic_db.delete_user(username)
-        if not result:
-            success = 'User does not exist in system, please try again.'
+        if username == "jaimeparker":
+            success = 'You may not delete the administrator credentials from the system.'
+        else:
+            result = demographic_db.delete_user(username)
+            if not result:
+                success = 'User does not exist in system, please try again.'
     df = demographic_db.get_users()
     html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
     return render_template("deleteusers.html",table=html, titles=df.columns.values, role = 'All', success = success)
