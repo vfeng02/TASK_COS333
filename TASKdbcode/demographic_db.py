@@ -12,10 +12,11 @@ import sqlalchemy
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import functions
+import datetime as dt
 # import database_constants
 # sql_alchemy filters has to be downloaded from this repo
 # https://github.com/bodik/sqlalchemy-filters
-from sqlalchemy_filters import apply_filters
+from sqlalchemy_filters import filters
 from TASKdbcode import database_constants
 
 from werkzeug.security import generate_password_hash,\
@@ -35,7 +36,6 @@ class User(Base):
     __tablename__ = "users"
     username = Column(String(), primary_key = True)
     password_hash = Column(String())
-    email = Column(String())
     role = Column(String())
     # idrk about this hashing stuff I just stole it from here
     # https://dev.to/kaelscion/authentication-hashing-in-sqlalchemy-1bem
@@ -94,7 +94,7 @@ def add_patron(input_dict):
                 entry_timestamp = sqlalchemy.func.now(),\
                     **input_dict)
             session.add(entry)
-            print(input_dict)
+           
             query = session.query(EntryCount).filter(EntryCount.meal_site == input_dict["meal_site"])
             row = query.one()
             row.num_entries += 1
@@ -113,8 +113,6 @@ def get_last_patron(meal_site):
             query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
-        print(entry)
-        print(type(entry))
         return entry
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -134,14 +132,15 @@ def delete_last_patron(meal_site):
             #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
             #filter_spec = {"field": key, "op" : "==", "value": value}
             obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
-            #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
+            fivemin = dt.datetime.now() - dt.timedelta(minutes= 5)
+            if obj is None or obj.entry_timestamp<=fivemin:
+                return False
             session.delete(obj)
-            query = session.query(EntryCount).filter(EntryCount.meal_site == "meal_site")
+            query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
             row = query.one()
             row.num_entries -= 1
-
             session.commit()
-
+            return True
 
     except Exception as ex:
         print(ex, file=sys.stderr)
@@ -185,7 +184,7 @@ def get_patrons(filter_dict = {}, select_fields = []):
                 else:
                     filter_spec = {"field": key, "op" : "==", "value": value}
                     
-                query = apply_filters(query, filter_spec)
+                query = filters.apply_filters(query, filter_spec)
             # print(query)
             demographic_df = pandas.read_sql(query.statement, session.bind)
 
@@ -197,20 +196,13 @@ def get_patrons(filter_dict = {}, select_fields = []):
         sys.exit(1)
 
 #-----------------------------------------------------------------------
-def get_users(value):
+def get_users():
     
     try:
-        with sqlalchemy.orm.Session(engine) as session:
-            if value == 'all':
-                 query =session.query(User)
-            elif value == 'administrators':
-                 query =session.query(User).filter_by(role = "administrator")
-            elif value == 'representatives':
-                 query =session.query(User).filter_by(role = "representative")
+        with sqlalchemy.orm.Session(engine) as session: 
+            query =session.query(User)
             user_df = pandas.read_sql(query.statement, session.bind)
         html_code = user_df.drop(['password_hash'], axis =1)
-
-        print(html_code.to_html())
         return html_code
         
     except Exception as ex:
@@ -232,7 +224,7 @@ def filter_dms(filter_dicts):
                     else:
                         filter_spec = filter_dict
                         
-                    query = apply_filters(query, filter_spec)
+                    query = filters.apply_filters(query, filter_spec)
             demographic_df = pandas.read_sql(query.statement, session.bind)
         return demographic_df
     except Exception as ex:
@@ -275,40 +267,48 @@ def get_total_entries():
 #-----------------------------------------------------------------------
 
 # input a dict like {"username":username,
-#                    "email":email
 #                    "password":password.
 #                    "role": role}
 # role is either administrator or representative
 def add_user(input_dict):
-    
-    if input_dict["role"] not in ["administrator", "representative"]:
-        return
-        # maybe do some other checks here for a "valid" username/email/password
-
-    # print(input_dict)
-
     try:
-        # engine = sqlalchemy.create_engine(DATABASE_URL)
-
         with sqlalchemy.orm.Session(engine) as session:
-            # demographics = {}
-            # for demographic in demographic_options:
-            #     demographics[demographic] = args_dict[demographic]
-            user = User(username = input_dict["username"],
-                          email = input_dict["email"],
-                          role = input_dict["role"])
+            username = input_dict["username"]
+            user = User(username = username,
+                          role = 'representative')
             user.set_password(input_dict["password"])
-            session.add(user)
-
-            session.commit()
-
-        # engine.dispose()
-
+            obj = session.query(User).filter_by(username=username).first()
+            if not obj:
+                session.add(user)
+                session.commit()
+                return True
+            else:
+                return False
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
 
 #-----------------------------------------------------------------------
+def delete_user(username):
+    
+
+    try:
+        # engine = sqlalchemy.create_engine(DATABASE_URL)
+
+        with sqlalchemy.orm.Session(engine) as session:
+            obj=session.query(User).filter_by(username=username, role= 'representative').first()
+            session.delete(obj)
+            session.commit()
+            return True
+            
+
+        # engine.dispose()
+
+    except Exception as ex:
+        return False
+
+#-----------------------------------------------------------------------
+
 
 def display_users():
     
@@ -322,7 +322,7 @@ def display_users():
                 for row in table:
                     print("\nuser")
                     print('-------------------------------------------')
-                    print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nemail:{row.email}")
+                    print(f"username: {row.username}\npassword_hash: {row.password_hash}\nrole: {row.role}\nusername:{row.username}")
                     print('-------------------------------------------')
         # engine.dispose()
 
@@ -380,19 +380,27 @@ def check_my_users(user):
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
-        print(username)
-        with sqlalchemy.orm.Session(engine) as session:
-                query = session.query(User).filter(User.username == username)
-                print(query)
-                if not query: return False
-                for row in query:
-                    if row.role != 'administrator': 
-                        return False 
-                        # "User does not have admin role"
-                    return
-    except EOFError as ex: 
-        print("there is an error in be_admin")
+        if username == "jaimeparker":
+            return
+        else: 
+            return False
+    except Exception as ex: 
+        print(ex, file=sys.stderr)  
         sys.exit(1)
+    
+    #     print(username)
+    #     with sqlalchemy.orm.Session(engine) as session:
+    #             query = session.query(User).filter(User.username == username)
+    #             print(query)
+    #             if not query: return False
+    #             for row in query:
+    #                 if row.role != 'jaimeparker': 
+    #                     return False 
+    #                     # "User does not have admin role"
+    #                 return
+    # except EOFError as ex: 
+    #     print("there is an error in be_admin")
+    #     sys.exit(1)
     # except Exception as ex:
     #     print(ex, file=sys.stderr)
     #     sys.exit(1)
@@ -440,8 +448,6 @@ def be_admin(username):
 
 # class Redding_Circle_Senior_Center(MealSite):
 #     __tablename__ = "redding_circle_senior_center"
-
-
 
 
 
