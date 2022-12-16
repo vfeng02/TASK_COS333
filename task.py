@@ -61,7 +61,7 @@ def get_current_time():
     return time.asctime(time.localtime())
 
  #-----------------------------------------------------------------------
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET','POST'])
 def login(): 
     
     return render_template("login.html")
