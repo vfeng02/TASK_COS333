@@ -102,7 +102,7 @@ def selectmealsit1e():
 @app.route('/submitpatrondata', methods=['GET','POST'])
 @login_required(basic=True)
 def submitpatrondata():
-    new_mealsite = request.form.get('mealsite')
+    new_mealsite = request.args.get('mealsite')
     mealsite = request.cookies.get('mealsite')
     new = False
     num = request.cookies.get('num')
