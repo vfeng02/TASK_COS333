@@ -1,0 +1,96 @@
+
+  
+
+  <!DOCTYPE html>
+  <html>
+  <head>
+   {% include 'imports.html' %}
+  <style>
+
+  * {box-sizing: border-box}
+  input[type=text], input[type=password] {
+     width: 100%;
+     margin-left:0%;
+     font-size: 28px;
+     padding: 15px;
+     margin: 5px 0 22px 0;
+     display: inline-block;
+     border: none;
+     background: white;
+  }
+  label{
+     font-size: 15px;
+  }
+  input[type=text]:focus, input[type=password]:focus {
+     background-color: white;
+     outline: none;
+  }
+  hr {
+     border: 1px solid #f1f1f1;
+     margin-bottom: 25px;
+  }
+  button {
+     font-size: 14px;
+     font-weight: bold;
+     background-color: #145078;
+     color: white;
+     padding: 14px 20px;
+     margin: 4px 0;
+     border: none;
+     cursor: pointer;
+     width: 100%;
+     opacity: 0.9;
+  }
+  button:hover {
+     opacity:1;
+  }
+  .cancel {
+     padding: 14px 20px;
+     background-color:#145078;
+  }
+  .formContainer {
+     padding: 16px;
+  }
+  .formContainer p{
+     font-size: 28px;
+  }
+  </style>
+  <body>
+   {% include "admin_header.html" %}
+  <form action ='/register' method = 'post'>
+  <div class="formContainer" style = "width:70%;margin-left:15%">
+  <h1><center>Add An User</center></h1>
+  <hr>
+  <label for="username"><b>Username</b></label>
+  <input type="text" placeholder="Enter Username" name="username" required>
+  <label for="password"><b>Password</b></label>
+  <input type="password" placeholder="Enter Password" name="password" required>
+  <label for="repeatPassword"><b>Repeat Password</b></label>
+  <input type="password" placeholder="Repeat Password" name="repeatPassword"
+  required>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </div>
+  <div style="width:68%;margin-left:16%"><button type="submit" class="signup">Register User</button></div>
+  <br/>
+  
+  <center>{{success}}</center>
+  <br/>
+  
+  <hr>
+
+  </form>
+  
+</div>
+  </body>
+  </html><style>
+   html {
+     height: 200%;
+   }
+   body {
+     /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+     background-size: auto 100%;
+     background-repeat: no-repeat;
+     background-position: center center;
+     background-color: #80c0ea;
+   }
+ </style>

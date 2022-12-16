@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block messages %}
+   {{super()}}
+   {%if form.errors %}
+     <ul class="alert alert-danger">
+       {% for field, errors in form.errors.items() %}
+         <li>{{field}} {% for error in errors %}{{ error }}{% endfor %}</li>
+       {% endfor %}
+     </ul>
+   {% endif %}
+{% endblock %}
+
+
+{% block page_body %}
+<center> 
+  <div style = "width:50%; position:relative;-ms-transform: translateY(50%);
+  transform: translateY(50%);">
+  
+       <form action="{{ url_for('simplelogin.login') }}" method="post">
+            <div class="form-group">
+            {{ form.csrf_token }}
+            <h2>Username</h2><div><div class="form-control" >{{form.username }}</div></div><br>
+            <h2>Password</h2><div><div class="form-control"> {{ form.password }}</div></div><br>
+            {% if next %}<input type="hidden" name="next" value="{{next}}">{% endif %}
+            </form>
+           <input type="submit" value="Sign In">
+           
+       </form>
+       <style>
+        html {
+          height: 100%;
+        }
+        body {
+          /* no-repeat center center fixed; */
+          background-image: url('/static/photos/login.jpg');
+          background-size: auto 100%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: #145078;
+        }
+      </style>
+  </div>
+</center>
+{% endblock %}
+
+

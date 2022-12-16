@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TASK.com</title>
+    {% include 'imports.html' %}
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <div style="
+      display: flex;
+      justify-content: center;
+      margin-top: 150px;
+      margin-left: 20px;
+      margin-right: 20px;
+    ">
+    <div
+      style="
+        max-width: 400px;
+        width: 400px;
+      "
+    >
+      <center>
+                <img src="/static/photos/homepage_logo.jpg" style="width:80%; justify-content:center; margin-bottom: 20px;">
+            </center>
+      <br />
+      <div class="row">
+        <center>
+          <input
+            id="volunteerloginbtn"
+            class="form-control dark-blue enter-button"
+            type="button"
+            onclick="location.href='/selectmealsite';"
+            value="Volunteer"
+          /
+        </center>
+      </div>
+      <br />
+      <div class="row">
+        <center>
+          <input
+            id="adminloginbtn"
+            class="form-control orange enter-button"
+            type="button"
+            onclick="location.href='/admin';"
+            value="Admin"
+          />
+          
+        </center>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
+
+<style>
+  html {
+    height: 100%;
+  }
+  body {
+    /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+    background-image: url('/static/photos/homepage.jpg');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #FEF6F6;
+  }
+</style>

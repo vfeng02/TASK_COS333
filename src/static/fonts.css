@@ -1,0 +1,45 @@
+.dark-blue {
+    background: #145078;
+    /* fallback for old browsers */
+    /* background: -webkit-linear-gradient(to right, #145078, #145078);  */
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: linear-gradient(to right, #145078, #145078); */
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: white;
+  }
+
+  .orange {
+    background: #ff911f;
+    color: white;
+  }
+
+.enter-button {
+    border: 3px solid #d9dad9;
+}
+
+.forceOpenSans {
+    font-family: "Open Sans", sans-serif;
+}
+.stripe-2 {
+    color: black;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      #ccc 10px,
+      #ccc 20px
+    ),
+    linear-gradient(
+      to bottom,
+      #eee,
+      #999
+    )
+  }
+
+  background{
+    color: hotpink
+  }
+
+  .navbar-collapse.in {
+    display: block !important;
+}
