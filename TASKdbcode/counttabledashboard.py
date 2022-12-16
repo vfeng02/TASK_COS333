@@ -164,6 +164,7 @@ def init_callbacks(count_table_app):
     State('demographic_count_options', 'value')],
     prevent_initial_call=True)
     def download_current(n_clicks, selected_categories):
+        print(selected_categories)
         if selected_categories:
             category_list = selected_categories
             selected_fields = ["meal_site", *category_list]
@@ -171,15 +172,14 @@ def init_callbacks(count_table_app):
             selected_fields = []
             category_list = database_constants.DEMOGRAPHIC_OPTIONS
 
-        df = demographic_db.get_patrons(select_fields=selected_categories)
+        df = demographic_db.get_patrons(select_fields=selected_fields)
 
         count_df_list = []
         for option in category_list:
-            count_df = df.groupby(['meal_site', option]).size().unstack(fill_value=0)
+            count_df = df.groupby(["meal_site", option]).size().unstack(fill_value=0)
             if option in list(database_constants.STATUS_OPTION_MAPPING):
                 print(database_constants.STATUS_OPTION_MAPPING[option])
                 count_df.rename(columns = database_constants.STATUS_OPTION_MAPPING[option], inplace = True)
-                #print(count_df)
             else:
                 count_df.rename(columns = {"Unknown":f"Unknown {option.title()}", "Other":f"Other {option.title()}"}, inplace=True)
 
@@ -189,7 +189,7 @@ def init_callbacks(count_table_app):
         counts_df.reset_index(inplace=True)
         counts_df.rename(columns = {'meal_site':'meal site'}, inplace=True)
         
-        return dcc.send_data_frame(df.to_excel, "taskcountdatacurrent.xlsx", sheet_name="TASK_count_data_current")
+        return dcc.send_data_frame(counts_df.to_excel, "taskcountdatacurrent.xlsx", sheet_name="TASK_count_data_current")
 
     # This callback updates the count table display with the data
     # that matches the currently selected demographic categories.
@@ -212,7 +212,6 @@ def init_callbacks(count_table_app):
         for option in category_list:
             count_df = df.groupby(['meal_site', option]).size().unstack(fill_value=0)
             if option in list(database_constants.STATUS_OPTION_MAPPING):
-                print(database_constants.STATUS_OPTION_MAPPING[option])
                 count_df.rename(columns = database_constants.STATUS_OPTION_MAPPING[option], inplace = True)
             else:
                 count_df.rename(columns = {"Unknown":f"Unknown {option.title()}", "Other":f"Other {option.title()}"}, inplace=True)
