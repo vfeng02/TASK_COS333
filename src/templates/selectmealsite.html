@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TASK.com</title>
+        {% include 'imports.html' %}
+    </head>
+    <body>
+        {% include 'header.html' %}
+        <div class="container-fluid" style = "color:white; background-color:#145078 ; margin-top: 200px; max-width:400px;">
+            <center><h1>Select Mealsite</h1></center>
+            <hr style="color:white">
+            <center>
+                <form action="/submitpatrondata" method="get">
+                    <div class="row" >
+                        <center>
+                            <select name="mealsite" id = "mealsite"style="width: 300px">  
+                            {% for site in mealsites %}
+                            <option value="{{site}}">{{site}}</option>
+                            {% endfor %}
+                        </select>
+                    </center>
+                        
+                    </div>
+                    
+                    <!-- <hr style="color:white"> -->
+                    <br>
+                    <br>
+                    <div class="row">
+                        <center>
+                            <input id='go' type= "submit" class="form-control mainButton enter-button" style="background-color:#ff9f46 ;font-weight: bold; color:white; width:250px;"
+                            type="button" value="Go">
+                        </center>
+                    </div>
+                </form>
+            </center>
+        </div>
+       
+        <br>
+    </body>
+
+    <script>
+        $(function(){
+         $("#mealsite").select2();
+        }); 
+    </script>
+</html>
+<style>
+    html {
+      height: 100%;
+    }
+    body {
+      background-size: auto 100%;
+      background-repeat: no-repeat;
+      background-position: center center;
+    background-color: #145078;
+    }
+  </style>
