@@ -135,12 +135,12 @@ def delete_last_patron(meal_site):
             fivemin = dt.datetime.now() - dt.timedelta(minutes= 2)
             if obj is None or obj.entry_timestamp<=fivemin:
                 return False
-            #obj = session.query(MealSite).order_by(MealSite.entry_timestamp.desc()).first()
             session.delete(obj)
+            query = session.query(EntryCount).filter(EntryCount.meal_site == meal_site)
+            row = query.one()
+            row.num_entries -= 1
             session.commit()
             return True
-            
-
 
     except Exception as ex:
         print(ex, file=sys.stderr)
