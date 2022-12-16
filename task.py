@@ -99,10 +99,10 @@ def selectmealsit1e():
     return response
  #-----------------------------------------------------------------------
 
-@app.route('/submitpatrondata', methods=['GET'])
+@app.route('/submitpatrondata', methods=['GET','POST'])
 @login_required(basic=True)
 def submitpatrondata():
-    new_mealsite = request.args.get('mealsite')
+    new_mealsite = request.form.get('mealsite')
     mealsite = request.cookies.get('mealsite')
     new = False
     num = request.cookies.get('num')
@@ -111,14 +111,14 @@ def submitpatrondata():
         mealsite = new_mealsite
         num = '0'
     
-    submitted = request.args.get('language')
+    submitted = request.form.get('language')
     if submitted:
         num = str(int(num)+1)   
     
 
     races = []
-    if request.args.getlist('race') is not None:
-        for race in request.args.getlist('race'):
+    if request.form.getlist('race') is not None:
+        for race in request.form.getlist('race'):
             if (race != 'Unknown'):
                 if race == "Native":
                     races.append("Native Hawaiian/Pacific Islander")
@@ -129,15 +129,15 @@ def submitpatrondata():
         races = list(filter(None, races))
     print("RACE", races)
     racecsv = ",".join(races)
-    language = request.args.get('language')
-    age_range = request.args.get('age_range')
+    language = request.form.get('language')
+    age_range = request.form.get('age_range')
     # problem because the names changed
-    gender = request.args.get('gender')
-    zip_code = request.args.get('zip_codes')
-    homeless = request.args.get('homeless')
-    veteran = request.args.get('veteran')
-    disabled = request.args.get('disabled')
-    guessed = request.args.get('guessed')
+    gender = request.form.get('gender')
+    zip_code = request.form.get('zip_codes')
+    homeless = request.form.get('homeless')
+    veteran = request.form.get('veteran')
+    disabled = request.form.get('disabled')
+    guessed = request.form.get('guessed')
     # print('guess',guessed)
 
     patron_data = {"race": racecsv, "language": language,
@@ -190,11 +190,11 @@ def admindisplaydata():
 @login_required(must=[demographic_db.be_admin])
 def register(): 
     success = ''
-    username = request.args.get('username')
+    username = request.form.get('username')
     if username:
-        password = request.args.get('password')
+        password = request.form.get('password')
         account_type = 'representative'
-        repeat_password = request.args.get('repeatPassword')
+        repeat_password = request.form.get('repeatPassword')
         if password != repeat_password: 
             success = "Passwords do not match"
         else: 
@@ -224,12 +224,12 @@ def users():
 @login_required(username="jaimeparker")
 def deleteuser(): 
     success = ''
-    username = request.args.get('user')
+    username = request.form.get('user')
     print(username)
     if username:
         result = demographic_db.delete_user(username)
         if not result:
-            success = 'Not a valid username'
+            success = 'User does not exist in system, please try again.'
     df = demographic_db.get_users()
     html = build_table(df, 'blue_light', padding='20px', even_color = 'black')
     return render_template("deleteusers.html",table=html, titles=df.columns.values, role = 'All', success = success)
