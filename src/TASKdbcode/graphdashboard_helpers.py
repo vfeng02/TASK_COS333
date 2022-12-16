@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 # graphdashboard_helpers.py
 # Author: Andres Blanco Bonilla
-# Helper functions for graphing related dash apps, to reduce repeated
+# Helper functions for graphing related Dash apps, to reduce repeated
 # code.
 #-----------------------------------------------------------------------
 
@@ -25,12 +25,11 @@ import datetime
 from flask_simplelogin import login_required
 
 #-----------------------------------------------------------------------
-
+# This function is adapted from
+# https://gist.github.com/okomarov/f2d4fcd485222ba9fda3b31f3c6f0701
 def protect_dashviews(dashapp):
     """If you want your Dash app to require a login,
     call this function with the Dash app you want to protect"""
-    
-    # pass
 
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):
@@ -38,19 +37,9 @@ def protect_dashviews(dashapp):
                 dashapp.server.view_functions[view_func], must=[demographic_db.be_admin]
             )
 #-----------------------------------------------------------------------
-
-# def table_buttons_helper():
-#     button_option_list = []
-#     for option in database_constants.DEMOGRAPHIC_OPTIONS:
-#         button_option = {"label": f"{database_constants.DEMOGRAPHIC_CATEGORIES[option]} Counts", "value": option},
-#         button_option_list.append(button_option)
-#     button_option_list.append({"label": "All Counts", "value": "all"})
-#     return button_option_list
-
-#-----------------------------------------------------------------------
-
+# Takes a Dash callback's context as an input and helps determine
+# which filters have been selected.
 def selected_fields_helper(callback_context):
-    # print(list(callback_context.keys()))
 
     for key in list(callback_context.keys()):
         if "name" not in key:
@@ -64,7 +53,9 @@ def selected_fields_helper(callback_context):
     return selected_fields
 
 #-----------------------------------------------------------------------
-
+# Helps update the options for filter selection after a category
+# selection is made by the user. If a demographic category is selected
+# as the breakdown, that category is removed from the filter options.
 def filter_options_helper(selected_demographic, filter_dict, graph_type):
 
     filters = []
@@ -78,9 +69,7 @@ def filter_options_helper(selected_demographic, filter_dict, graph_type):
     for demographic_option in database_constants.DEMOGRAPHIC_OPTIONS:
         if demographic_option != selected_demographic:
             options_string = demographic_option.upper() + "_OPTIONS"
-            # American Indian/Alaska Native
-            # and Native Hawaiian/Pacific Islander
-            # are too tall to fit in the default dropdown option height
+
             if demographic_option == "race":
                 options_string = "RACE_DROPDOWN_OPTIONS"
             elif demographic_option == "zip_code":
@@ -236,9 +225,9 @@ def filter_options_helper(selected_demographic, filter_dict, graph_type):
                 end_date = filter_dict["entry_timestamp"]["end_date"]
         
         time_row = dbc.Row(dcc.DatePickerRange(id='range',
-                           min_date_allowed=datetime.datetime(2020, 10, 1),
-                           start_date_placeholder_text='From Any Date',
-                           end_date_placeholder_text='To Any Date',
+                           min_date_allowed=database_constants.EARLIEST_DATE["date"],
+                           start_date_placeholder_text='From ' + database_constants.EARLIEST_DATE["date_string"],
+                           end_date_placeholder_text='To Today',
                            start_date=start_date,
                            end_date=end_date,
                            clearable=True,
@@ -246,7 +235,9 @@ def filter_options_helper(selected_demographic, filter_dict, graph_type):
         filters = [time_row, *filters]
     return filters
 #-----------------------------------------------------------------------
-
+# Dynamically constructs the title for a graph given the filters that
+# have been selected, the type of graph (pie/bar/line), and the
+# selected demographic category (if pie or bar)
 def construct_title(filter_dict, graph_type, selected_demographic=None):
     
     filter_dict = {key:value for (key, value) in\
@@ -272,6 +263,8 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         if selected_demographic:
             title += f"by {category_dict[selected_demographic]}"
 
+        # testing verbose title construction
+        # (Jaime preferred simpler titles)
         # title += "Percentage "
         # if selected_demographic:
         #     title += f"distribution of <b>{category_dict[selected_demographic]}</b> among Diners "
@@ -332,8 +325,9 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
     title = "<br>".join(textwrap.wrap(title, width=100))
     return title
 
-# -----------------------------------------------------------------------
-
+#-----------------------------------------------------------------------
+# Dynamically constructs the section of the title that corresponds to
+# the current filters on the graph.
 def construct_filter_string(filter_dict):
     status_options = database_constants.STATUS_OPTION_MAPPING
     
@@ -387,8 +381,11 @@ def construct_filter_string(filter_dict):
         filter_string = ""
 
     return filter_string
-# -----------------------------------------------------------------------
-
+#-----------------------------------------------------------------------
+# Unused. Jaime preferred simpler titles.
+# When verbose title construction was being used,
+# this function dynamically constructed the section of the title that
+# corresponds to the selected meal sites.
 def construct_site_string(meal_sites):
     site_string = ""
     if len(meal_sites) > 1:
@@ -401,7 +398,8 @@ def construct_site_string(meal_sites):
     return site_string
 
 #-----------------------------------------------------------------------
-
+# Constructs the titles on the pie chart slices,
+# given the current filters.
 def construct_slice_title(filter_dict):
     timestamp_filter = filter_dict.get("entry_timestamp")
     slice_title = construct_filter_string(filter_dict=filter_dict)
@@ -416,7 +414,8 @@ def construct_slice_title(filter_dict):
     return slice_title
 
 #-----------------------------------------------------------------------
-
+# Constructs a message to go in place of the graph given text.
+# Used for displaying "Not found" and "Please select filters" messages
 def graph_message(message_text):
     message = go.Figure()
     message.update_layout(
@@ -439,7 +438,9 @@ def graph_message(message_text):
     return message
 
 #-----------------------------------------------------------------------
-
+# Unused.
+# This was the previous filter option helper before line graph
+# was implemented.
 def old_filter_options_helper(selected_demographic, filter_dict):
 
     filters = []
