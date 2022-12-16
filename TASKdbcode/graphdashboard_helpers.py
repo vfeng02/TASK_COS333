@@ -258,8 +258,7 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         title+="Diner Entries "
         
         if filter_dict.get("entry_timestamp"):
-            title+=f"between {filter_dict['entry_timestamp']['start_date']}\
-                and {filter_dict['entry_timestamp']['end_date']} "
+            title+=f"between {filter_dict['entry_timestamp']['start_date']} and {filter_dict['entry_timestamp']['end_date']} "
 
         if selected_demographic:
             title += f"by {category_dict[selected_demographic]}"
@@ -296,8 +295,7 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
         title+="Diner Entries "
 
         if filter_dict.get("entry_timestamp"):
-            title+=f"between {filter_dict['entry_timestamp']['start_date']}\
-                and {filter_dict['entry_timestamp']['end_date']} "
+            title+=f"between {filter_dict['entry_timestamp']['start_date']} and {filter_dict['entry_timestamp']['end_date']} "
         
         if selected_demographic:
             title += f"by {category_dict[selected_demographic]} and "
@@ -315,8 +313,7 @@ def construct_title(filter_dict, graph_type, selected_demographic=None):
 
         if timestamp_filter:
             print(timestamp_filter)
-            title+=f"Diner Entries between {timestamp_filter['start_date']}\
-                and {timestamp_filter['end_date']} "
+            title+=f"Diner Entries between {timestamp_filter['start_date']} and {timestamp_filter['end_date']} "
         else:
             title+="Diner Entries All-Time "
 
