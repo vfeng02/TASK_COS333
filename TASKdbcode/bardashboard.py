@@ -26,11 +26,12 @@ import plotly.graph_objects as go
 
 CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
+# Takes the Flask server as input and initializes a new Dash app
+# for making a pie chart on that server.
 def init_bardashboard(server):
     bar_app = dash.Dash(
         __name__,
         server=server,
-        # using the default bootstrap style sheet, could be changed
         external_stylesheets=[CUSTOM_BOOTSTRAP],
         url_base_pathname="/barapp/")
 
@@ -136,6 +137,8 @@ def init_bardashboard(server):
 
 def init_callbacks(bar_app):
 
+    # This callback updates the filter options and the dropdown menu
+    # once a selection is made on the Category dropdown
     @bar_app.callback(
        Output('filter_options', 'children'),
         Output('iddropdownmenu', 'label'),
@@ -156,9 +159,6 @@ def init_callbacks(bar_app):
     def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters):
 
         ctx = dash.callback_context
-        # print(selected_filters)
-        # print(buttons)
-        # print(buttons[0])
 
         if not ctx.triggered:
             button_label = "None"
@@ -192,11 +192,11 @@ def init_callbacks(bar_app):
 
         if selected_demographic:
             button_label = database_constants.DEMOGRAPHIC_CATEGORIES[selected_demographic]
-        # print("\n" + button_label + "\n")
 
         return filters, button_label
 
-
+    # This callback calculates a new bar chart and updates the display
+    # once any selection is made on the graph menu.
     @bar_app.callback(
         Output('bar_graph', 'figure'),
         [Input('site_options', 'value'),
@@ -227,9 +227,6 @@ def init_callbacks(bar_app):
         else:
             button_id = database_constants.DEMOGRAPHIC_CATEGORIES_SWAPPED[mlabel]
 
-        # print("\n")
-        # print(button_id)
-        # print("\n")
 
         if button_id == "mnone" or button_id == "none":
             selected_demographic = ""
@@ -246,7 +243,7 @@ def init_callbacks(bar_app):
         if time_range_start:
             time_filter["start_date"] = time_range_start
         else:
-            time_filter["start_date"] = datetime.date(2022, 10, 1)
+            time_filter["start_date"] = database_constants.EARLIEST_DATE["date"]
 
         if time_range_end:
             time_filter["end_date"] = time_range_end
@@ -256,9 +253,6 @@ def init_callbacks(bar_app):
         if time_range_start or time_range_end:
             filter_dict["entry_timestamp"] = time_filter
 
-        # to do for bar graphs:
-        # colors repeat sometimes and it may be hard to read, need to change colors
-        # but still not great, some sort of "Not Found" message might be good
         if selected_demographic:
             
             selected_fields.append(selected_demographic)
@@ -266,6 +260,9 @@ def init_callbacks(bar_app):
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
 #-----------------------------------------------------------------------
+            # Race breakdown is a special case
+            # and must be handled differently, to toggle between
+            # grouping and splitting multiraces.
             if selected_demographic == "race":
                 bar_graph = go.Figure()
 
@@ -295,12 +292,11 @@ def init_callbacks(bar_app):
                 histogram.update_layout(yaxis_title = "number of entries")
                 histogram.update_xaxes(categoryorder="array", categoryarray = ["White", "Black", "Hispanic", "Asian", "AI/AN", "NHOPI", "Unknown", *multi_races])
                 show_sep = []
-                # print(histogram.data)
                 for trace in histogram.data:
                     trace.visible = False
                     bar_graph.add_trace(trace)
                     show_sep.append(True)
-                # return histogram
+
                 
                 diner_data_df.loc[diner_data_df["race"].str.contains(","), "race"] = "Multiracial"
                 
@@ -360,6 +356,8 @@ def init_callbacks(bar_app):
             return histogram
 
         else:
+            # Construct a non-grouped bar graph if no category
+            # is selected on the category dropdown.
 
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
