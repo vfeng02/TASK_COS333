@@ -132,7 +132,7 @@ def delete_last_patron(meal_site):
             #filter_spec = {"field": "meal_site", "op" : "==", "value": "First Baptist Church"}
             #filter_spec = {"field": key, "op" : "==", "value": value}
             obj=session.query(MealSite).filter_by(meal_site = meal_site).order_by(MealSite.entry_timestamp.desc()).first()
-            fivemin = dt.datetime.now() - dt.timedelta(minutes= 2)
+            fivemin = dt.datetime.now() - dt.timedelta(minutes= 5)
             if obj is None or obj.entry_timestamp<=fivemin:
                 return False
             session.delete(obj)
