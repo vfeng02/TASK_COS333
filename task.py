@@ -30,13 +30,13 @@ from werkzeug.security import generate_password_hash,\
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in, Message
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
 messages = {
-    'auth_error': Message('You are not authorized as an administrator. Please return to the previous page and enter administrator login details—Volunteer Login Entered', 'index.html')
+    'auth_error': 'You are not authorized as an administrator. Please return to the previous page and enter administrator login details.'
 }
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
