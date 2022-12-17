@@ -30,11 +30,14 @@ from werkzeug.security import generate_password_hash,\
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in, Message
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
+messages = {
+    'auth_error': Message('You are not authorized as an administrator. Please return to the previous page and enter administrator login details—Volunteer Login Entered', 'index.html')
+}
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
 with app.app_context():
@@ -47,7 +50,7 @@ with app.app_context():
 
         app.config["SECRET_KEY"] = "andresallisonvickyrohan"
 
-        SimpleLogin(app, login_checker=demographic_db.check_my_users)
+        SimpleLogin(app, login_checker=demographic_db.check_my_users, messages = messages)
 
 #-----------------------------------------------------------------------
 
@@ -211,7 +214,7 @@ def register():
 @app.route('/users', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
 def viewusers(): 
-    return render_template("userdashboard.html")
+    return render_template("viewusers.html")
 
 @app.route('/viewusers', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
@@ -227,7 +230,7 @@ def deleteuser():
     username = request.form.get('user')
     print(username)
     if username:
-        if username == "jaimeparker":
+        if username == "administrator":
             success = 'You may not delete the administrator credentials from the system.'
         else:
             result = demographic_db.delete_user(username)
