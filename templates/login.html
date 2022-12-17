@@ -3,7 +3,7 @@
 {% block messages %}
    {{super()}}
    {%if form.errors %}
-     <ul class="alert alert-danger">
+     <ul class="alert alert-danger" style="margin-bottom:0px">
        {% for field, errors in form.errors.items() %}
          <li>{{field}} {% for error in errors %}{{ error }}{% endfor %}</li>
        {% endfor %}
@@ -14,34 +14,33 @@
 
 {% block page_body %}
 <center> 
-  <div style = "width:50%; position:relative;-ms-transform: translateY(50%);
-  transform: translateY(50%);">
-  
-       <form action="{{ url_for('simplelogin.login') }}" method="post">
-            <div class="form-group">
-            {{ form.csrf_token }}
-            <h2>Username</h2><div><div class="form-control" >{{form.username }}</div></div><br>
-            <h2>Password</h2><div><div class="form-control"> {{ form.password }}</div></div><br>
-            {% if next %}<input type="hidden" name="next" value="{{next}}">{% endif %}
-            </form>
-           <input type="submit" value="Sign In">
-           
-       </form>
-       <style>
-        html {
-          height: 100%;
-        }
-        body {
-          /* no-repeat center center fixed; */
-          background-image: url('/static/photos/login.jpg');
-          background-size: auto 100%;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: #145078;
-        }
-      </style>
+  <div class="container-fluid rounded" style ="position: relative; margin-top: 60px; margin-bottom: 30px; max-width:750px; justify-content:center;"">
+    <form action="{{ url_for('simplelogin.login') }}" method="post">
+      <div class="form-group" >
+      {{ form.csrf_token }}
+      <h2>Username</h2><div class="form-control" style="max-width: 210px; height:45px;">{{form.username }}</div><br>
+      <h2>Password</h2><div class="form-control" style="max-width: 210px; height:45px;">{{form.password }}</div><br>
+      {% if next %}<input type="hidden" name="next" value="{{next}}">{% endif %}
+      </form>
+      <br>
+     <input type="submit" value="Sign In">
+     
+ </form>
   </div>
 </center>
+<style>
+  html {
+    height: 100%;
+  }
+  body {
+    /* no-repeat center center fixed; */
+    background-image: url('/static/photos/login.jpg');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #145078;
+  }
+</style>
 {% endblock %}
 
 
