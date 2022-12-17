@@ -227,7 +227,7 @@ def deleteuser():
     username = request.form.get('user')
     print(username)
     if username:
-        if username == "jaimeparker":
+        if username == "administrator":
             success = 'You may not delete the administrator credentials from the system.'
         else:
             result = demographic_db.delete_user(username)
