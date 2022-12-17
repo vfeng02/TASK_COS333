@@ -254,7 +254,7 @@ def deleteuser():
     return render_template("deleteusers.html",table=html, titles=df.columns.values, role = 'All', success = success)
 
 
-@app.route('/deletelastpatron')
+@app.route('/deletelastpatron', methods=['GET','POST'])
 @login_required(basic=True)
 def deletelast():
     meal_site = request.args.get('mealsite')
@@ -284,13 +284,12 @@ def deletelast():
     response.set_cookie('num', num)
     return response
 
-@app.route('/getlastpatron')
+@app.route('/getlastpatron', methods=['GET'])
 @login_required(basic=True)
 def getlast():
     meal_site = request.args.get('mealsite')
     last = demographic_db.get_last_patron(meal_site)
     lastrace = last['race'].iloc[0]
-    print(lastrace)
     lastrace = "\n".join(textwrap.wrap(lastrace, width=20))
     html_code = render_template('prev.html',
         lastrace = lastrace,

@@ -109,11 +109,12 @@ def get_last_patron(meal_site):
     try:
         with sqlalchemy.orm.Session(engine) as session:
             query = session.query(MealSite)
-            filter_spec = {"field": "meal_sites", "op" : "==", "value": meal_site}
             query = query.filter_by(meal_site = meal_site)
             #.filter_by(meal_site=meal_site)
             entry = pandas.read_sql(query.statement, session.bind).tail(1)
+        print("last patron", entry)
         return entry
+
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
