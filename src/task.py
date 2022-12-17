@@ -36,7 +36,7 @@ from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__, template_folder='templates')
 messages = {
-    'auth_error': Message('You are not authorized as an administrator. Please return to the previous page and enter administrator login details—Volunteer Login Entered', 'index.html')
+    'auth_error': 'Volunteer Login or No Login Entered—You are not authorized as an administrator. Please return to the previous page and enter administrator login details'
 }
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
