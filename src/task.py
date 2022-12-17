@@ -30,13 +30,26 @@ from werkzeug.security import generate_password_hash,\
 # from database_constants import mealsites, languages, races, ages, genders, zip_codes
 # from database_constants import HOMELESS_OPTIONS
 import psycopg2
-from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in, Message
+from flask_simplelogin import SimpleLogin, get_username, login_required, is_logged_in
 from flask_wtf.csrf import CSRFProtect
 #-----------------------------------------------------------------------
 
 app = Flask(__name__, template_folder='templates')
 messages = {
-    'auth_error': 'Volunteer Login or No Login Entered—You are not authorized as an administrator. Please return to the previous page and enter administrator login details'
+    'auth_error': '''
+    <div class="container-fluid" style ="width: 100%; height: 100%; background-color: #145078">
+    <div class="container-fluid rounded" style ="position: absolute; color: white; width: 50%; margin-top: 80px; margin-left: 25%; padding: 10px;
+    border: 4px solid #ff9f46" >
+    <center>
+    <h3 style="color: white">
+    You are not authorized as an administrator. 
+    Please return to <a href="https://task-dk40.onrender.com/" style="color:#ff9f46">the previous page</a> and enter administrator login details. 
+    </h3>
+    <center>
+    </div>
+    </div>
+    
+    '''
 }
 csrf = CSRFProtect()
 csrf._exempt_views.add('dash.dash.dispatch')
