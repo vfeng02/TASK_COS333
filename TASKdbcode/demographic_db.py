@@ -385,7 +385,7 @@ def be_admin(username):
         else: 
             return False
     except Exception as ex: 
-        print(ex, file=sys.stderr)  
+        print("You are not authorized as an administrator. Please enter administrator details", file=sys.stderr)  
         sys.exit(1)
     
     #     print(username)
