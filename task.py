@@ -2,7 +2,7 @@
 
 #-----------------------------------------------------------------------
 # task.py
-# Author: Vicky Feng and Andres Blanco Bonilla
+# Author: Vicky Feng and Andres Blanco Bonilla and Rohan Amin
 # Runs simple HTML form to input data into the TASK demographic database
 #-----------------------------------------------------------------------
 

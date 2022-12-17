@@ -2,7 +2,7 @@
 
 #-----------------------------------------------------------------------
 # demographic_db.py
-# Author: Andres Blanco Bonilla
+# Author: Andres Blanco Bonilla and Rohan Amin
 # Sets up TASK database table classes for SQLAlchemy to use
 #-----------------------------------------------------------------------
 
