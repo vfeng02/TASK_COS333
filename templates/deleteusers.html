@@ -1,0 +1,48 @@
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TASK.com</title>
+    {% include 'imports.html' %}
+  </head>
+  <body>
+    {% include 'admin_header.html' %}
+    <h1 style="color:white;padding-top: 2%;
+    padding-bottom: 2%;"><center>All Users </center></h1>
+    
+    <div class = container-fluid style="width: 40%; margin-left:30%; background-color:white; position: absolute; padding-top: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;" align = "justify" >
+        <center>{{ table|safe }}</center>
+        <center>
+        <div>
+            <form action ='/deleteusers' method = 'post'>
+                <input type="text" placeholder="Enter Username" name="user" required>
+
+                <div style = "width: 30%"><button type="submit" class="user">Delete User</button></div>
+        </div>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </center>
+        
+    </form>
+    <br/>
+    <center>{{success}}</center>
+    
+  </body>
+</html>
+
+<style>
+  html {
+    height: 200%;
+  }
+  body {
+    /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color:#80c0ea;
+  }
+</style>
