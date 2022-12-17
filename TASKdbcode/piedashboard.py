@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 # piedashboard.py
 # Author: Andres Blanco Bonilla
-# Dash app for pie chart display
+# Dash app for "Graph by Demographic" (pie chart) display
 # route: /pieapp
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
-"""Instantiate a Dash app."""
 import datetime
 import dash
 import pandas
@@ -28,15 +27,15 @@ import textwrap
 CUSTOM_BOOTSTRAP = '../static/custombootstrap.min.css'
 
 
+# Takes the Flask server as input and initializes a new Dash app
+# for making a pie chart on that server.
 def init_piedashboard(server):
     pie_app = dash.Dash(
         __name__, 
         server=server, 
-        # using default bootstrap style sheet, could be changed
         external_stylesheets=[CUSTOM_BOOTSTRAP],
         url_base_pathname="/pieapp/"
         )
-    # ,external_scripts= [IFRAME_RESIZER])
 
     pie_app.layout = html.Div(
         children=[
@@ -134,17 +133,9 @@ def init_piedashboard(server):
                 ])], fluid=True)], style={'display':'block', 'background-color': '#145078',
                                           'min-height':'100%', 'height':'100vh', 'width': '100%', 'overflow':'scroll'}
     )
-    # ISSUES:
-    # Once graph is big, there's no way to make it small again,
-    # maybe some sort of refresh message?
-
-    # change colors to be readable in black and white and less ugly
 
 
     init_callbacks(pie_app)
-    # pie_app.enable_dev_tools(
-    # dev_tools_ui=True,
-    # dev_tools_serve_dev_bundles=True,)
     helpers.protect_dashviews(pie_app)
 
     return pie_app.server
@@ -152,6 +143,8 @@ def init_piedashboard(server):
 
 def init_callbacks(pie_app):
 
+    # This callback updates the filter options and the dropdown menu
+    # once a selection is made on the Category dropdown
     @pie_app.callback(
         Output('filter_options', 'children'),
         Output('iddropdownmenu', 'label'),
@@ -172,9 +165,6 @@ def init_callbacks(pie_app):
     def update_filter_options(r, l, a, gr, z, h, v, d, gs, n, time_range_start, time_range_end, selected_filters):
 
         ctx = dash.callback_context
-        # print(selected_filters)
-        # print(buttons)
-        # print(buttons[0])
 
         if not ctx.triggered:
             button_label = "None"
@@ -208,10 +198,11 @@ def init_callbacks(pie_app):
 
         if selected_demographic:
             button_label = database_constants.DEMOGRAPHIC_CATEGORIES[selected_demographic]
-        # print("\n" + button_label + "\n")
 
         return filters, button_label
 
+    # This callback calculates a new pie chart and updates the display
+    # once any selection is made on the graph menu.
     @pie_app.callback(
         Output('pie_chart', 'figure'),
         [Input('site_options', 'value'),
@@ -241,9 +232,6 @@ def init_callbacks(pie_app):
         else:
             button_id = database_constants.DEMOGRAPHIC_CATEGORIES_SWAPPED[mlabel]
 
-        # print("\n")
-        # print(button_id)
-        # print("\n")
 
         if button_id == "mnone" or button_id == "none":
             selected_demographic = ""
@@ -254,17 +242,14 @@ def init_callbacks(pie_app):
             dash.callback_context.inputs)
         filter_dict = dict(zip(selected_fields, selected_filters))
 
-            
-        print("\n")
-        print(filter_dict)
-        print("\n")
+
         selected_fields.append("entry_timestamp")
 
         time_filter = {}
         if time_range_start:
             time_filter["start_date"] = time_range_start
         else:
-            time_filter["start_date"] = datetime.date(2022, 10, 1)
+            time_filter["start_date"] = database_constants.EARLIEST_DATE["date"]
 
         if time_range_end:
             time_filter["end_date"] = time_range_end
@@ -278,8 +263,6 @@ def init_callbacks(pie_app):
             none_selected_message = helpers.graph_message("Please select filters and/or category.")
             return none_selected_message
 
-
-
         if selected_demographic != "":
 
             selected_fields.append(selected_demographic)
@@ -287,7 +270,10 @@ def init_callbacks(pie_app):
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
 
-                # sunburst chart testing
+#-----------------------------------------------------------------------
+                # Sunburst chart testing for race.
+                # This code works, I just decided the sunburst chart
+                # looked ugly.
                 # race_counts = demographic_db.get_patrons(filter_dict=filter_dict, select_fields=selected_fields)["race"].value_counts()
                 # race_counts = race_counts.to_frame()
                 # race_counts.rename(columns={"race": "count"}, inplace=True)
@@ -320,6 +306,9 @@ def init_callbacks(pie_app):
                 # sunburst_chart = go.Figure(data = [go.Sunburst(labels = races, parents = race_type, values=counts, branchvalues="total")])
                 # return sunburst_chart
 #-----------------------------------------------------------------------
+            # Race breakdown is a special case
+            # and must be handled differently, to toggle between
+            # grouping and splitting multiraces.
             if selected_demographic == "race":
                 pie_chart = go.Figure()
 
@@ -428,12 +417,11 @@ def init_callbacks(pie_app):
                         )
                     ],
                     title=pie_chart_title)
-                    # ,height=1000)
-                # margin = {"t":5,"b":5,"l":5,"r":5})
 
                 return pie_chart
 #-----------------------------------------------------------------------
-
+            # The rest of this code handles every other selection
+            # besides a breakdown of race.
             diner_data_df = demographic_db.get_patrons(
                 filter_dict=filter_dict, select_fields=selected_fields)
 
@@ -467,12 +455,11 @@ def init_callbacks(pie_app):
             pie_chart_title = helpers.construct_title(
                 filter_dict, graph_type="pie", selected_demographic=selected_demographic)
             pie_chart.update_layout(title=pie_chart_title)
-            # pie_chart.update_traces(textposition='inside')
-            # pie_chart.update_layout(uniformtext_minsize=9, uniformtext_mode='hide')
             return pie_chart
 
         else:
-
+            # If no category is selected, construct a popped-out pie
+            # chart, with the relevant slice pulled out.
             if selected_sites:
                 filter_dict["meal_site"] = selected_sites
                 num_entries = demographic_db.get_num_entries(
