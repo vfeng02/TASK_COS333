@@ -2,7 +2,7 @@
 
 #-----------------------------------------------------------------------
 # piedashboard.py
-# Author: Andres Blanco Bonilla
+# Author: Andres Blanco Bonilla with Rohan Amin's help
 # Dash app for "Graph by Demographic" (pie chart) display
 # route: /pieapp
 #-----------------------------------------------------------------------

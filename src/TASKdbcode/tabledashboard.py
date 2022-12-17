@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
-# -----------------------------------------------------------------------
+#-----------------------------------------------------------------------
 # tabledashboard.py
-# Author: Andres Blanco Bonilla
-# Dash app for displaying the table on the admin interface
-# -----------------------------------------------------------------------
+# Author: Andres Blanco Bonilla, with some help from
+# Rohan Amin and Allison Qi for bug fixes.
+# Dash app for displaying the "View Raw Data" tab (table)
+# on the admin interface.
+# route: /tableapp
+#-----------------------------------------------------------------------
 
-"""Instantiate a Dash app."""
 import math
 import dash
 from dash import Dash, dash_table, dcc, html
@@ -164,9 +166,9 @@ def init_tabledashboard(server):
     return table_app.server
 
 
-
+# This function is copied from the dash documentation
+# https://dash.plotly.com/datatable/callbacks
 def split_filter_part(filter_part):
-    # print(filter_part)
     for operator_type in operators:
         for operator in operator_type:
             if operator in filter_part:
@@ -191,8 +193,6 @@ def split_filter_part(filter_part):
 
     return {}
 
-# update non time-based filters
-# fix age range filter
 
 
 def init_callbacks(table_app):
@@ -251,6 +251,8 @@ def init_callbacks(table_app):
 
         return dcc.send_data_frame(df.to_excel, "taskdatacurrent.xlsx", sheet_name="TASK_data_current")
 
+    # This callback updates the table display with the data
+    # that matches the current filters.
     @table_app.callback(
         Output('table-filtering', 'data'),
         Output('num_entries_display', 'children'),
@@ -260,7 +262,6 @@ def init_callbacks(table_app):
         Input('table-filtering', 'sort_by'),
         Input('table-filtering', "filter_query")])
     def update_table(page_current, page_size, sort_by, filter):
-        # print(filter)
         filtering_expressions = filter.split(' && ')
         filter_dicts = []
         time_filter = {}
@@ -269,8 +270,6 @@ def init_callbacks(table_app):
         for filter_part in filtering_expressions:
 
             filter_dict = split_filter_part(filter_part)
-            # print(filter_dict)
-            
 
             if filter_dict:
                 if filter_dict["op"] == "contains":
@@ -302,7 +301,7 @@ def init_callbacks(table_app):
         num_entries = len(dff.index)
         num_total = demographic_db.get_total_entries()
             
-
+        # Testing a different display that I ended up not liking.
         # selected_sites = list(dff["meal_site"].unique())
         # total_site_entries = 0
         # for site in selected_sites:
@@ -313,17 +312,6 @@ def init_callbacks(table_app):
         
         # display.append(html.H5(f"{num_entries} Entries / {total_site_entries} Total Site Entries = {percent_site_data:.2%} of selected site data"))
 
-        # if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
-        #     # these operators match pandas series operator method names
-        #     dff = dff.loc[getattr(
-        #         dff[col_name], operator)(filter_value)]
-        # elif operator == 'contains':
-        #     dff = dff.loc[dff[col_name].str.contains(filter_value)]
-        # elif operator == 'datestartswith':
-        #     # this is a simplification of the front-end filtering logic,
-        #     # only works with complete fields in standard format
-        #     dff = dff.loc[dff[col_name].str.startswith(
-        #         filter_value)]
 
         if sort_by:
             dff = dff.sort_values(
