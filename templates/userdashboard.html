@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Dashboard</title>
+    {% include 'imports.html' %}
+  </head>
+  <body>
+    {% include 'admin_header.html' %}
+    <div style="
+      display: flex;
+      justify-content: center;
+      margin-top: 150px;
+      margin-left: 20px;
+      margin-right: 20px;
+    ">
+    <div
+      style="
+        max-width: 400px;
+        width: 400px;
+      "
+    >
+    <center><h1> User Dashboard</h1></center>
+    
+      <br />
+      <div class="row">
+        <center>
+          <input
+            id="volunteerloginbtn"
+            class="form-control orange enter-button"
+            type="button"
+            onclick="location.href='/viewusers';"
+            value="View Users"
+          /
+        </center>
+      </div>
+      <br />
+      <div class="row">
+        <center>
+          <input
+            id="adminloginbtn"
+            class="form-control dark-blue enter-button"
+            type="button"
+            onclick="location.href='/register';"
+            value="Register"
+          />
+          
+        </center>
+      </div>
+      <br />
+      <div class="row">
+        <center>
+          <input
+            id="adminloginbtn"
+            class="form-control dark-blue enter-button"
+            type="button"
+            onclick="location.href='/deleteusers';"
+            value="Delete Users"
+          />
+          
+        </center>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
+
+<style>
+  html {
+    height: 100%;
+  }
+  body {
+    /* background: url(https://i.ibb.co/YBWpstC/indexb.jpg) no-repeat center center fixed; */
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #80c0ea;
+  }
+</style>
