@@ -380,7 +380,7 @@ def check_my_users(user):
 def be_admin(username):
     """Validator to check if user has admin role"""
     try:
-        if username == "jaimeparker":
+        if username == "administrator":
             return
         else: 
             return False

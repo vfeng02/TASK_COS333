@@ -211,7 +211,7 @@ def register():
 @app.route('/users', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
 def viewusers(): 
-    return render_template("userdashboard.html")
+    return render_template("viewusers.html")
 
 @app.route('/viewusers', methods=['GET','POST'])
 @login_required(must=[demographic_db.be_admin])
